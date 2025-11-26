@@ -13,11 +13,52 @@ body {
     line-height: 1.6;
 }
 
+/* ---------- NAVBAR ---------- */
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 8%;
+    background: linear-gradient(to right, #14b8ff, #4dc9ff);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #004c8c;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #004c8c;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: 0.25s;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+    color: #ff7b29;
+    border-bottom: 2px solid #ff7b29;
+    padding-bottom: 3px;
+}
+
 /* ---------- HERO SECTION ---------- */
 .hero {
     height: 70vh;
     position: relative;
-    background: linear-gradient(to right, rgba(0,120,200,0.6), rgba(0,150,255,0.6)),
+    background: linear-gradient(to right, rgba(20,184,255,0.6), rgba(77,201,255,0.6)),
                 url('city_map.jpg') center/cover no-repeat;
 }
 
@@ -37,9 +78,8 @@ body {
 }
 
 .hero h1 {
-    font-size: 4.2rem;
+    font-size: 4rem;
     font-weight: 700;
-    letter-spacing: 2px;
     margin-bottom: 10px;
 }
 
@@ -57,7 +97,7 @@ body {
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
-    transition: 0.3s ease-in-out;
+    transition: 0.3s;
 }
 
 .btn:hover {
@@ -65,64 +105,40 @@ body {
     transform: scale(1.05);
 }
 
-/* ---------- SECTION HEADERS ---------- */
-.section {
-    padding: 70px 10%;
+/* ---------- SECTION HEADER ---------- */
+.page-header {
+    text-align: center;
+    background: #004c8c;
+    padding: 40px 0;
+    color: white;
+    margin-bottom: 40px;
 }
 
-.section h2 {
+.page-header h1 {
     font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 30px;
+}
+
+/* ---------- SECTIONS ---------- */
+.section, .page-section {
+    padding: 60px 10%;
+}
+
+.section h2, .page-section h2 {
+    font-size: 2.4rem;
+    border-left: 8px solid #ff7b29;
+    padding-left: 12px;
+    margin-bottom: 20px;
     color: #004c8c;
-    border-left: 10px solid #ff7b29;
-    padding-left: 15px;
 }
 
 /* ---------- CARDS ---------- */
-.info-grid, .team-grid {
-    display: grid;
-    gap: 25px;
-}
-
-.info-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.card {
+.card, .content-card {
     background: white;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    border-top: 6px solid #0090ff;
-    transition: 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0,0,0,0.18);
-}
-
-.card h3 {
-    color: #ff7b29;
-    margin-bottom: 15px;
-}
-
-/* ---------- MAP ---------- */
-.map {
-    width: 70%;
-    display: block;
-    margin: 20px auto;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    border: 6px solid #0090ff;
-}
-
-.note {
-    text-align: center;
-    margin-top: 10px;
-    color: #666;
-    font-style: italic;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    margin-bottom: 25px;
+    border-left: 6px solid #14b8ff;
 }
 
 /* ---------- TABLES ---------- */
@@ -133,15 +149,13 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 25px;
     background: white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     border-radius: 10px;
-    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
 th {
-    background: #0090ff;
+    background: #14b8ff;
     color: white;
     padding: 14px;
     font-size: 1.1rem;
@@ -150,49 +164,26 @@ th {
 td {
     padding: 12px;
     border-bottom: 1px solid #ddd;
-    font-weight: 500;
 }
 
 tr:hover {
-    background: rgba(0,144,255,0.08);
-}
-
-/* ---------- ACCORDION ---------- */
-.accordion {
-    margin-top: 25px;
-}
-
-.acc-item {
-    background: white;
-    padding: 20px;
-    margin-bottom: 15px;
-    border-left: 6px solid #ff7b29;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    transition: 0.3s ease;
-}
-
-.acc-item:hover {
-    transform: translateX(8px);
-}
-
-.acc-item h3 {
-    color: #004c8c;
-    margin-bottom: 10px;
+    background: rgba(20,184,255,0.08);
 }
 
 /* ---------- TEAM ---------- */
 .team-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
 }
 
 .team-card {
-    background: linear-gradient(to right, #0090ff, #4dbbff);
+    background: linear-gradient(to right, #14b8ff, #4dc9ff);
     padding: 25px;
     color: white;
+    font-size: 1.2rem;
     border-radius: 12px;
     text-align: center;
-    font-size: 1.2rem;
     font-weight: 600;
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     transition: 0.3s;
@@ -200,15 +191,14 @@ tr:hover {
 
 .team-card:hover {
     transform: scale(1.07);
-    background: linear-gradient(to right, #0077cc, #33aaff);
+    background: linear-gradient(to right, #0ea0d8, #36b8ef);
 }
 
 /* ---------- FOOTER ---------- */
 footer {
     background: #002f55;
+    text-align: center;
     padding: 20px;
     color: white;
-    text-align: center;
-    margin-top: 50px;
-    font-size: 0.95rem;
+    margin-top: 40px;
 }
