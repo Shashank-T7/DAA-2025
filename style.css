@@ -10,13 +10,14 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #f2f4f7; /* soft very light grey */
-    color: #2d2d2d;      /* deep slate text */
+    background: #2E3440;       /* Nord base */
+    color: #D8DEE9;            /* Soft light text */
     line-height: 1.6;
 }
 
+
 /* =======================================
-   NAVBAR – Soft Premium
+   NAVBAR – Soft Dark + Frost Accents
 ======================================= */
 .navbar {
     width: 100%;
@@ -24,33 +25,32 @@ body {
     justify-content: space-between;
     align-items: center;
 
-    padding: 18px 8%;
-    background: #ffffffcc;
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid #d7dde5;
+    padding: 16px 8%;
+    background: #3B4252;
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(216,222,233,0.15);
+
     position: fixed;
     top: 0;
     left: 0;
-
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    z-index: 999;
+    z-index: 1000;
 }
 
 .logo {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     font-weight: 700;
-    color: #2d4f92; /* soft blue */
+    color: #88C0D0;    /* Frost blue */
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 30px;
+    gap: 28px;
 }
 
 .nav-links li a {
     text-decoration: none;
-    color: #495057;
+    color: #D8DEE9;
     font-weight: 500;
     font-size: 1.05rem;
     transition: 0.25s;
@@ -58,11 +58,12 @@ body {
 
 .nav-links li a:hover,
 .nav-links li a.active {
-    color: #ff7b29;
+    color: #EBCB8B;   /* warm nord sand */
 }
 
+
 /* =======================================
-   HERO – Soft Blue Premium
+   PREMIUM HERO – Frosty Soft Dark
 ======================================= */
 .hero-premium {
     height: 85vh;
@@ -70,24 +71,30 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: linear-gradient(145deg, #cfe8ff 0%, #e4f0ff 40%, #f2f7ff 100%);
+    background: linear-gradient(
+        135deg,
+        #3B4252 0%,
+        #434C5E 40%,
+        #4C566A 100%
+    );
+
     text-align: center;
     padding: 0 10%;
     margin-top: 70px;
-    position: relative;
 }
 
 .hero-title {
-    font-size: 4rem;
-    color: #1f3c88;
+    font-size: 3.8rem;
     font-weight: 800;
+    color: #E5E9F0;
     margin-bottom: 10px;
 }
 
 .hero-sub {
-    font-size: 1.3rem;
-    margin-bottom: 30px;
-    color: #4a5568;
+    font-size: 1.25rem;
+    color: #D8DEE9;
+    opacity: 0.85;
+    margin-bottom: 28px;
 }
 
 .hero-buttons {
@@ -96,11 +103,15 @@ body {
     gap: 20px;
 }
 
+
+/* =======================================
+   BUTTONS – Frost Blue + Warm Sand
+======================================= */
 .btn-premium {
-    padding: 14px 30px;
-    background: #ff7b29;
+    padding: 13px 28px;
+    background: #5E81AC;             /* Calm nord blue */
     border-radius: 10px;
-    color: white;
+    color: #ECEFF4;
     font-size: 1.1rem;
     font-weight: 600;
     text-decoration: none;
@@ -108,20 +119,22 @@ body {
 }
 
 .btn-premium:hover {
-    background: #ff5400;
+    background: #81A1C1;
     transform: translateY(-3px);
 }
 
 .btn-premium.alt {
-    background: #1f6feb;
+    background: #EBCB8B;              /* Nord warm yellow */
+    color: #2E3440;
 }
 
 .btn-premium.alt:hover {
-    background: #1256c4;
+    background: #F0D59C;
 }
 
+
 /* =======================================
-   PAGE SECTIONS
+   SECTIONS (Soft Card Backgrounds)
 ======================================= */
 .page-section {
     padding: 60px 10%;
@@ -130,31 +143,33 @@ body {
 .page-section h2 {
     margin-bottom: 20px;
     font-size: 2.2rem;
-    color: #1f3c88;
-    border-left: 8px solid #ff7b29;
+    color: #88C0D0;
+    border-left: 7px solid #EBCB8B;
     padding-left: 12px;
 }
 
+
 /* =======================================
-   CONTENT CARDS (SOFT GREY GLASS)
+   CONTENT CARDS – Neutral Slate
 ======================================= */
 .content-card {
-    background: #ffffff;
+    background: #3B4252;
     padding: 28px;
     border-radius: 14px;
     margin-bottom: 22px;
 
-    border: 1px solid #e3e8ef;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+    border: 1px solid rgba(216,222,233,0.1);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
 }
 
 .content-card h2 {
-    color: #2d4f92;
+    color: #88C0D0;
     margin-bottom: 14px;
 }
 
+
 /* =======================================
-   TABLES – Clean, Soft, Professional
+   TABLES – Blue Slate Professional
 ======================================= */
 .table-container {
     overflow-x: auto;
@@ -163,27 +178,28 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: #3B4252;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.04);
 }
 
 th {
-    background: #2d4f92;
-    color: white;
+    background: #5E81AC;
+    color: #ECEFF4;
     padding: 12px;
     font-size: 1.05rem;
 }
 
 td {
     padding: 12px;
-    border-bottom: 1px solid #e4e7ec;
+    border-bottom: 1px solid rgba(236,239,244,0.08);
+    color: #D8DEE9;
 }
 
 tr:hover {
-    background: #f7faff;
+    background: #434C5E;
 }
+
 
 /* =======================================
    TEAM CARDS
@@ -196,30 +212,31 @@ tr:hover {
 
 .team-card {
     padding: 24px;
-    background: #ffffff;
+    background: #4C566A;
     border-radius: 12px;
-    color: #2d4f92;
+    color: #ECEFF4;
     font-size: 1.15rem;
     text-align: center;
     font-weight: 600;
 
-    border: 1px solid #dee3ea;
-    box-shadow: 0 5px 14px rgba(0,0,0,0.06);
+    border: 1px solid rgba(216,222,233,0.15);
     transition: 0.25s;
 }
 
 .team-card:hover {
     transform: translateY(-5px);
+    background: #5E81AC;
 }
+
 
 /* =======================================
    FOOTER
 ======================================= */
 footer {
-    background: #1f3c88;
+    background: #3B4252;
     padding: 18px;
     text-align: center;
-    color: #f2f7ff;
+    color: #D8DEE9;
     margin-top: 50px;
     font-size: 0.95rem;
 }
