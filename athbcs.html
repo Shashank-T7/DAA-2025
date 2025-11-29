@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atharva – DSA Case Studies | Arohanagara</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">Arohanagara</div>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#city-info">City Info</a></li>
+        <li><a href="index.html#layout">Layout</a></li>
+        <li><a href="index.html#budget">Budget</a></li>
+        <li><a href="index.html#revenue">Revenue</a></li>
+        <li><a href="index.html#team">Team</a></li>
+        <li><a href="athbcs.html" class="active">Atharva</a></li>
+    </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<section class="hero-premium small-hero">
+    <div class="hero-inner">
+        <h1 class="hero-title">Atharva’s Case Studies</h1>
+        <p class="hero-sub">Business Use-Cases Solved Using Data Structures & Algorithms</p>
+    </div>
+</section>
+
+<!-- CONTENT -->
+<section class="page-section">
+    <h2>Business Case Applications Identified by Atharva</h2>
+
+    <!-- 1 -->
+    <div class="content-card">
+        <h3>1. Real-Time Disaster Alerting from Sensor Networks</h3>
+        <p>Aroha Nagar uses thousands of environmental sensors producing long encoded streams. Detecting dangerous patterns must be fast and should avoid checking each character sequentially.</p>
+        <strong>Algorithm Used:</strong> Boyer–Moore Pattern Searching  
+        <p>Boyer–Moore skips large sections of text during mismatch, making it ideal for long sensor streams where hazardous patterns are rare.</p>
+    </div>
+
+    <!-- 2 -->
+    <div class="content-card">
+        <h3>2. Skill-Matching System for Students and Workers</h3>
+        <p>The city's education hubs store digital skills and job requirements. Users search using partial words like “jav” and expect instant results.</p>
+        <strong>Data Structure Used:</strong> Trie  
+        <p>Tries support prefix-based retrieval in O(k) time regardless of dataset size, making the skill search system extremely efficient.</p>
+    </div>
+
+    <!-- 3 -->
+    <div class="content-card">
+        <h3>3. IT Asset Lifecycle & E-Waste Routing</h3>
+        <p>Devices across repair units have expiry dates. The city needs to process upcoming expiries first to reduce waste.</p>
+        <strong>Data Structure Used:</strong> Binary Search Tree  
+        <p>A BST maintains items in sorted expiry order, enabling instant access to the earliest-expiring items.</p>
+    </div>
+
+    <!-- 4 -->
+    <div class="content-card">
+        <h3>4. Traffic Classification from Drone & Sensor Data</h3>
+        <p>Drones capture traffic values that must be grouped into low, medium, and high congestion categories.</p>
+        <strong>Algorithm Used:</strong> Quick Sort  
+        <p>Quick Sort partitions values efficiently, enabling classification even before full sorting completes.</p>
+    </div>
+
+    <!-- 5 -->
+    <div class="content-card">
+        <h3>5. Monitoring Patterns in Public Wi-Fi Networks</h3>
+        <p>Wi-Fi logs update continuously, and sudden spikes in failed logins need rapid detection.</p>
+        <strong>Data Structure Used:</strong> Fenwick Tree (Binary Indexed Tree)  
+        <p>BIT supports O(log n) updates and queries, ideal for tracking real-time network activity trends.</p>
+    </div>
+
+    <!-- 6 -->
+    <div class="content-card">
+        <h3>6. Scheduling Compute Resources for Data Centres</h3>
+        <p>Data centres must minimise communication cost by clustering machines efficiently.</p>
+        <strong>Algorithm Used:</strong> Kruskal’s Algorithm  
+        <p>Kruskal forms a minimum spanning tree that reduces overall network latency across compute nodes.</p>
+    </div>
+
+    <!-- 7 -->
+    <div class="content-card">
+        <h3>7. Managing Student Records in Digital Classrooms</h3>
+        <p>The city’s digital learning centers store attendance and progress logs that must be retrieved by ID instantly.</p>
+        <strong>Data Structure Used:</strong> Hash Table  
+        <p>Hash tables offer O(1) lookup time, making student data retrieval extremely fast.</p>
+    </div>
+
+    <!-- 8 -->
+    <div class="content-card">
+        <h3>8. Routing Stock Between Warehouses & Retail Units</h3>
+        <p>Retail distribution requires checking cheapest routes between multiple locations.</p>
+        <strong>Algorithm Used:</strong> Floyd–Warshall  
+        <p>Computes all-pairs shortest paths in one run, ideal for municipal-scale logistics networks.</p>
+    </div>
+
+    <!-- 9 -->
+    <div class="content-card">
+        <h3>9. Planning Maintenance Routes for City Infrastructure</h3>
+        <p>Technicians must find shortest paths to malfunctioning devices across Arohanagara.</p>
+        <strong>Algorithm Used:</strong> Dijkstra’s Algorithm  
+        <p>Dijkstra handles non-negative road weights and yields optimal routes from a single source.</p>
+    </div>
+
+    <!-- 10 -->
+    <div class="content-card">
+        <h3>10. Detecting Repeated or Fraudulent Patterns in Micro-Loan Applications</h3>
+        <p>Loan verification systems must check if a pattern already exists in previous records.</p>
+        <strong>Algorithm Used:</strong> Rabin–Karp  
+        <p>Its rolling hash enables fast substring comparisons without re-scanning entire strings.</p>
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2025 Arohanagara Project | Atharva’s Case Study Page</p>
+</footer>
+
+</body>
+</html>
