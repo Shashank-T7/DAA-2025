@@ -3,243 +3,228 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aroha Nagara – Smart City Simulation</title>
+    <title>Arohanagara – Smart City Simulation</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- HERO SECTION -->
-    <header class="hero">
-        <div class="overlay"></div>
-        <div class="hero-content">
-            <h1>Arohanagara</h1>
-            <p>A Data Structures & Algorithms Based Smart City Model</p>
-            <a href="#city-info" class="btn">Explore City</a>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">Arohanagara</div>
+    <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="#city-info">City Info</a></li>
+        <li><a href="#layout">Layout</a></li>
+        <li><a href="#budget">Budget</a></li>
+        <li><a href="#revenue">Revenue</a></li>
+        <li><a href="#team">Team</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero-premium">
+    <div>
+        <h1 class="hero-title">Arohanagara</h1>
+        <p class="hero-sub">A Data Structures & Algorithms Based Smart City Model</p>
+
+        <div class="hero-buttons">
+            <a href="#overview" class="btn-premium">Overview</a>
+            <a href="#city-info" class="btn-premium alt">Explore City</a>
         </div>
-    </header>
+    </div>
+</section>
 
-    <!-- CITY INFO SECTION -->
-    <section id="city-info" class="section">
-        <h2>City Information</h2>
+<!-- ===============================
+     OVERVIEW (NEW + HUMANIZED)
+================================== -->
+<section id="overview" class="page-section">
+    <h2>Overview</h2>
 
-        <div class="info-grid">
-            <div class="card reveal">
-                <h3>General Info</h3>
-                <ul>
-                    <li><strong>City Name:</strong> Arohanagara</li>
-                    <li><strong>District:</strong> Indore</li>
-                    <li><strong>State:</strong> Madhya Pradesh</li>
-                    <li><strong>Pincode:</strong> 452780</li>
-                    <li><strong>Timezone:</strong> IST (UTC +5:30)</li>
-                    <li><strong>Vehicle Registraion Format:</strong> MP 56 XX XXXX</li>
-                </ul>
-            </div>
+    <div class="content-card">
+        <p>
+            The “Arohanagara” project is our attempt to understand how data structures 
+            and algorithms can support the design of a modern city. Instead of looking 
+            at DAA only as a theoretical subject, we wanted to explore how concepts 
+            like graphs, shortest path algorithms, trees, and optimization techniques 
+            connect to real-world planning.  
+        </p>
 
-            <div class="card reveal">
-                <h3>Population</h3>
-                <ul>
-                    <li><strong>Total:</strong> 54,00,000 people</li>
-                    <li><strong>Male:</strong> 29,70,000</li>
-                    <li><strong>Female:</strong> 24,30,000</li>
-                    <li><strong>Population Density:</strong> ≈ 3,830 / sq km</li>
-                </ul>
-            </div>
+        <p>
+            Throughout this course, we studied how different data structures evolve 
+            based on the kind of problems they solve. This helped us recognize that 
+            city planning is, in many ways, a large-scale data problem — roads behave 
+            like weighted graphs, zoning can be represented in hierarchical structures, 
+            and resource management often relies on efficient searching and balancing 
+            algorithms.  
+        </p>
 
-            <div class="card reveal">
-                <h3>Age Distribution</h3>
-                <ul>
-                    <li>1–10 years → 5,40,000</li>
-                    <li>11–20 years → 8,10,000</li>
-                    <li>21–30 years → 13,50,000</li>
-                    <li>31–40 years → 10,80,000</li>
-                    <li>41–50 years → 9,72,000</li>
-                    <li>51–60 years → 4,32,000</li>
-                    <li>60+ years → 2,16,000</li>
-                </ul>
-            </div>
+        <p>
+            Our objective was not only to design a hypothetical smart city but to 
+            present a structured model that shows how algorithmic thinking improves 
+            decision-making. Whether it is deciding the best route between zones, 
+            distributing utilities, or estimating budgets, each part of the city 
+            benefits from a well-chosen algorithm. Arohanagara is therefore a 
+            demonstration of how classroom concepts can be meaningfully connected 
+            to real planning challenges.
+        </p>
+    </div>
+</section>
+
+<!-- ===============================
+     CITY INFO
+================================== -->
+<section id="city-info" class="page-section">
+    <h2>City Information</h2>
+
+    <div class="info-grid">
+        <div class="content-card reveal">
+            <h3>General Info</h3>
+            <ul>
+                <li><strong>City Name:</strong> Arohanagara</li>
+                <li><strong>District:</strong> Indore</li>
+                <li><strong>State:</strong> Madhya Pradesh</li>
+                <li><strong>Pincode:</strong> 452780</li>
+                <li><strong>Timezone:</strong> IST (UTC +5:30)</li>
+                <li><strong>Vehicle Registration:</strong> MP 56 XX XXXX</li>
+            </ul>
         </div>
-    </section>
 
-    <!-- CITY LAYOUT -->
-    <section id="layout" class="section">
-        <h2>City Layout Plan</h2>
-        <p class="center">A planned city with evenly distributed residential, commercial, industrial & green zones.</p>
-
-        <img src="WhatsApp Image 2025-11-26 at 15.29.03_abe9dc89.jpg" class="map reveal" />
-        <img src="WhatsApp Image 2025-11-26 at 14.26.56_7cdcadd2.jpg" class="map reveal" />
-    </section>
-
-    <!-- BUDGET -->
-    <section id="budget" class="section">
-        <h2>Budget Estimation</h2>
-
-        <div class="table-container reveal">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Sector</th>
-                        <th>Cost (₹ Cr / km)</th>
-                        <th>Total Cost (₹ Cr)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1. Residential infrastructure</td>
-                        <td class="right">250</td>
-                        <td class="right">112,500</td>
-                    </tr>
-                    <tr>
-                        <td>2. Industrial Area</td>
-                        <td class="right">400</td>
-                        <td class="right">66,000</td>
-                    </tr>
-                    <tr>
-                        <td>3. Renewable energy</td>
-                        <td class="right">450</td>
-                        <td class="right">67,500</td>
-                    </tr>
-                    <tr>
-                        <td>4. Public & Transport</td>
-                        <td class="right">500</td>
-                        <td class="right">75,000</td>
-                    </tr>
-                    <tr>
-                        <td>5. Agriculture & green zones</td>
-                        <td class="right">150</td>
-                        <td class="right">22,500</td>
-                    </tr>
-                    <tr>
-                        <td>6. Health & Education</td>
-                        <td class="right">350</td>
-                        <td class="right">28,350</td>
-                    </tr>
-                    <tr>
-                        <td>7. Commercial Sector</td>
-                        <td class="right">450</td>
-                        <td class="right">40,500</td>
-                    </tr>
-                    <tr>
-                        <td>8. Drainage & Waste management</td>
-                        <td class="right">350</td>
-                        <td class="right">26,250</td>
-                    </tr>
-                    <tr>
-                        <td>9. Tech park & Data centres</td>
-                        <td class="right">500</td>
-                        <td class="right">49,500</td>
-                    </tr>
-                    <tr class="total">
-                        <td><strong>Total</strong></td>
-                        <td></td>
-                        <td class="right"><strong>4,88,100</strong></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="content-card reveal">
+            <h3>Population</h3>
+            <ul>
+                <li><strong>Total:</strong> 54,00,000</li>
+                <li><strong>Male:</strong> 29,70,000</li>
+                <li><strong>Female:</strong> 24,30,000</li>
+                <li><strong>Density:</strong> ≈ 3,830 / sq km</li>
+            </ul>
         </div>
-    </section>
 
-    <!-- REVENUE -->
-    <section id="revenue" class="section">
-        <h2>Revenue Model</h2>
-
-        <div class="table-container reveal">
-            <table>
-                <thead>
-                    <tr><th>Source</th><th>Annual Revenue (₹ Crore)</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>1. Renewable Energy Exports</td><td>7,800</td></tr>
-                    <tr><td>2. Green Hydrogen &amp; derivatives</td><td>5,400</td></tr>
-                    <tr><td>3. Carbon / Environmental Fees</td><td>600</td></tr>
-                    <tr><td>4. Industrial Park Lease &amp; Fees</td><td>8,200</td></tr>
-                    <tr><td>5. Tech &amp; Commercial Services</td><td>8,000</td></tr>
-                    <tr><td>6. Property tax</td><td>5,200</td></tr>
-                    <tr><td>7. Utilities &amp; User Fees</td><td>2,800</td></tr>
-                    <tr><td>8. Tourism &amp; Hospitality</td><td>4,800</td></tr>
-                    <tr><td>9. Hotel / Tourism Tax</td><td>1,600</td></tr>
-                    <tr><td><strong>Total Annual Revenue</strong></td><td><strong>44,400</strong></td></tr>
-                </tbody>
-            </table>
+        <div class="content-card reveal">
+            <h3>Age Distribution</h3>
+            <ul>
+                <li>1–10 years → 5,40,000</li>
+                <li>11–20 years → 8,10,000</li>
+                <li>21–30 years → 13,50,000</li>
+                <li>31–40 years → 10,80,000</li>
+                <li>41–50 years → 9,72,000</li>
+                <li>51–60 years → 4,32,000</li>
+                <li>60+ years → 2,16,000</li>
+            </ul>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- CHALLENGES -->
-    <section class="section">
-        <h2>Challenges & Constructive Measures</h2>
+<!-- ===============================
+     CITY LAYOUT
+================================== -->
+<section id="layout" class="page-section">
+    <h2>City Layout Plan</h2>
+    <p style="opacity:0.9; margin-bottom:20px;">
+        A balanced distribution of residential, commercial, industrial, and green zones 
+        to ensure sustainable growth.
+    </p>
 
-        <div class="accordion">
-            <div class="acc-item reveal">
-                <h3>1. High Initial Capital cost</h3>
-                <p><strong>Cons:</strong> Developing smart infrastructure and renewable systems demands heavy upfront investment.<br>
-                <strong>Counter measure:</strong> Adopt phased PPP projects &amp; land-value-capture financing to spread costs &amp; ensure long-term returns.</p>
-            </div>
+    <img src="WhatsApp Image 2025-11-26 at 15.29.03_abe9dc89.jpg" class="map reveal" />
+    <img src="WhatsApp Image 2025-11-26 at 14.26.56_7cdcadd2.jpg" class="map reveal" />
+</section>
 
-            <div class="acc-item reveal">
-                <h3>2. Renewable Reliability</h3>
-                <p><strong>Cons:</strong> Solar and wind energy supply may fluctuate seasonally and may affect consistency.<br>
-                <strong>Constructive measure:</strong> Use hybrid energy grids with battery &amp; hydrogen storage for stable, 24/7 renewable power.</p>
-            </div>
+<!-- ===============================
+     BUDGET
+================================== -->
+<section id="budget" class="page-section">
+    <h2>Budget Estimation</h2>
 
-            <div class="acc-item reveal">
-                <h3>3. Population Growth &amp; Urban sprawl</h3>
-                <p><strong>Cons:</strong> Rapid migration could strain housing &amp; transport systems.<br>
-                <strong>Constructive measure:</strong> Promote vertical, mixed-use zoning &amp; green buffer zones to maintain sustainable density.</p>
-            </div>
-        </div>
-    </section>
+    <div class="table-container reveal">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sector</th>
+                    <th>Cost (₹ Cr / km)</th>
+                    <th>Total Cost (₹ Cr)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Residential Infrastructure</td><td>250</td><td>112,500</td></tr>
+                <tr><td>Industrial Area</td><td>400</td><td>66,000</td></tr>
+                <tr><td>Renewable Energy</td><td>450</td><td>67,500</td></tr>
+                <tr><td>Public & Transport</td><td>500</td><td>75,000</td></tr>
+                <tr><td>Agriculture & Green Zones</td><td>150</td><td>22,500</td></tr>
+                <tr><td>Health & Education</td><td>350</td><td>28,350</td></tr>
+                <tr><td>Commercial Sector</td><td>450</td><td>40,500</td></tr>
+                <tr><td>Drainage & Waste Management</td><td>350</td><td>26,250</td></tr>
+                <tr><td>Tech Park & Data Centres</td><td>500</td><td>49,500</td></tr>
+                <tr class="total"><td><strong>Total</strong></td><td></td><td><strong>4,88,100</strong></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 
-    <!-- NOTE (from image) -->
-    <section class="section">
-      <h2>NOTE</h2>
-      <p>Inflation Adjustment: ≈ 4–4.5% per annum — Factored into long-term CAPEX recovery and maintenance cost projections for sustainable forecasting.</p>
-    </section>
+<!-- ===============================
+     REVENUE
+================================== -->
+<section id="revenue" class="page-section">
+    <h2>Revenue Model</h2>
 
-    <!-- TEAM -->
-    <section id="team" class="section">
-        <h2>Team Members</h2>
+    <div class="table-container reveal">
+        <table>
+            <thead>
+                <tr><th>Source</th><th>Annual Revenue (₹ Crore)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Renewable Energy Exports</td><td>7,800</td></tr>
+                <tr><td>Green Hydrogen</td><td>5,400</td></tr>
+                <tr><td>Environmental Fees</td><td>600</td></tr>
+                <tr><td>Industrial Leases</td><td>8,200</td></tr>
+                <tr><td>Tech & Commercial Services</td><td>8,000</td></tr>
+                <tr><td>Property Tax</td><td>5,200</td></tr>
+                <tr><td>Utilities & User Fees</td><td>2,800</td></tr>
+                <tr><td>Tourism & Hospitality</td><td>4,800</td></tr>
+                <tr><td>Hotel / Tourism Tax</td><td>1,600</td></tr>
+                <tr><td><strong>Total Annual Revenue</strong></td><td><strong>44,400</strong></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 
-        <div class="team-grid">
-            <div class="team-card reveal">Shashank R. Yende – 245</div>
-            <div class="team-card reveal">Atharva – 264</div>
-            <div class="team-card reveal">Vinay Hosur – 265</div>
-            <div class="team-card reveal">Varun B – 233</div>
-        </div>
-    </section>
+<!-- ===============================
+     TEAM
+================================== -->
+<section id="team" class="page-section">
+    <h2>Team Members</h2>
 
-    <footer>
-        <p>© 2025 Arohanagara Project | Built for DAA Course</p>
-    </footer>
+    <div class="team-grid">
+        <div class="team-card reveal">Shashank R. Yende – 245</div>
+        <div class="team-card reveal">Atharva – 264</div>
+        <div class="team-card reveal">Vinay Hosur – 265</div>
+        <div class="team-card reveal">Varun B – 233</div>
+    </div>
+</section>
 
-    <!-- JS: Scroll reveal + accordion -->
-    <script>
-        (function(){
-            const obsOpts = { threshold: 0.1 };
-            const revealObs = new IntersectionObserver((entries, ob) => {
-                entries.forEach(e => {
-                    if (e.isIntersecting) {
-                        e.target.classList.add("in-view");
-                        ob.unobserve(e.target);
+<!-- ===============================
+     FOOTER
+================================== -->
+<footer>
+    <p>© 2025 Arohanagara Project | Built for DAA Course</p>
+</footer>
 
-                        // table anim
-                        const tb = e.target.querySelector("tbody");
-                        if (tb) tb.classList.add("in-view");
-                    }
-                });
-            }, obsOpts);
 
-            document.querySelectorAll(".reveal, .table-container").forEach(el => revealObs.observe(el));
-
-            // Accordion
-            document.querySelectorAll(".acc-item").forEach(item => {
-                const title = item.querySelector("h3");
-                title.innerHTML += `<span class="chev">▾</span>`;
-                item.addEventListener("click", () => {
-                    item.classList.toggle("open");
-                });
+<!-- Scroll reveal + accordion JS -->
+<script>
+    (function(){
+        const obsOpts = { threshold: 0.12 };
+        const revealObs = new IntersectionObserver((entries, ob) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add("in-view");
+                    ob.unobserve(e.target);
+                }
             });
-        })();
-    </script>
+        }, obsOpts);
+
+        document.querySelectorAll(".reveal, .table-container").forEach(el => revealObs.observe(el));
+    })();
+</script>
 
 </body>
 </html>
