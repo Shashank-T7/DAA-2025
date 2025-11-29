@@ -1,6 +1,6 @@
-/* =======================================
+/* ===========================
    GLOBAL RESET
-======================================= */
+=========================== */
 * {
     margin: 0;
     padding: 0;
@@ -10,168 +10,125 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #2E3440;       /* Nord base */
-    color: #D8DEE9;            /* Soft light text */
-    line-height: 1.6;
-}
-
-
-/* =======================================
-   NAVBAR – Soft Dark + Frost Accents
-======================================= */
-.navbar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 16px 8%;
-    background: #3B4252;
-    backdrop-filter: blur(6px);
-    border-bottom: 1px solid rgba(216,222,233,0.15);
-
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-}
-
-.logo {
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #88C0D0;    /* Frost blue */
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 28px;
-}
-
-.nav-links li a {
-    text-decoration: none;
+    background: #2E3440;
     color: #D8DEE9;
-    font-weight: 500;
-    font-size: 1.05rem;
-    transition: 0.25s;
 }
 
-.nav-links li a:hover,
-.nav-links li a.active {
-    color: #EBCB8B;   /* warm nord sand */
-}
-
-
-/* =======================================
-   PREMIUM HERO – Frosty Soft Dark
-======================================= */
+/* ===========================
+   HERO SECTION
+=========================== */
 .hero-premium {
-    height: 85vh;
+    height: 90vh;
     display: flex;
-    align-items: center;
     justify-content: center;
-
-    background: linear-gradient(
-        135deg,
-        #3B4252 0%,
-        #434C5E 40%,
-        #4C566A 100%
-    );
-
+    align-items: center;
+    background: linear-gradient(135deg, #3B4252, #434C5E, #4C566A);
+    animation: bgMove 14s ease-in-out infinite alternate;
+    position: relative;
     text-align: center;
-    padding: 0 10%;
-    margin-top: 70px;
+}
+
+@keyframes bgMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.hero-inner {
+    position: relative;
+    z-index: 2;
 }
 
 .hero-title {
-    font-size: 3.8rem;
+    font-size: 4rem;
     font-weight: 800;
-    color: #E5E9F0;
-    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(30px);
 }
 
 .hero-sub {
     font-size: 1.25rem;
-    color: #D8DEE9;
-    opacity: 0.85;
-    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(30px);
+    margin-top: 12px;
 }
 
-.hero-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+.reveal-hero {
+    animation: fadeUp 1.2s ease forwards;
 }
 
+.delay-1 { animation-delay: 0.4s; }
 
-/* =======================================
-   BUTTONS – Frost Blue + Warm Sand
-======================================= */
-.btn-premium {
-    padding: 13px 28px;
-    background: #5E81AC;             /* Calm nord blue */
-    border-radius: 10px;
-    color: #ECEFF4;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: 0.25s;
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-.btn-premium:hover {
-    background: #81A1C1;
-    transform: translateY(-3px);
+.hero-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(136,192,208,0.25), transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(30px);
+    animation: floatGlow 8s infinite alternate ease-in-out;
 }
 
-.btn-premium.alt {
-    background: #EBCB8B;              /* Nord warm yellow */
-    color: #2E3440;
+@keyframes floatGlow {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    100% { transform: translate(-45%, -45%) scale(1.25); }
 }
 
-.btn-premium.alt:hover {
-    background: #F0D59C;
-}
-
-
-/* =======================================
-   SECTIONS (Soft Card Backgrounds)
-======================================= */
+/* ===========================
+   SECTIONS
+=========================== */
 .page-section {
     padding: 60px 10%;
 }
 
 .page-section h2 {
+    font-size: 2rem;
     margin-bottom: 20px;
-    font-size: 2.2rem;
     color: #88C0D0;
-    border-left: 7px solid #EBCB8B;
+    border-left: 6px solid #EBCB8B;
     padding-left: 12px;
 }
 
-
-/* =======================================
-   CONTENT CARDS – Neutral Slate
-======================================= */
 .content-card {
     background: #3B4252;
-    padding: 28px;
-    border-radius: 14px;
-    margin-bottom: 22px;
-
-    border: 1px solid rgba(216,222,233,0.1);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-.content-card h2 {
-    color: #88C0D0;
-    margin-bottom: 14px;
+/* ===========================
+   GRID SECTIONS
+=========================== */
+.info-grid, .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
 }
 
+/* ===========================
+   IMAGES
+=========================== */
+.map {
+    width: 100%;
+    margin-top: 18px;
+    border-radius: 15px;
+    border: 2px solid #4C566A;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
 
-/* =======================================
-   TABLES – Blue Slate Professional
-======================================= */
+/* ===========================
+   TABLES
+=========================== */
 .table-container {
+    margin-top: 20px;
     overflow-x: auto;
 }
 
@@ -185,114 +142,92 @@ table {
 
 th {
     background: #5E81AC;
-    color: #ECEFF4;
     padding: 12px;
-    font-size: 1.05rem;
+    color: #ECEFF4;
 }
 
 td {
     padding: 12px;
-    border-bottom: 1px solid rgba(236,239,244,0.08);
-    color: #D8DEE9;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 tr:hover {
     background: #434C5E;
 }
 
-
-/* =======================================
+/* ===========================
    TEAM CARDS
-======================================= */
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-    gap: 22px;
-}
-
+=========================== */
 .team-card {
-    padding: 24px;
     background: #4C566A;
+    padding: 20px;
     border-radius: 12px;
-    color: #ECEFF4;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     text-align: center;
-    font-weight: 600;
-
-    border: 1px solid rgba(216,222,233,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.10);
     transition: 0.25s;
 }
 
 .team-card:hover {
-    transform: translateY(-5px);
     background: #5E81AC;
+    transform: translateY(-4px);
 }
 
+/* ===========================
+   BUSINESS CASE STUDIES SECTION
+=========================== */
+.bcs-list {
+    list-style: none;
+    margin-top: 10px;
+}
 
-/* =======================================
+.bcs-list li {
+    padding: 8px 0;
+    font-size: 1.1rem;
+}
+
+.bcs-link {
+    color: #EBCB8B;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.bcs-link:hover {
+    color: #F0D79A;
+}
+
+/* ===========================
+   GITHUB BUTTON
+=========================== */
+.github-box {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.github-btn {
+    padding: 12px 24px;
+    background: #88C0D0;
+    border-radius: 10px;
+    color: #2E3440;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.github-btn:hover {
+    background: #A3D1DF;
+    transform: translateY(-3px);
+}
+
+/* ===========================
    FOOTER
-======================================= */
+=========================== */
 footer {
     background: #3B4252;
-    padding: 18px;
+    padding: 20px;
     text-align: center;
     color: #D8DEE9;
-    margin-top: 50px;
-    font-size: 0.95rem;
+    margin-top: 40px;
 }
-/* ================================
-   HERO ANIMATIONS + GLOW EFFECT
-================================ */
-.animated-hero {
-    position: relative;
-    overflow: hidden;
-    animation: bgMove 14s ease-in-out infinite alternate;
-}
-
-@keyframes bgMove {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
-}
-
-.hero-inner {
-    position: relative;
-    z-index: 5;
-}
-
-.hero-title,
-.hero-sub {
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.reveal-hero {
-    animation: fadeUp 1.2s ease forwards;
-}
-
-.reveal-hero.delay-1 {
-    animation-delay: 0.4s;
-}
-
-@keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* Floating glow */
-.hero-glow {
-    position: absolute;
-    width: 450px;
-    height: 450px;
-    background: radial-gradient(circle, rgba(136,192,208,0.25) 0%, rgba(46,52,64,0) 70%);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    filter: blur(30px);
-    animation: floatGlow 8s ease-in-out infinite alternate;
-}
-
-@keyframes floatGlow {
-    0% { transform: translate(-60%, -55%) scale(1); }
-    100% { transform: translate(-45%, -40%) scale(1.25); }
-}
-
