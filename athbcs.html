@@ -8,18 +8,18 @@
   <style>
     :root{
       --bg:#071126;
-      --panel: rgba(255,255,255,0.03);
       --muted:#9fb0c8;
       --accent:#EBCB8B;
-      --sdg-border: #d9b44a;
-      --glass-border: rgba(255,255,255,0.06);
+      --sdg-border:#d9b44a;
+      --glass-border:rgba(255,255,255,0.06);
       --maxw:1200px;
     }
     *{box-sizing:border-box}
     html,body{
       margin:0;padding:0;
+      background:var(--bg);
       font-family:Inter,system-ui,-apple-system;
-      background:var(--bg);color:#e6eef8;
+      color:#e6eef8;
       -webkit-font-smoothing:antialiased;
     }
 
@@ -32,80 +32,52 @@
       align-items:flex-start;
     }
 
-    /* LEFT SIDEBAR */
+    /* SIDEBAR */
     .left{
       width:300px;
       background:rgba(255,255,255,0.02);
       border:1px solid var(--glass-border);
       border-radius:14px;
       padding:18px;
-      box-shadow:0 18px 40px rgba(2,8,23,0.55);
       backdrop-filter:blur(8px);
+      box-shadow:0 18px 40px rgba(2,8,23,0.55);
     }
 
-    h1.project{
-      margin:0;
-      font-size:1.15rem;
-      font-weight:800;
-    }
-
-    p.lead{
-      margin:6px 0;
-      color:var(--muted);
-      font-size:0.92rem;
-    }
+    h1.project{margin:0;font-size:1.15rem;font-weight:800}
+    p.lead{margin:6px 0;color:var(--muted);font-size:0.92rem}
 
     .meta{
-      margin-top:16px;
-      display:grid;
-      gap:10px;
+      margin-top:16px;display:grid;gap:10px;
     }
     .meta .item{
-      display:flex;
-      justify-content:space-between;
       padding:10px;
       border-radius:10px;
       border:1px solid var(--glass-border);
+      display:flex;justify-content:space-between;
       background:rgba(255,255,255,0.02);
     }
     .meta .k{color:var(--muted);font-size:0.88rem}
     .meta .v{font-weight:700;color:#dbe9ff}
 
     .repo-link{
-      display:inline-block;
-      margin-top:14px;
+      margin-top:14px;display:block;text-align:center;
+      padding:10px 12px;border-radius:12px;
       background:linear-gradient(90deg,#9b7bff,#6be3ff);
-      padding:10px 12px;
-      border-radius:12px;
-      text-decoration:none;
-      color:#04131b;
-      font-weight:800;
-      text-align:center;
-      width:100%;
+      color:#04131b;font-weight:900;text-decoration:none;
     }
 
     .main{flex:1}
 
-    /* SIMPLE HERO */
+    /* HERO */
     .hero{
-      border-radius:14px;
-      padding:20px;
-      margin-bottom:18px;
+      border-radius:14px;padding:20px;margin-bottom:18px;
       background:rgba(255,255,255,0.03);
       border:1px solid var(--glass-border);
     }
+    .hero h2{margin:0;font-size:1.55rem;font-weight:800}
+    .hero .by{margin-top:8px;color:var(--muted);font-size:1rem}
 
-    .hero h2{
-      margin:0;
-      font-size:1.55rem;
-      font-weight:800;
-    }
-    .hero .by{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:1rem;
-    }
-
+    /* CASE CARDS */
     .cases{display:flex;flex-direction:column;gap:20px}
 
     .case{
@@ -115,67 +87,35 @@
       padding:20px;
       box-shadow:0 14px 34px rgba(2,8,23,0.45);
     }
+    .case h3{margin:0 0 12px;font-size:1.15rem;font-weight:700}
 
-    .case h3{
-      margin:0 0 12px;
-      font-size:1.15rem;
-      font-weight:700;
-    }
+    .section{margin-bottom:12px;line-height:1.6;font-size:0.96rem;color:#d8e7ff}
 
-    .section{
-      margin-bottom:10px;
-      line-height:1.6;
-      font-size:0.96rem;
-      color:#d8e7ff;
-    }
-
-    /* SDG block */
     .sdg{
       border-left:4px solid var(--sdg-border);
-      padding:10px 12px;
-      margin:12px 0;
-      border-radius:8px;
+      padding:10px 12px;margin:12px 0;
       background:rgba(217,180,74,0.05);
-      font-size:0.95rem;
+      border-radius:8px;font-size:0.95rem;
     }
     .sdg .line{
-      display:block;
-      color:#ffdca3;
-      font-weight:700;
-      margin-bottom:4px;
+      display:block;color:#ffdca3;
+      font-weight:700;margin-bottom:4px;
     }
 
-    .algo{
-      font-weight:700;
-      color:var(--accent);
-      margin-top:6px;
-    }
+    .algo{color:var(--accent);font-weight:800;margin-top:6px}
+    .complex{color:var(--muted);font-size:0.9rem;margin-top:6px}
 
-    .complex{
-      color:var(--muted);
-      font-size:0.9rem;
-      margin-top:6px;
-    }
-
-    /* CLICKABLE VIEW CODE BUTTON */
     .code-btn{
-      margin-top:14px;
-      display:inline-block;
-      padding:10px 16px;
+      margin-top:14px;display:inline-block;
+      padding:10px 16px;border-radius:12px;
       background:linear-gradient(90deg,#6be3ff,#9b7bff);
-      color:#04131b;
-      font-weight:900;
-      border-radius:12px;
-      text-decoration:none;
+      color:#04131b;font-weight:900;text-decoration:none;
     }
 
     footer{
-      margin-top:30px;
-      padding:12px;
-      text-align:center;
+      margin-top:30px;padding:12px;text-align:center;
       color:var(--muted);
     }
-
   </style>
 </head>
 
@@ -198,7 +138,7 @@
     </a>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <main class="main">
 
     <!-- HERO -->
@@ -209,13 +149,31 @@
 
     <section class="cases">
 
-      <!-- CASE 1 -->
+      <!-- CASE 1 FULL TEXT -->
       <article class="case">
         <h3>1. Rain Prediction for Disaster Prevention</h3>
 
         <div class="section">
-          The crops grown in this region, like groundnuts, wheat, tomatoes, potatoes...
-          (FULL DESCRIPTION EXACTLY AS YOU PROVIDED — unchanged)
+          The crops grown in this region, like groundnuts, wheat, tomatoes, potatoes, citrus fruits, 
+          and leafy vegetables, require a lot of water and can be easily damaged by heavy rainfall 
+          during harvest time. If farmers are informed about expected heavy rains, they can take 
+          precautions to protect their crops.
+          Thanks to the strong technological presence and stronger inter-city relations, Goutham 
+          collects data from sensors placed throughout the city and neighbouring areas. These 
+          sensors track important factors like wind speed, air quality, humidity, and sunlight, 
+          which are stored in a dataset. By analyzing this data, patterns of high humidity and wind 
+          can indicate the possibility of rain. Finding these patterns and their frequency can help 
+          the farmers predict rains and help them make adjustments accordingly.
+          Sample text: LWHHB HWHHD HWHHB HWLHD Sample Pattern: HWHHD explanation: every 5 letters 
+          describe the weather at a particular hour. The first 2 letters are about wind speed: 
+          LW = Low windspeed, the next 2 are about humidity: HH = High Humidity, the last letter is 
+          about amount of sunlight, B: Bright. HWHHD indicates rain, hence our pattern will be the 
+          code for rain.
+          The weather prediction system can also pick up other patterns such as sunlight and is 
+          versatile in its working. Since the dataset is huge, the Boyer-Moore substring search 
+          algorithm will work well. It has a worst-case efficiency of O(m+n) and works on the 
+          principles of Sliding Window, Pruning, Prefix and Suffix. (The below implementation of 
+          Boyer-Moore is modified to find frequency)
         </div>
 
         <div class="sdg">
@@ -227,148 +185,250 @@
 
         <div class="section">
           <span class="algo">Algorithm Used – Boyer–Moore</span>
-          Boyer–Moore excels...
+          Boyer–Moore excels in scenarios where rare patterns must be found inside extremely long 
+          strings. Instead of verifying every character, it compares from right to left and jumps 
+          forward using the bad-character and good-suffix heuristics, significantly reducing 
+          unnecessary comparisons.
+
           <div class="complex">
-            Efficiency & Optimizations: Worst-case O(m+n) ...
+            Efficiency & Optimizations: Worst-case O(m+n). Uses skip tables. Works on edge devices 
+            and servers. Suitable for continuous sensor streams.
           </div>
         </div>
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/boyer-moore(case-1).cpp" target="_blank">View Code</a>
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/boyer-moore(case-1).cpp">
+          View Code
+        </a>
       </article>
 
-      <!-- CASE 2 -->
+
+            <!-- CASE 2 FULL TEXT -->
       <article class="case">
         <h3>2. Dictionary for Crops and Seeds</h3>
 
         <div class="section">
-          Creating a dictionary would assist the farmers...
+          Creating a dictionary would assist the farmers and the municipality in establishing good 
+          ties with urban, peri-urban and rural areas. This dictionary should just show if there is 
+          availability of a certain seed or a crop. If it is not present, then it implies that the 
+          produce cannot be obtained on the land. A trie data structure would help create this 
+          dictionary as it has fast retrieval. It works on the principle of Space-Time Tradeoff as it 
+          takes a lot of space and executes queries in constant time.
         </div>
 
         <div class="sdg">
-          <span class="line">| Task: Create a dictionary to assist farmers</span>
+          <span class="line">| Task: Create a dictionary to assist farmers and municipal corporations</span>
           <span class="line">| SDG: 11</span>
           <span class="line">| Target: 11.a</span>
           <span class="line">| Indicator: 11.a.1</span>
         </div>
 
-        <span class="algo">Data Structure Used – Trie</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Data Structure Used – Trie</span>
+          A Trie stores words as character paths, allowing extremely fast prefix-based lookups. 
+          Since queries operate on input length rather than dataset size, this scales well for 
+          autocomplete and availability checks.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/trie-skill-matcher(case-2).cpp" target="_blank">
-          View Code
+          <div class="complex">
+            Efficiency & Optimizations: Search/Insert O(k). Use path compression to reduce memory. 
+            Maintain terminal-node metadata only.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank" 
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/trie-skill-matcher(case-2).cpp">
+           View Code
         </a>
       </article>
 
-      <!-- CASE 3 -->
+
+      <!-- CASE 3 FULL TEXT -->
       <article class="case">
         <h3>3. Storing expiry dates of a batch of produce</h3>
 
-        <div class="section">As each new batch is stored...</div>
+        <div class="section">
+          As each new batch is stored inside a warehouse or any other storing facility, priority 
+          should be given to each batch based on its expiry date to reduce food wastage.
+          This can be achieved by using a Binary Search Tree that can dynamically allocate the 
+          hierarchical data. Due to the design of the BST, this is easy to manipulate and it is 
+          the natural data structure to store it in.
+        </div>
 
         <div class="sdg">
-          <span class="line">| Task: Store expiry date</span>
+          <span class="line">| Task: Store expiry dates with priority for early spoilage</span>
           <span class="line">| SDG: 12</span>
           <span class="line">| Target: 12.5</span>
           <span class="line">| Indicator: 12.5.1</span>
         </div>
 
-        <span class="algo">Data Structure Used – BST</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Data Structure Used – Binary Search Tree</span>
+          BST organizes produce by expiry date so the earliest expiring batch is the leftmost node. 
+          It supports inserts, deletes, sorting by expiry, and range queries.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/bst-asset-lifecycle(case-3).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: Average O(log n). Use AVL/Red-Black for balance. Augment 
+            nodes for expiry-window range scanning.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/bst-asset-lifecycle(case-3).cpp">
           View Code
         </a>
       </article>
 
-      <!-- CASE 4 -->
-      <article class="case">
-        <h3>4. Sorting / Traffic Classification</h3>
 
-        <div class="section">Classifying the produce...</div>
+      <!-- CASE 4 FULL TEXT -->
+      <article class="case">
+        <h3>4. Sorting the Produce / Traffic Classification</h3>
+
+        <div class="section">
+          Classifying the produce according to quality/volume allows for better economic growth and 
+          better trade as lower tiers are more affordable. This increases trade between urban, 
+          peri-urban and rural areas. Quick Sort can be used to classify as the dataset gets 
+          partitioned around a pivot, placing items into better/worse clusters. It also applies to 
+          traffic classification.
+        </div>
 
         <div class="sdg">
-          <span class="line">| Task: Sort / classify</span>
+          <span class="line">| Task: Sort & classify produce and traffic datasets</span>
           <span class="line">| SDG: 11</span>
           <span class="line">| Target: 11.2</span>
           <span class="line">| Indicator: 11.2.1</span>
         </div>
 
-        <span class="algo">Algorithm Used – Quick Sort</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Algorithm Used – Quick Sort</span>
+          Quick Sort’s partitioning makes it suitable for grouping elements into quality tiers even 
+          before full sorting completes.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/quicksort-traffic-classifier(case-4).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: Average O(n log n). Use median-of-three pivot, iterative 
+            implementation, and insertion sort for small partitions.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/quicksort-traffic-classifier(case-4).cpp">
           View Code
         </a>
       </article>
 
-      <!-- CASE 5 -->
+
+      <!-- CASE 5 FULL TEXT -->
       <article class="case">
         <h3>5. Market price fluctuations</h3>
 
-        <div class="section">Some food grains fluctuate...</div>
+        <div class="section">
+          Some Food grains and produce fluctuate in the national market at a very high frequency, 
+          reflecting demand and supply. Fenwick Trees allow fast updates and prefix sums for 
+          real-time rolling analytics. They rely on bit manipulation and operate in O(log n).
+        </div>
 
         <div class="sdg">
-          <span class="line">| Task: Track market prices</span>
+          <span class="line">| Task: Track market prices & detect volatility</span>
           <span class="line">| SDG: 9</span>
           <span class="line">| Target: 9.c</span>
           <span class="line">| Indicator: 9.c.1</span>
         </div>
 
-        <span class="algo">Data Structure – Fenwick Tree</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Data Structure Used – Fenwick Tree</span>
+          Fenwick Trees support fast updates and prefix/range queries for market analysis.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/fenwick-market(case-5).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: Update & Query O(log n). 
+            Use 1-indexed arrays, sliding windows, and snapshots.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/fenwick-market(case-5).cpp">
           View Code
         </a>
       </article>
 
-      <!-- CASE 6 -->
-      <article class="case">
-        <h3>6. Optimal Storage (Kruskal)</h3>
 
-        <div class="section">After production, the produce...</div>
+      <!-- CASE 6 FULL TEXT -->
+      <article class="case">
+        <h3>6. Optimal Storage / Kruskal for Warehouse Placement</h3>
+
+        <div class="section">
+          After production, the produce must be stored at optimal locations around the city for 
+          quick relief if disaster strikes. Kruskal’s MST connects regions at least cost, allowing 
+          selection of optimal warehouse locations based on edge weights like distance or 
+          accessibility.
+        </div>
 
         <div class="sdg">
-          <span class="line">| Task: Optimal warehouse placement</span>
+          <span class="line">| Task: Decide optimal warehouse locations</span>
           <span class="line">| SDG: 11</span>
           <span class="line">| Target: 11.a</span>
           <span class="line">| Indicator: 11.a.1</span>
         </div>
 
-        <span class="algo">Algorithm – Kruskal</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Algorithm Used – Kruskal’s MST</span>
+          Kruskal sorts edges by weight and uses Union-Find to avoid cycles, yielding a minimal 
+          connection backbone.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/kruskal-warehouse(case-6).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: O(E log V). Use optimized union-find (path compression + 
+            union by rank).
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/kruskal-warehouse(case-6).cpp">
           View Code
         </a>
       </article>
 
-      <!-- CASE 7 -->
+
+      <!-- CASE 7 FULL TEXT -->
       <article class="case">
         <h3>7. Mapping Products to Storage Locations</h3>
 
-        <div class="section">Inventory is very important...</div>
+        <div class="section">
+          Inventory is very important to maintain as even striking deals with neighbouring cities 
+          require this data. Fast retrievals are essential. Hash tables provide constant-time 
+          lookups to map products to their storage warehouses and maintain availability metadata.
+        </div>
 
         <div class="sdg">
-          <span class="line">| Task: Map products</span>
+          <span class="line">| Task: Map products to warehouses</span>
           <span class="line">| SDG: 9</span>
           <span class="line">| Target: 9.1</span>
           <span class="line">| Indicator: 9.1.1</span>
         </div>
 
-        <span class="algo">Data Structure – Hash Table</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Data Structure Used – Hash Table</span>
+          A Hash Table maps product IDs to warehouse IDs in constant time.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/hashmap-inventory(case-7).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: Average O(1). Use load factor control, probing strategy, 
+            and rehashing to maintain speed.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/hashmap-inventory(case-7).cpp">
           View Code
         </a>
       </article>
 
-      <!-- CASE 8 -->
-      <article class="case">
-        <h3>8. Minimize Distribution Cost (Floyd–Warshall)</h3>
 
-        <div class="section">From multiple production areas...</div>
+      <!-- CASE 8 FULL TEXT -->
+      <article class="case">
+        <h3>8. Minimize the cost to distribute to warehouses</h3>
+
+        <div class="section">
+          From multiple production areas to multiple warehouses and from warehouses to marketplaces 
+          and schools, an all-pair shortest path algorithm can compute the minimum distribution 
+          cost. Floyd’s algorithm is suited for such fixed-size graphs.
+        </div>
 
         <div class="sdg">
           <span class="line">| Task: Minimize distribution cost</span>
@@ -377,52 +437,86 @@
           <span class="line">| Indicator: 11.a.1</span>
         </div>
 
-        <span class="algo">Algorithm – Floyd–Warshall</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Algorithm Used – Floyd–Warshall</span>
+          Floyd–Warshall computes shortest paths between every pair of nodes.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/floyd-distribution(case-8).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: O(n³), O(n²) space. Use adjacency matrix blocking for 
+            memory optimization.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/floyd-distribution(case-8).cpp">
           View Code
         </a>
       </article>
 
-      <!-- CASE 9 -->
-      <article class="case">
-        <h3>9. Food Inspection (Dijkstra)</h3>
 
-        <div class="section">The food inspectors leave...</div>
+      <!-- CASE 9 FULL TEXT -->
+      <article class="case">
+        <h3>9. Food Inspection</h3>
+
+        <div class="section">
+          The Food inspectors leave the municipal corporation to visit all food storage locations. 
+          They need a single-source shortest path to minimize inspection time. Dijkstra’s algorithm 
+          fits this need.
+        </div>
 
         <div class="sdg">
-          <span class="line">| Task: Inspector routing</span>
+          <span class="line">| Task: Compute shortest inspection route</span>
           <span class="line">| SDG: 11</span>
           <span class="line">| Target: 11.5</span>
           <span class="line">| Indicator: 11.5.1</span>
         </div>
 
-        <span class="algo">Algorithm – Dijkstra</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Algorithm Used – Dijkstra’s Algorithm</span>
+          Dijkstra efficiently finds shortest paths from a single source for non-negative weights.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/dijkstra-inspection(case-9).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: O(E log V). Use priority queue (binary heap) or adjacency 
+            lists for performance.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/dijkstra-inspection(case-9).cpp">
           View Code
         </a>
       </article>
 
-      <!-- CASE 10 -->
-      <article class="case">
-        <h3>10. Recall Faulty Batches (Rabin–Karp)</h3>
 
-        <div class="section">If a certain batch of food...</div>
+      <!-- CASE 10 FULL TEXT -->
+      <article class="case">
+        <h3>10. Food batches need to be called back</h3>
+
+        <div class="section">
+          If a particular batch of food is found to be spoiled, it must be recalled. Searching for 
+          the batch number quickly across datasets is essential. Rabin-Karp enables efficient 
+          substring search via rolling hash.
+        </div>
 
         <div class="sdg">
-          <span class="line">| Task: Recall faulty batches</span>
+          <span class="line">| Task: Recall faulty food batches</span>
           <span class="line">| SDG: 16</span>
           <span class="line">| Target: 16.5</span>
           <span class="line">| Indicator: 16.5.1</span>
         </div>
 
-        <span class="algo">Algorithm – Rabin–Karp</span>
-        <div class="complex">Efficiency notes...</div>
+        <div class="section">
+          <span class="algo">Algorithm Used – Rabin–Karp</span>
+          Rabin–Karp uses rolling hash to search for patterns in data efficiently.
 
-        <a class="code-btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/rabin-karp-recall(case-10).cpp" target="_blank">
+          <div class="complex">
+            Efficiency & Optimizations: Average O(m+n). Worst case O(mn). Use double hashing to 
+            avoid collisions.
+          </div>
+        </div>
+
+        <a class="code-btn" target="_blank"
+           href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/rabin-karp-recall(case-10).cpp">
           View Code
         </a>
       </article>
@@ -434,8 +528,8 @@
     </footer>
 
   </main>
-
 </div>
 
 </body>
 </html>
+
