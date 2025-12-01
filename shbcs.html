@@ -1,1 +1,325 @@
-Hello there!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Shashank – Business Case Studies | Arohanagara</title>
+
+    <style>
+        /* Keep the same visual style as the Atharva page */
+        body {
+            margin:0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg,#071022,#0b1a2a);
+            color:#E6EEF3;
+            -webkit-font-smoothing:antialiased;
+        }
+
+        .bcs-hero {
+            height:45vh;
+            background: linear-gradient(135deg, #3B4252, #434C5E);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            box-shadow:0 6px 30px rgba(2,6,23,0.6);
+        }
+        .bcs-title { font-size:3rem; font-weight:800; color:#D8DEE9; margin:0; }
+        .bcs-domain { color:#88C0D0; margin-top:8px; font-size:1.1rem; }
+        .bcs-author { color:#EBCB8B; margin-top:6px; opacity:0.85; font-size:0.95rem; }
+
+        main { max-width:1100px; margin:-60px auto 80px; padding:28px; }
+        h2 { color:#EBCB8B; margin-bottom:8px; }
+        .page-section { background: rgba(255,255,255,0.02); padding:18px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); }
+
+        .content-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+            border-radius:10px;
+            padding:18px;
+            margin:18px 0;
+            box-shadow:0 8px 30px rgba(2,6,23,0.5);
+        }
+        .content-card h3 { margin:0 0 10px 0; color:#fff; font-size:1.05rem; }
+        .case-text { color:#cfe9f2; line-height:1.6; margin-bottom:14px; }
+        .case-heading { display:block; margin-top:18px; margin-bottom:8px; font-weight:700; color:#EBCB8B; }
+        .case-section { margin-left:20px; color:#d6eef8; line-height:1.55; margin-bottom:12px; }
+
+        /* fade up animation */
+        .fade-up { opacity:0; transform:translateY(22px); transition: all 0.8s ease; }
+        .fade-up.visible { opacity:1; transform:none; }
+
+        footer { text-align:center; color:#9aa6b2; margin-top:26px; }
+        @media(min-width:880px){
+            .two-col { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="bcs-hero">
+        <div>
+            <h1 class="bcs-title fade-up">Business Use-Case Analysis</h1>
+            <p class="bcs-domain fade-up">Domain:Mobility,Infrastructure & Industrial Operations</p>
+            <p class="bcs-author fade-up">Shashank Yende · ROLL 245</p>
+        </div>
+    </section>
+
+    <main>
+        <section class="page-section">
+
+            <h2 class="fade-up">Shashank — 10 Business Case Applications</h2>
+
+            <!-- CASE 1 -->
+            <div class="content-card fade-up">
+                <h3>1. Ride-Sharing & Dynamic Dispatch System</h3>
+
+                <p class="case-text">
+                    Purpose: Real-time driver–rider matching and route optimization to reduce wait times
+                    and total network travel. The system combines quick neighborhood exploration with
+                    reliable shortest-path routing and priority selection.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>BFS / DFS</strong> — explore nearby drivers in the road-grid or partitioned tiles.</li>
+                    <li><strong>Dijkstra / Bellman-Ford</strong> — compute shortest or conformant alternate routes.</li>
+                    <li><strong>Heap (priority queue)</strong> — select nearest or fastest drivers by score.</li>
+                    <li><strong>Queue</strong> — buffer ride requests during surges.</li>
+                    <li><strong>Hashing</strong> — driver/rider profile & status lookup.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Use spatial hashing (grid or R-tree) to narrow search region before running Dijkstra.</li>
+                    <li>Typical routing: O(E log V) with a min-heap; locality reduces nodes inspected.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 2 -->
+            <div class="content-card fade-up">
+                <h3>2. EV Charging Network – Slot Scheduling</h3>
+
+                <p class="case-text">
+                    Purpose: Locate the nearest available charger and manage reservations so idle time is minimized
+                    while preventing double-booking of charging slots.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>Segment Tree / Fenwick Tree</strong> — efficient slot availability and range updates.</li>
+                    <li><strong>Heap</strong> — choose next-free charger by time or distance.</li>
+                    <li><strong>Hashing</strong> — reservation and user lookup.</li>
+                    <li><strong>Arrays / Structures</strong> — station metadata and geolocation indices.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Segment trees with lazy propagation help for block reservations across time windows.</li>
+                    <li>Combine KD-tree for nearest charger queries with a min-heap for availability time.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 3 -->
+            <div class="content-card fade-up">
+                <h3>3. Warehouse & Distribution Routing</h3>
+
+                <p class="case-text">
+                    Purpose: Optimize depot network connections and delivery batching to reduce total transportation cost.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>Kruskal / Prim</strong> — compute MST for a minimal-cost backbone.</li>
+                    <li><strong>Union-Find</strong> — component tracking during network assembly.</li>
+                    <li><strong>Sorting (Quick / Merge / Heap)</strong> — order shipments and batches.</li>
+                    <li><strong>List</strong> — store and iterate route sequences.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Use MST to determine cheap inter-depot links, then apply VRP heuristics (clarke-wright, sweep) for vehicle routing.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 4 -->
+            <div class="content-card fade-up">
+                <h3>4. Waste Processing & Recycling Operations</h3>
+
+                <p class="case-text">
+                    Purpose: Sort incoming waste and manage conveyor workflows so perishable and hazardous loads receive priority handling.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>Heap</strong> — prioritize perishable or hazardous loads.</li>
+                    <li><strong>Queue</strong> — conveyor/truck buffering and scheduling.</li>
+                    <li><strong>Selection / Insertion / Bubble Sort</strong> — lightweight classification on small windows.</li>
+                    <li><strong>Union-Find</strong> — group recyclables and track clusters.</li>
+                    <li><strong>DFS</strong> — find process bottlenecks in workflow graphs.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Streaming algorithms are preferred for high throughput; avoid heavy in-memory sorts on continuous flows.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 5 -->
+            <div class="content-card fade-up">
+                <h3>5. Smart Toll Collection & Vehicle Lookup</h3>
+
+                <p class="case-text">
+                    Purpose: Automatic toll deduction with instantaneous vehicle verification and history lookup at scale.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>Trie</strong> — license plate prefix/substring matching for quick recognition.</li>
+                    <li><strong>Hashing</strong> — map vehicle IDs to account/balance.</li>
+                    <li><strong>AVL / Red-Black / 2-3 Tree</strong> — ordered toll slab storage.</li>
+                    <li><strong>Skip List</strong> — probabilistic ordered access alternative.</li>
+                    <li><strong>Arrays</strong> — static vehicle / toll reference data.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Use robust hashing and backup reconciliation logs for financial integrity and dispute resolution.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 6 -->
+            <div class="content-card fade-up">
+                <h3>6. Predictive Maintenance & Alerting</h3>
+
+                <p class="case-text">
+                    Purpose: Predict equipment failures based on streaming sensor data and schedule preventive maintenance.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>Segment Tree</strong> — sliding-window aggregates over sensor streams.</li>
+                    <li><strong>Fenwick Tree</strong> — efficient incremental counters.</li>
+                    <li><strong>Sparse Table</strong> — immutable-window RMQ for historical queries.</li>
+                    <li><strong>Heap</strong> — prioritize highest-risk alerts.</li>
+                    <li><strong>Queue</strong> — task scheduling for technicians.</li>
+                    <li><strong>Hashing</strong> — asset-to-sensor mapping for fast access.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Combine lightweight analytics (windowed aggregates) with ML models for scoring; use heaps to route scarce technician resources.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 7 -->
+            <div class="content-card fade-up">
+                <h3>7. Smart Parking – Slot Allocation System</h3>
+
+                <p class="case-text">
+                    Purpose: Efficiently assign parking slots, support reservations, and handle concurrent requests without conflicts.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>BST / AVL / Red-Black / 2-3 Tree</strong> — order and query slot availability efficiently.</li>
+                    <li><strong>Skip List</strong> — simpler probabilistic option for ordered updates.</li>
+                    <li><strong>Hashing</strong> — vehicle to slot lookup and reservation mapping.</li>
+                    <li><strong>Structures</strong> — maintain slot metadata and reservation records.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Optimistic locking or token-based reservation prevents double-booking during concurrency spikes.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 8 -->
+            <div class="content-card fade-up">
+                <h3>8. Smart Streetlight Monitoring</h3>
+
+                <p class="case-text">
+                    Purpose: Detect faults and cluster outages, then plan optimal maintenance routes to restore service quickly.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>BFS / DFS</strong> — fault cluster detection across the grid of poles.</li>
+                    <li><strong>Dijkstra</strong> — route planning for repair teams.</li>
+                    <li><strong>Union-Find</strong> — verify circuit connectivity and isolate zones.</li>
+                    <li><strong>Sparse Table</strong> — historical brightness / log queries.</li>
+                    <li><strong>Queue</strong> — incoming fault report processing.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Use prioritized routing (heap) combined with clustering to minimize total downtime across affected areas.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 9 -->
+            <div class="content-card fade-up">
+                <h3>9. Water Treatment & Pipeline Optimization</h3>
+
+                <p class="case-text">
+                    Purpose: Monitor flow stages, optimize pump schedules and detect leaks or pressure-loss paths in pipelines.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>BFS / DFS</strong> — flow tracing and dependency mapping.</li>
+                    <li><strong>Dijkstra / Bellman-Ford</strong> — compute least-pressure-loss or least-cost paths.</li>
+                    <li><strong>Union-Find</strong> — isolate pipeline zones for maintenance.</li>
+                    <li><strong>Segment Tree / Sparse Table</strong> — range queries on flow & pressure readings.</li>
+                    <li><strong>Queue</strong> — pump operation sequencing.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Integrate hydraulic simulation models with graph algorithms for rapid isolation and response to leaks.</li>
+                </ul>
+            </div>
+
+            <!-- CASE 10 -->
+            <div class="content-card fade-up">
+                <h3>10. Traffic Signal Optimization</h3>
+
+                <p class="case-text">
+                    Purpose: Adaptive signal timing and corridor-level coordination to reduce congestion and improve throughput.
+                </p>
+
+                <span class="case-heading">Algorithms Used</span>
+                <ul class="case-section">
+                    <li><strong>Segment Tree / Fenwick Tree</strong> — live traffic counts & range queries.</li>
+                    <li><strong>Sparse Table</strong> — analyze peak-time behavior.</li>
+                    <li><strong>Heap</strong> — prioritize congested junctions for intervention.</li>
+                    <li><strong>Queue</strong> — model vehicle queues at intersections.</li>
+                    <li><strong>Hashing</strong> — intersection & corridor lookups.</li>
+                    <li><strong>BFS / DFS</strong> — corridor grouping for coordinated timing.</li>
+                </ul>
+
+                <span class="case-heading">Efficiency & Notes</span>
+                <ul class="case-section">
+                    <li>Use two-layer control (fast local loops + slower corridor coordination). Segment trees provide very fast streaming counter updates.</li>
+                </ul>
+            </div>
+
+        </section>
+
+        <footer>
+            <p>© 2025 Arohanagara Project | Shashank R. Yende — Business Case Studies</p>
+        </footer>
+    </main>
+
+    <script>
+        // Fade-up animation observer (same as in friend's page)
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.18 }
+        );
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
