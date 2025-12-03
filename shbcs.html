@@ -1,790 +1,436 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Shashank R. Yende | Business Use-Case Analysis — Aroha Nagar</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <title>Shashank R. Yende · Arohanagara — Business Use Cases</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg-main: #020617;
-      --card-bg: #020617;
-      --card-border: rgba(148,163,184,0.32);
-      --accent: #38bdf8;
-      --accent-soft: rgba(56,189,248,0.20);
-      --accent-strong: #0ea5e9;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --radius-lg: 18px;
-      --shadow-soft: 0 20px 60px rgba(15,23,42,0.9);
+    :root{
+      --bg:#f6f8fb;
+      --panel:#ffffff;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --accent-2:#06b6d4;
+      --glass: rgba(37,99,235,0.08);
+      --radius:14px;
+      --card-border: rgba(15,23,42,0.06);
+      --shadow: 0 8px 28px rgba(15,23,42,0.06);
+      --max-width:1180px;
     }
 
-    * { box-sizing:border-box; margin:0; padding:0; }
-
-    body {
-      font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.10) 0, transparent 50%),
-        radial-gradient(circle at 100% 0%, rgba(79,70,229,0.16) 0, transparent 55%),
-        radial-gradient(circle at 50% 120%, rgba(8,47,73,0.85) 0, #020617 55%);
-      color:var(--text-main);
-      line-height:1.6;
-      padding:22px 16px 36px;
-      -webkit-font-smoothing:antialiased;
-    }
-
-    body::before {
-      content:"";
-      position:fixed;
-      inset:0;
-      background-image:
-        linear-gradient(rgba(15,23,42,0.45) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15,23,42,0.45) 1px, transparent 1px);
-      background-size:56px 56px;
-      opacity:0.16;
-      pointer-events:none;
-      z-index:-1;
-    }
-
-    .page-shell {
-      max-width:1100px;
-      margin:0 auto;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-    /* PROFILE STRIP */
-
-    .profile-strip {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      padding:12px 18px;
-      border-radius:20px;
-      border:1px solid rgba(51,65,85,0.9);
-      background:radial-gradient(circle at top left,#020617 0,#020617 65%);
-      box-shadow:0 18px 55px rgba(15,23,42,0.9);
-    }
-
-    .profile-main {
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
-
-    .avatar-circle {
-      width:52px;
-      height:52px;
-      border-radius:999px;
-      background:linear-gradient(135deg,#22c1c3,#4f46e5);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      font-size:1.1rem;
-      letter-spacing:0.08em;
-    }
-
-    .profile-text-main {
-      font-size:0.95rem;
-      font-weight:600;
-    }
-
-    .profile-text-sub {
-      font-size:0.8rem;
-      color:var(--text-muted);
-    }
-
-    .profile-meta {
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      font-size:0.78rem;
-      color:var(--text-muted);
-      align-items:center;
-    }
-
-    .profile-meta span.label {
-      text-transform:uppercase;
-      letter-spacing:0.16em;
-      font-size:0.68rem;
-      color:#9ca3af;
-      display:block;
-      margin-bottom:2px;
-    }
-
-    .github-btn {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
-      padding:8px 12px;
-      font-size:0.78rem;
-      font-weight:500;
-      border-radius:999px;
-      background:linear-gradient(135deg,#22c1c3,#60a5fa);
-      color:#020617;
-      box-shadow:0 14px 35px rgba(37,99,235,0.6);
-      white-space:nowrap;
-    }
-
-    /* HERO */
-
-    .hero-card {
-      background:radial-gradient(circle at top left,#020617 0,#020617 70%);
-      border-radius:22px;
-      padding:18px 20px 16px;
-      border:1px solid rgba(51,65,85,0.9);
-      box-shadow:var(--shadow-soft);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .hero-top {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-
-    .hero-title {
-      font-size:1.5rem;
-      font-weight:650;
-    }
-
-    .hero-sub {
-      font-size:0.95rem;
-      color:var(--text-muted);
-      max-width:700px;
-      margin-top:4px;
-    }
-
-    .meta-chip {
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,0.55);
-      padding:6px 14px;
-      font-size:0.78rem;
-      color:var(--text-muted);
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:rgba(15,23,42,0.96);
-    }
-
-    .meta-chip .dot {
-      width:7px;
-      height:7px;
-      border-radius:999px;
-      background:var(--accent);
-      box-shadow:0 0 0 4px var(--accent-soft);
-    }
-
-    .hero-meta-row {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      flex-wrap:wrap;
-      font-size:0.78rem;
-      text-transform:uppercase;
-      letter-spacing:0.18em;
-      color:#9ca3af;
-    }
-
-    .search-box {
-      position:relative;
-      max-width:260px;
-      width:100%;
-    }
-
-    .search-box input {
-      width:100%;
-      background:#020617;
-      border-radius:999px;
-      border:1px solid rgba(51,65,85,0.9);
-      padding:7px 14px;
-      padding-left:30px;
-      color:var(--text-main);
-      font-size:0.8rem;
-      outline:none;
-    }
-
-    .search-box input::placeholder { color:#64748b; }
-    .search-icon {
-      position:absolute;
-      left:10px;
-      top:50%;
-      transform:translateY(-50%);
-      font-size:0.85rem;
-      color:#64748b;
-    }
-
-    /* CASE CARDS */
-
-    .case-card {
-      margin-top:10px;
-      border-radius:20px;
-      background:var(--card-bg);
-      border:1px solid var(--card-border);
-      padding:13px 14px 10px;
-      box-shadow:0 16px 55px rgba(15,23,42,0.95);
-      position:relative;
-      overflow:hidden;
-      transition:transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-    }
-
-    .case-card::before {
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background:radial-gradient(circle at top left,var(--accent-soft),transparent 65%);
-      opacity:0.4;
-      pointer-events:none;
-    }
-
-    .case-card:hover {
-      transform:translateY(-3px);
-      border-color:rgba(148,163,184,0.7);
-      box-shadow:0 24px 80px rgba(15,23,42,0.98);
-    }
-
-    .case-inner {
-      position:relative;
-      z-index:1;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .case-main { display:flex; flex-direction:column; gap:6px; }
-
-    .case-top {
-      display:flex;
-      justify-content:space-between;
-      align-items:baseline;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:2px;
-    }
-
-    .case-kicker {
-      font-size:0.7rem;
-      text-transform:uppercase;
-      letter-spacing:0.24em;
-      color:#9ca3af;
-    }
-
-    .case-title {
-      font-size:1.02rem;
-      font-weight:600;
-      margin-top:3px;
-    }
-
-    .case-tags {
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-      font-size:0.7rem;
-    }
-
-    .case-tag {
-      padding:3px 9px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,0.45);
-      color:#cbd5f5;
-      background:rgba(15,23,42,0.96);
-    }
-
-    .case-body p {
-      font-size:0.88rem;
-      color:var(--text-muted);
-      max-width:780px;
-    }
-
-    /* IMPLEMENTATION BAR INLINE BELOW SUMMARY */
-
-    .impl-inline {
-      display:flex;
-      justify-content:flex-start;
-      margin-top:8px;
-    }
-
-    .action-strip {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      border-radius:999px;
-      padding:6px 8px 6px 12px;
-      background:#020617;
-      border:1px solid rgba(148,163,184,0.45);
-      box-shadow:0 0 0 1px #020617, 0 0 18px rgba(15,23,42,0.9);
-      max-width:260px;
-      width:100%;
-      justify-content:space-between;
-    }
-
-    .case-card:hover .action-strip {
-      box-shadow:0 0 0 1px #020617, 0 0 26px rgba(37,99,235,0.65);
-    }
-
-    .action-label {
-      display:flex;
-      flex-direction:column;
-      font-size:0.7rem;
-      color:#9ca3af;
-    }
-
-    .action-label span.title {
-      font-size:0.78rem;
-      font-weight:500;
-      color:var(--text-main);
-    }
-
-    .pill-btn {
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,0.7);
-      padding:6px 12px;
-      font-size:0.78rem;
-      text-decoration:none;
-      color:var(--text-main);
-      background:linear-gradient(135deg,#0f172a,#1d4ed8);
-      cursor:pointer;
-      transition:transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-      white-space:nowrap;
-    }
-
-    .pill-btn span.icon { font-size:0.85rem; color:var(--accent-strong); }
-
-    .pill-btn:hover {
-      transform:translateY(-1px);
-      border-color:var(--accent);
-      box-shadow:0 10px 28px rgba(15,23,42,0.9);
-      background:linear-gradient(135deg,#2563eb,#38bdf8);
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,"Helvetica Neue",Arial;
+      background: linear-gradient(180deg, #eef2ff 0%, var(--bg) 50%);
       color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:antialiased;
+      padding:20px;
+      display:flex;
+      justify-content:center;
     }
 
-    footer {
-      margin-top:22px;
-      font-size:0.75rem;
-      color:#6b7280;
-      text-align:right;
+    .shell{
+      width:100%;
+      max-width:var(--max-width);
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap:20px;
+      align-items:start;
     }
 
-    @media (max-width:720px) {
-      .profile-strip { flex-direction:column; align-items:flex-start; }
-      .profile-meta { width:100%; justify-content:space-between; }
+    /* SIDEBAR */
+    .sidebar{
+      background:linear-gradient(180deg, var(--panel), #fbfdff);
+      border-radius:var(--radius);
+      padding:18px;
+      border:1px solid var(--card-border);
+      box-shadow:var(--shadow);
+      height:fit-content;
+      position:sticky;
+      top:20px;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:14px;
+    }
+    .logo{
+      width:48px;height:48px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:white;font-weight:700;font-size:1.05rem;
+      box-shadow:0 6px 18px rgba(37,99,235,0.14);
+    }
+    .brand h1{font-size:1rem;margin:0}
+    .meta{font-size:0.85rem;color:var(--muted);margin-top:6px}
+
+    .sidebar .block{margin-top:18px}
+    .sidebar h3{font-size:0.79rem;margin:0 0 8px 0;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
+    .project-details{font-size:0.9rem}
+    .project-details p{margin:6px 0;color:#0b1220}
+    .link-btn{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;
+      text-decoration:none;background:var(--glass);color:var(--accent);font-weight:600;border:1px solid rgba(37,99,235,0.08)
+    }
+
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .tag{background:#f1f5f9;padding:6px 8px;border-radius:999px;font-size:0.8rem;color:var(--muted);border:1px solid rgba(2,6,23,0.03)}
+
+    /* TOP BAR */
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;margin-bottom:12px;
+    }
+    .search{
+      display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid var(--card-border);box-shadow:0 6px 18px rgba(2,6,23,0.03);width:100%;
+    }
+    .search input{border:0;outline:none;background:transparent;font-size:0.95rem}
+    .view-toggle{display:flex;gap:8px;align-items:center}
+
+    .btn{
+      padding:8px 12px;border-radius:10px;border:0;background:var(--accent);
+      color:white;font-weight:600;cursor:pointer;box-shadow:0 10px 22px rgba(37,99,235,0.12)
+    }
+    .btn.secondary{background:#ffffff;color:var(--accent);border:1px solid var(--card-border);box-shadow:none}
+
+    /* CONTENT AREA */
+    .content{
+      display:flex;flex-direction:column;gap:12px;
+    }
+
+    .summary{
+      background:var(--panel);padding:14px;border-radius:14px;border:1px solid var(--card-border);
+      box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:12px;
+    }
+    .summary .left{max-width:70%}
+    .summary h2{margin:0;font-size:1.05rem}
+    .summary p{margin:6px 0;color:var(--muted)}
+
+    /* REPRESENTATIONS */
+    .views{min-height:320px}
+    .grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;
+    }
+
+    .card{
+      background:#fff;border-radius:12px;padding:12px;border:1px solid var(--card-border);
+      box-shadow:0 10px 24px rgba(2,6,23,0.04);display:flex;flex-direction:column;gap:8px;
+      transition:transform .18s ease,box-shadow .18s ease;
+    }
+    .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.06)}
+    .kicker{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em}
+    .title{font-weight:700;font-size:1rem;color:#08112a}
+    .desc{font-size:0. nine rem;color:var(--muted);line-height:1.4}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+    .badge{font-size:0.78rem;padding:6px 8px;background:#f8fafc;border-radius:999px;color:var(--muted);border:1px solid rgba(2,6,23,0.02)}
+
+    .impl{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+    .impl small{color:var(--muted)}
+    .impl a{font-weight:600;color:var(--accent);text-decoration:none}
+
+    /* LIST view */
+    .list{display:flex;flex-direction:column;gap:10px}
+    .list-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:#fff;border:1px solid var(--card-border);box-shadow:var(--shadow)}
+    .list-left{display:flex;gap:12px;align-items:center}
+    .case-num{width:46px;height:46;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    .case-info{max-width:calc(100% - 120px)}
+    .case-info h4{margin:0;font-size:0.98rem}
+    .case-info p{margin:6px 0;color:var(--muted);font-size:0.9rem}
+
+    /* TABLE view */
+    .table-wrap{overflow:auto;background:#fff;border-radius:10px;border:1px solid var(--card-border);padding:8px}
+    table{width:100%;border-collapse:collapse;font-size:0.95rem}
+    th,td{padding:10px 12px;text-align:left;border-bottom:1px solid rgba(2,6,23,0.04)}
+    th{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
+
+    /* Footer small */
+    footer{margin-top:10px;color:var(--muted);font-size:0.85rem;text-align:right}
+
+    /* Responsiveness */
+    @media (max-width:980px){
+      .shell{grid-template-columns:1fr; padding-bottom:40px}
+      .sidebar{position:static}
+      .summary .left{max-width:100%}
     }
   </style>
 </head>
 <body>
-  <div class="page-shell">
-    <!-- PROFILE STRIP -->
-    <section class="profile-strip">
-      <div class="profile-main">
-        <div class="avatar-circle">SY</div>
+  <div class="shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" aria-label="Project sidebar">
+      <div class="brand">
+        <div class="logo">SY</div>
         <div>
-          <div class="profile-text-main">Shashank — Case Studies</div>
-          <div class="profile-text-sub">
-            Mobility, Infrastructure &amp; Industrial Operations · Aroha Nagar
-          </div>
-        </div>
-      </div>
-      <div class="profile-meta">
-        <div>
-          <span class="label">Author</span>
-          <span>Shashank R. Yende · Roll 245</span>
-        </div>
-        <div>
-          <span class="label">Project</span>
-          <span>DAA-2025</span>
-        </div>
-        <div>
-          <span class="label">Summary</span>
-          <span>20+ Data Structures · 20+ Algorithms</span>
-        </div>
-        <a class="github-btn" href="https://github.com/atharva-in-bits/DAA-2025" target="_blank">
-          Open GitHub
-        </a>
-      </div>
-    </section>
-
-    <!-- HERO -->
-    <section class="hero-card">
-      <div class="hero-top">
-        <div>
-          <div class="hero-title">Business Use-Case Analysis — Aroha Nagar</div>
-          <p class="hero-sub">
-            Ten engineering-grade modules for Mobility, Infrastructure &amp; Industrial Operations.
-            Each system links data structures, algorithms and C++ implementations to real-world behaviour.
-          </p>
-        </div>
-        <div class="meta-chip">
-          <span class="dot"></span>
-          <span>DAA-2025 · Environment &amp; Infrastructure</span>
+          <h1>Shashank R. Yende</h1>
+          <div class="meta">Business Case Portfolio — Arohanagara</div>
         </div>
       </div>
 
-      <div class="hero-meta-row">
-        <span>Business Case Studies · 10 Systems · 20+ Algorithms</span>
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Filter by case, domain or algorithm…" />
+      <div class="block project-details">
+        <h3>Project</h3>
+        <p><strong>DAA-2025 · Mobility, Infrastructure & Industrial Ops</strong></p>
+        <p class="meta">20+ Data Structures • 20+ Algorithms • 10 Systems</p>
+
+        <div style="margin-top:10px">
+          <a class="link-btn" href="https://github.com/atharva-in-bits/DAA-2025" target="_blank" rel="noopener">Open GitHub</a>
         </div>
       </div>
-    </section>
 
-    <!-- CASE 1 -->
-    <section class="case-card" id="case1">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 1 · Ride-Sharing</div>
-              <div class="case-title">Ride-Sharing &amp; Dynamic Dispatch System</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">Real-time Matching</span>
-              <span class="case-tag">Shortest Paths</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              A ride-sharing and dynamic dispatch system is designed for real-time driver–rider matching and route optimization. It rapidly locates nearby available drivers using geospatial methods, ranks them (often by estimated time of arrival or distance), and optimally assigns ride requests. Route optimization ensures the chosen driver uses the shortest or fastest path to the pickup and drop-off points, often utilizing algorithms like Dijkstra or Bellman-Ford. Data structures like heaps (priority queues) prioritize drivers, regular queues buffer ride requests, and hashing supports fast lookups of drivers and users in a large, live system.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>C++ source for all algorithms</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case1.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
+      <div class="block">
+        <h3>Quick links</h3>
+        <div class="tags">
+          <a class="tag" href="#case1">Ride-Sharing</a>
+          <a class="tag" href="#case5">Tolling</a>
+          <a class="tag" href="#case9">Water</a>
+          <a class="tag" href="#case10">Traffic</a>
         </div>
       </div>
-    </section>
 
-    <!-- CASE 2 -->
-    <section class="case-card" id="case2">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 2 · EV Charging</div>
-              <div class="case-title">EV Charging Network – Slot Scheduling</div>
+      <div class="block">
+        <h3>Author</h3>
+        <p style="margin:0"><strong>Shashank R. Yende</strong></p>
+        <p class="meta" style="margin-top:6px">Roll 245 • DAA-2025</p>
+      </div>
+
+      <div class="block" style="margin-top:14px">
+        <h3>Representation</h3>
+        <p class="meta" style="margin:0">Grid cards, compact list and table available in the main area.</p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content" role="main">
+      <div class="summary" aria-hidden="false">
+        <div class="left">
+          <h2>Business Use-Case Analysis — Aroha Nagar</h2>
+          <p>Ten focused engineering modules mapping algorithmic building blocks to city systems. Toggle views, filter, and export code links.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+          <div style="display:flex;gap:8px;width:100%;max-width:420px">
+            <div class="search" style="flex:1">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:0.6"><path d="M21 21l-4.35-4.35" stroke="#0b1220" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <input id="filterInput" placeholder="Filter by case, domain, algorithm or tag…" aria-label="Filter cases" />
             </div>
-            <div class="case-tags">
-              <span class="case-tag">Scheduling</span>
-              <span class="case-tag">Segment / Fenwick</span>
+
+            <div class="view-toggle" role="tablist" aria-label="View toggle">
+              <button class="btn secondary" id="gridBtn" title="Grid view">Grid</button>
+              <button class="btn secondary" id="listBtn" title="List view">List</button>
+              <button class="btn secondary" id="tableBtn" title="Table view">Table</button>
             </div>
           </div>
-          <div class="case-body">
-            <p>
-              An EV charging network slot-scheduling system helps a user find the nearest suitable charger and reserve a time slot while keeping charger availability and station load up to date in real time. Efficient data structures like segment trees or Fenwick trees track which time slots are free or occupied, heaps prioritize the next-free or closest chargers, hash maps support fast reservation lookups, and arrays/structs store base station and charger data. This combination allows quick updates when a reservation is created or canceled, and fast queries when users ask for an available slot at a certain time.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Segment &amp; Fenwick Trees</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case2.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
+
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="downloadAll">Download All (zip)</button>
+            <a class="btn secondary" href="#footer" style="text-decoration:none;color:inherit">Print</a>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- CASE 3 -->
-    <section class="case-card" id="case3">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 3 · Logistics</div>
-              <div class="case-title">Warehouse &amp; Distribution Routing</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">MST &amp; Routing</span>
-              <span class="case-tag">Batching</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              A warehouse and distribution routing system connects depots and customers with low-cost transport links and forms efficient delivery batches for orders. It can use minimum spanning tree (MST) algorithms like Kruskal or Prim to design a cheap backbone network between depots, trucks, or hubs, while sorting and lists help order and store delivery sequences inside each batch. Union-Find (Disjoint Set Union) tracks which depots or regions are already connected during MST construction so redundant or cyclic edges are avoided, leading to a cost-efficient distribution graph.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Kruskal, Prim &amp; DSU</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case3.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
+      <!-- Views container -->
+      <section class="views" id="views">
+
+        <!-- GRID (default) -->
+        <div id="gridView" class="grid" aria-live="polite"></div>
+
+        <!-- LIST -->
+        <div id="listView" class="list" style="display:none" aria-live="polite"></div>
+
+        <!-- TABLE -->
+        <div id="tableView" style="display:none">
+          <div class="table-wrap">
+            <table id="casesTable" aria-label="Cases table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Case</th>
+                  <th>System</th>
+                  <th>Algorithms / Structures</th>
+                  <th>Implementation</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- CASE 4 -->
-    <section class="case-card" id="case4">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 4 · Recycling</div>
-              <div class="case-title">Waste Processing &amp; Recycling Operations</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">Queues &amp; Heaps</span>
-              <span class="case-tag">Union–Find</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              A waste processing and recycling system must quickly sort mixed waste, prioritize urgent/perishable loads, and keep conveyor and truck flows smooth. Heaps can prioritize loads that must be processed first, queues buffer waste on conveyors or waiting trucks, basic sorting algorithms help classify and order waste items, Union-Find groups recyclable materials into compatible classes, DFS on a process graph can reveal bottlenecks, and arrays/structures store batch-level data such as weight, type, and destination.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Priority queues, DFS &amp; DSU</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case4.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- CASE 5 -->
-    <section class="case-card" id="case5">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 5 · Tolling</div>
-              <div class="case-title">Smart Toll Collection &amp; Vehicle Lookup</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">Trie</span>
-              <span class="case-tag">Ordered Slabs</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              A smart toll collection and vehicle lookup system reads a license plate (via camera/OCR or RFID tag), finds the corresponding vehicle record, checks its balance, selects the correct toll slab based on ordered rules (like vehicle class and time), and then deducts the toll automatically. Tries support fast plate prefix lookup, hash maps store balances and metadata, balanced trees or skip lists maintain ordered toll slabs, and arrays/structures hold core vehicle and toll data used across these operations.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Trie, AVL &amp; skip list</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case5.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CASE 6 -->
-    <section class="case-card" id="case6">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 6 · Reliability</div>
-              <div class="case-title">Predictive Maintenance &amp; Alerting</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">Sensor Analytics</span>
-              <span class="case-tag">Heaps &amp; Queues</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              Predictive maintenance and alerting systems continuously analyze sensor streams from machines to detect abnormal behavior early and trigger prioritized alerts. Segment trees, Fenwick trees, and sparse tables support fast range statistics on sensor readings, heaps rank alerts by severity or risk, queues buffer maintenance jobs, hash maps link assets to their sensors, and arrays/structures store machine metadata and configuration.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Segment / Fenwick / Sparse</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case6.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CASE 7 -->
-    <section class="case-card" id="case7">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 7 · Parking</div>
-              <div class="case-title">Smart Parking – Slot Allocation System</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">AVL / Skip List</span>
-              <span class="case-tag">Hash Maps</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              A smart parking slot allocation system keeps slots ordered and searchable, supports fast updates when cars enter/exit, and instantly maps vehicles to their reserved or occupied slots. Ordered trees or skip lists maintain free/occupied slots by number or distance, hash maps link each vehicle to its current slot, and simple structs store slot metadata like level, type, and status.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Balanced trees &amp; skip list</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case7.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CASE 8 -->
-    <section class="case-card" id="case8">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 8 · Smart City</div>
-              <div class="case-title">Smart Streetlight Monitoring</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">Fault Detection</span>
-              <span class="case-tag">Routing</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              A smart streetlight monitoring system continuously checks poles and circuits to detect faults, group nearby failures, and compute efficient repair routes for maintenance crews. Graph algorithms (BFS/DFS, Dijkstra, Union-Find) work on the streetlight/circuit network, while sparse tables and basic structures manage brightness logs and pole metadata, with queues and heaps often added on top in full systems.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Graphs &amp; RMQ logs</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case8.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CASE 9 -->
-    <section class="case-card" id="case9">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 9 · Water</div>
-              <div class="case-title">Water Treatment &amp; Pipeline Optimization</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">Pipelines</span>
-              <span class="case-tag">Shortest Paths</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              A water treatment and pipeline optimization system models plants and pipe networks as graphs to trace flow, find low-loss pressure paths, isolate faulty zones, and quickly answer flow/pressure queries. BFS/DFS follow water paths and detect reachable areas, Dijkstra/Bellman-Ford compute minimum pressure-loss routes, Union-Find manages zone/group isolation, segment trees or sparse tables answer range queries on sensor lines, queues schedule pump operations, and arrays store pipeline and node metadata.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Flow tracing &amp; shortest paths</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case9.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CASE 10 -->
-    <section class="case-card" id="case10">
-      <div class="case-inner">
-        <div class="case-main">
-          <div class="case-top">
-            <div>
-              <div class="case-kicker">Case 10 · Mobility</div>
-              <div class="case-title">Traffic Signal Optimization</div>
-            </div>
-            <div class="case-tags">
-              <span class="case-tag">Segment / Fenwick</span>
-              <span class="case-tag">Corridors</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <p>
-              Traffic signal optimization systems use live detector counts and historical patterns to adapt green times, coordinate corridors, and prioritize the most congested junctions. Segment/Fenwick trees track traffic counts over time, sparse tables answer historical “peak” queries, heaps rank overloaded intersections, queues represent per-approach vehicle lines, hash maps index intersections, and BFS/DFS group connected junctions into coordinated corridors.
-            </p>
-          </div>
-          <div class="impl-inline">
-            <div class="action-strip">
-              <div class="action-label">
-                <span class="title">Implementation</span>
-                <span>Traffic counts &amp; corridors</span>
-              </div>
-              <a class="pill-btn" href="Shashank/Case10.cpp" target="_blank" rel="noopener">
-                <span class="icon">💻</span><span>View Code</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      © 2025 Shashank · Design &amp; Analysis of Algorithms – Business Case Portfolio
-    </footer>
+      <footer id="footer">© 2025 Shashank · Design & Analysis of Algorithms — Business Case Portfolio</footer>
+    </main>
   </div>
+
+  <script>
+    // Data model (keeps the original content)
+    const cases = [
+      { id:1, tag:'Ride-Sharing', title:'Ride-Sharing & Dynamic Dispatch System', kicker:'Case 1 · Ride-Sharing',
+        summary:'Real-time driver–rider matching and route optimization using geospatial methods, shortest-path algorithms and priority queues.',
+        implText:'C++ source for all algorithms', implLink:'Shashank/Case1.cpp', tags:['Real-time Matching','Shortest Paths','Heaps','Queues','Hashing'] },
+
+      { id:2, tag:'EV Charging', title:'EV Charging Network – Slot Scheduling', kicker:'Case 2 · EV Charging',
+        summary:'Slot reservation and availability tracking using Segment / Fenwick trees, heaps and hash maps for fast lookups and updates.',
+        implText:'Segment & Fenwick Trees', implLink:'Shashank/Case2.cpp', tags:['Scheduling','Segment Tree','Fenwick','Heaps'] },
+
+      { id:3, tag:'Logistics', title:'Warehouse & Distribution Routing', kicker:'Case 3 · Logistics',
+        summary:'Design of distribution backbones with MST (Kruskal/Prim), DSU and batching for delivery optimization.',
+        implText:'Kruskal, Prim & DSU', implLink:'Shashank/Case3.cpp', tags:['MST','DSU','Routing','Batching'] },
+
+      { id:4, tag:'Recycling', title:'Waste Processing & Recycling Operations', kicker:'Case 4 · Recycling',
+        summary:'Prioritised processing with heaps, buffering queues and union-find grouping for recyclables.',
+        implText:'Priority queues, DFS & DSU', implLink:'Shashank/Case4.cpp', tags:['Queues','Heaps','DSU','DFS'] },
+
+      { id:5, tag:'Tolling', title:'Smart Toll Collection & Vehicle Lookup', kicker:'Case 5 · Tolling',
+        summary:'License lookup and toll slab selection via Trie, balanced trees or skip lists, and hash maps for accounts.',
+        implText:'Trie, AVL & Skip List', implLink:'Shashank/Case5.cpp', tags:['Trie','AVL','Skip List','HashMap'] },
+
+      { id:6, tag:'Reliability', title:'Predictive Maintenance & Alerting', kicker:'Case 6 · Reliability',
+        summary:'Continuous sensor analytics using segment/fenwick/sparse data structures and ranked alerting with heaps.',
+        implText:'Segment / Fenwick / Sparse', implLink:'Shashank/Case6.cpp', tags:['Sensor Analytics','Segment Tree','Sparse Table'] },
+
+      { id:7, tag:'Parking', title:'Smart Parking – Slot Allocation System', kicker:'Case 7 · Parking',
+        summary:'Ordered slot allocation with balanced trees/skip lists and fast vehicle-slot mappings via hash maps.',
+        implText:'Balanced trees & Skip List', implLink:'Shashank/Case7.cpp', tags:['AVL','Skip List','HashMap'] },
+
+      { id:8, tag:'Streetlight', title:'Smart Streetlight Monitoring', kicker:'Case 8 · Smart City',
+        summary:'Fault grouping and efficient repair routing using graphs and RMQ logs for brightness/time-series.',
+        implText:'Graphs & RMQ logs', implLink:'Shashank/Case8.cpp', tags:['Graphs','BFS','Dijkstra','RMQ'] },
+
+      { id:9, tag:'Water', title:'Water Treatment & Pipeline Optimization', kicker:'Case 9 · Water',
+        summary:'Flow tracing and shortest-path pressure-loss routes using Dijkstra/Bellman-Ford and DSU for isolation.',
+        implText:'Flow tracing & Shortest Paths', implLink:'Shashank/Case9.cpp', tags:['Graph','Dijkstra','Bellman-Ford'] },
+
+      { id:10, tag:'Traffic', title:'Traffic Signal Optimization', kicker:'Case 10 · Mobility',
+        summary:'Adaptive green times and corridor coordination with Fenwick/segment trees, sparse tables, and queues.',
+        implText:'Traffic counts & Corridors', implLink:'Shashank/Case10.cpp', tags:['Fenwick','Segment','Corridors','Queues'] }
+    ];
+
+    // Render helpers
+    const gridView = document.getElementById('gridView');
+    const listView = document.getElementById('listView');
+    const tableBody = document.querySelector('#casesTable tbody');
+
+    function createCard(c){
+      const el = document.createElement('article');
+      el.className='card';
+      el.id = 'case' + c.id;
+      el.innerHTML = `
+        <div class="kicker">${escapeHtml(c.kicker)}</div>
+        <div class="title">${escapeHtml(c.title)}</div>
+        <div class="desc">${escapeHtml(c.summary)}</div>
+        <div class="badges">${c.tags.map(t=>`<span class="badge">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="impl"><small>${escapeHtml(c.implText)}</small><a href="${c.implLink}" target="_blank">View Code →</a></div>
+      `;
+      return el;
+    }
+
+    function createListItem(c){
+      const el = document.createElement('div');
+      el.className='list-item';
+      el.innerHTML = `
+        <div class="list-left">
+          <div class="case-num">${c.id}</div>
+          <div class="case-info">
+            <h4>${escapeHtml(c.title)}</h4>
+            <p>${escapeHtml(c.summary)}</p>
+            <div style="margin-top:6px">${c.tags.map(t=>`<span class="badge" style="margin-right:6px">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <small style="color:var(--muted)">${escapeHtml(c.implText)}</small>
+          <a class="link-btn" href="${c.implLink}" target="_blank" style="padding:6px 10px">View Code</a>
+        </div>
+      `;
+      return el;
+    }
+
+    function refreshViews(filter=''){
+      const q = filter.trim().toLowerCase();
+      gridView.innerHTML=''; listView.innerHTML=''; tableBody.innerHTML='';
+      const filtered = cases.filter(c => {
+        if(!q) return true;
+        const hay = (c.title+' '+c.summary+' '+c.kicker+' '+c.tags.join(' ')+' '+c.implText+' '+c.tag).toLowerCase();
+        return hay.includes(q);
+      });
+
+      filtered.forEach(c=>{
+        gridView.appendChild(createCard(c));
+        listView.appendChild(createListItem(c));
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${c.id}</td>
+          <td>${escapeHtml(c.kicker)}</td>
+          <td>${escapeHtml(c.title)}</td>
+          <td>${escapeHtml(c.tags.join(', '))}</td>
+          <td><a href="${c.implLink}" target="_blank">${escapeHtml(c.implText)}</a></td>`;
+        tableBody.appendChild(tr);
+      });
+
+      if(filtered.length===0){
+        const none = document.createElement('div');
+        none.style.padding='18px'; none.style.background='#fff'; none.style.borderRadius='10px';
+        none.style.border='1px solid var(--card-border)'; none.textContent='No cases match your filter.';
+        gridView.appendChild(none);
+        listView.appendChild(none.cloneNode(true));
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="5" style="padding:18px">No cases match your filter.</td>`;
+        tableBody.appendChild(tr);
+      }
+    }
+
+    // Simple escape
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    // View toggles
+    const gridBtn = document.getElementById('gridBtn');
+    const listBtn = document.getElementById('listBtn');
+    const tableBtn = document.getElementById('tableBtn');
+    const gridEl = document.getElementById('gridView');
+    const listEl = document.getElementById('listView');
+    const tableEl = document.getElementById('tableView');
+
+    function setActive(btn){
+      [gridBtn,listBtn,tableBtn].forEach(b => b.classList.remove('btn'));
+      // mark clicked as primary
+    }
+
+    gridBtn.addEventListener('click', ()=>{ gridEl.style.display='grid'; listEl.style.display='none'; tableEl.style.display='none';
+      gridBtn.className='btn'; listBtn.className='btn secondary'; tableBtn.className='btn secondary';
+      window.scrollTo({top:0,behavior:'smooth'}) });
+    listBtn.addEventListener('click', ()=>{ gridEl.style.display='none'; listEl.style.display='flex'; tableEl.style.display='none';
+      listBtn.className='btn'; gridBtn.className='btn secondary'; tableBtn.className='btn secondary';
+      window.scrollTo({top:0,behavior:'smooth'}) });
+    tableBtn.addEventListener('click', ()=>{ gridEl.style.display='none'; listEl.style.display='none'; tableEl.style.display='block';
+      tableBtn.className='btn'; gridBtn.className='btn secondary'; listBtn.className='btn secondary';
+      window.scrollTo({top:0,behavior:'smooth'}) });
+
+    // Filter
+    const filterInput = document.getElementById('filterInput');
+    filterInput.addEventListener('input', e => refreshViews(e.target.value));
+
+    // Download (stub) — replace with real zip generation if hosting server handles it
+    document.getElementById('downloadAll').addEventListener('click', ()=>{
+      const msg = 'This demo will trigger a download when code files are hosted or a server endpoint is available. For local preview, open each View Code link.';
+      alert(msg);
+    });
+
+    // initial render
+    refreshViews();
+
+    // Keyboard shortcuts (g=grid, l=list, t=table, / = focus filter)
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='g'){ gridBtn.click() }
+      if(e.key==='l'){ listBtn.click() }
+      if(e.key==='t'){ tableBtn.click() }
+      if(e.key==='/'){ e.preventDefault(); filterInput.focus(); }
+    });
+  </script>
 </body>
 </html>
