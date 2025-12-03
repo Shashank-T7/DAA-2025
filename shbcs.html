@@ -120,70 +120,31 @@
       box-shadow:0 8px 24px rgba(8,20,40,0.6);
     }
 
-    /* 2-column professional layout */
+    /* content area */
     .board{
       display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-      gap:26px;
+      grid-template-columns: repeat(3, 1fr);
+      gap:18px;
       align-items:start;
-      padding-top:10px;
     }
 
     /* card */
     .case{
       background:linear-gradient(180deg, rgba(255,255,255,0.014), rgba(255,255,255,0.01));
-      border-radius:14px;padding:22px;border:1px solid var(--card-border);
+      border-radius:14px;padding:18px;border:1px solid var(--card-border);
       box-shadow:0 10px 30px rgba(2,6,23,0.6);
       transition:transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
-      display:flex;flex-direction:column;gap:12px;min-height:210px;
+      display:flex;flex-direction:column;gap:10px;min-height:180px;
     }
     .case:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
     .case .meta{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.14em}
-    .case h3{margin:0;font-size:1.04rem}
-    .case p{margin:6px 0 0 0;color:var(--muted);font-size:0.96rem;line-height:1.45}
+    .case h3{margin:0;font-size:1.02rem}
+    .case p{margin:6px 0 0 0;color:var(--muted);font-size:0.95rem;line-height:1.45}
     .taglist{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .tag-pill{background:rgba(255,255,255,0.02);padding:6px 9px;border-radius:999px;border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.82rem}
 
     .case .impl{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
     .code-link{color:var(--accent-2);font-weight:700;text-decoration:none}
-
-    /* Modern animated View Code button */
-    .view-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:9px 16px;
-      font-size:0.88rem;
-      font-weight:600;
-      color:var(--accent-2);
-      border-radius:999px;
-      text-decoration:none;
-      border:1px solid rgba(96,165,250,0.24);
-      background:rgba(255,255,255,0.03);
-      backdrop-filter:blur(8px);
-      transition:all .25s cubic-bezier(.25,.8,.25,1);
-      position:relative;
-      overflow:hidden;
-    }
-
-    /* arrow animation */
-    .view-btn span.arrow{
-      display:inline-block;
-      transition:transform .3s ease;
-    }
-
-    .view-btn:hover span.arrow{
-      transform:translateX(6px);
-    }
-
-    /* button hover glow */
-    .view-btn:hover{
-      border-color:rgba(96,165,250,0.65);
-      color:#bfe9ff;
-      background:rgba(96,165,250,0.07);
-      box-shadow:0 0 18px rgba(96,165,250,0.20);
-      transform:translateY(-2px);
-    }
 
     /* LIST view */
     .listview{display:flex;flex-direction:column;gap:12px}
@@ -317,7 +278,7 @@
 
   <!-- modal for code preview -->
   <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" role="document">
+    <div class="modal">
       <div class="modal-head">
         <div>
           <strong id="modalTitle">Case code</strong>
@@ -405,9 +366,9 @@
         `;
         const impl = el('div','impl');
         impl.innerHTML = `<div class="muted">${esc(c.implText)}</div>
-          <div style="display:flex;gap:12px;align-items:center">
-            <a class="view-btn" href="#" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">View Code <span class="arrow">→</span></a>
-            <a class="view-btn" href="${esc(c.implLink)}" target="_blank" rel="noopener" style="opacity:0.88">Open <span class="arrow">↗</span></a>
+          <div style="display:flex;gap:10px;align-items:center">
+            <a class="code-link" href="#" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">View Code →</a>
+            <a class="code-link" href="${esc(c.implLink)}" target="_blank" rel="noopener" style="opacity:0.85">Open</a>
           </div>`;
         card.appendChild(impl);
         board.appendChild(card);
@@ -431,8 +392,8 @@
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
             <div class="muted">${esc(c.implText)}</div>
             <div style="display:flex;gap:8px">
-              <a class="view-btn" href="#" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">Preview</a>
-              <a class="view-btn" href="${esc(c.implLink)}" target="_blank" rel="noopener">Open</a>
+              <a class="code-link" href="#" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">Preview</a>
+              <a class="code-link" href="${esc(c.implLink)}" target="_blank" rel="noopener">Open</a>
             </div>
           </div>
         `;
@@ -446,14 +407,14 @@
       list.forEach(c=>{
         const tr = el('tr');
         tr.innerHTML = `<td>${c.id}</td><td>${esc(c.kicker)}</td><td>${esc(c.title)}</td><td>${esc(c.tags.join(', '))}</td>
-          <td><a class="view-btn" href="#" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">${esc(c.implText)}</a></td>`;
+          <td><a class="code-link" href="#" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">${esc(c.implText)}</a></td>`;
         tableBody.appendChild(tr);
       });
       attachModalTriggers();
     }
 
     function attachModalTriggers(){
-      document.querySelectorAll('.view-btn[data-link]').forEach(a=>{
+      document.querySelectorAll('.code-link[data-link]').forEach(a=>{
         a.removeEventListener('click', codeClickHandler);
         a.addEventListener('click', codeClickHandler);
       });
@@ -461,7 +422,7 @@
     function codeClickHandler(e){
       e.preventDefault();
       const link = e.currentTarget.dataset.link;
-      const title = e.currentTarget.dataset.title || e.currentTarget.textContent.trim();
+      const title = e.currentTarget.dataset.title;
       openModal(title, link);
     }
 
@@ -471,14 +432,15 @@
       modalSub.textContent = link;
       modalBackdrop.style.display = 'flex';
       modalBackdrop.setAttribute('aria-hidden','false');
+      // Attempt to fetch the file path. In static preview this may 404; we handle gracefully.
       modalContent.textContent = 'Loading preview...';
-      // Try to fetch; if blocked, show helpful message
       fetch(link).then(r=>{
         if(!r.ok) throw new Error('Could not fetch file (CORS / not hosted).');
         return r.text();
       }).then(txt=>{
         modalContent.textContent = txt.slice(0, 4000) + (txt.length>4000?'\n\n...truncated preview...':'');
       }).catch(err=>{
+        // fallback: show the link and a helpful message
         modalContent.textContent = `Preview not available from this host.\n\nOpen the file directly: ${link}\n\n(If files are hosted on the same origin, previews will appear here.)\n\nError: ${err.message}`;
       });
     }
@@ -503,6 +465,7 @@
       document.getElementById('board').style.display = (view==='grid') ? 'grid':'none';
       listView.style.display = (view==='list') ? 'block':'none';
       document.getElementById('tableView').style.display = (view==='table') ? 'block':'none';
+      // toggle primary class
       [gridBtn,listBtn,tableBtn].forEach(b => b.classList.remove('primary'));
       if(view==='grid') gridBtn.classList.add('primary');
       if(view==='list') listBtn.classList.add('primary');
@@ -541,9 +504,11 @@
     renderTable(cases);
     showView('grid');
 
-    // accessibility focus hint
+    // small accessibility: focus outline for keyboard nav
     document.addEventListener('keydown', (e)=> { if(e.key==='Tab') document.body.classList.add('show-focus'); });
 
+    // graceful resize handling (re-layout)
+    window.addEventListener('resize', ()=> { /* could add responsive grid adjustments */ });
   </script>
 </body>
 </html>
