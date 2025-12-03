@@ -1,366 +1,137 @@
-// File: Atharva/dijkstra-inspection(case-9).cpp
-// Compile with: g++ -std=c++17 -O2 dijkstra-inspection(case-9).cpp -o dijkstra_inspection
-
 #include <bits/stdc++.h>
 using namespace std;
 
-const double INF = 1e18;
-
-// ============================================================================
-// Node structure: represents warehouses, food hubs, data centers, markets, etc.
-// ============================================================================
-
-struct Node {
-    int id;
-    string name;
-    string type;   // "warehouse", "shop", "datahub", "inspection-point"
-};
-
-// ============================================================================
-// Graph (adjacency list) for inspector routing
-// ============================================================================
-
-class Graph {
-public:
-    struct Edge {
-        int v;
-        double w;
-    };
-
-    Graph(int n = 0) { init(n); }
-
-    void init(int n) {
-        N = n;
-        adj.assign(N, vector<Edge>());
+struct Edge { int v; double w; };
+static vector<tuple<int,int,double>> load_edges_generic(const string &path){
+    ifstream in(path);
+    vector<tuple<int,int,double>> out;
+    if(!in.is_open()) return out;
+    string line; if(!getline(in,line)) return out;
+    while(getline(in,line)){
+        vector<string> cols; string cur; bool inq=false;
+        for(char c:line){ if(c=='"'){ inq=!inq; continue; } if(c==',' && !inq){ cols.push_back(cur); cur.clear(); } else cur.push_back(c); }
+        cols.push_back(cur);
+        if(cols.size()<3) continue;
+        int u = stoi(cols[0]); int v = stoi(cols[1]); double w = stod(cols[2]);
+        out.emplace_back(u,v,w);
     }
+    return out;
+}
 
-    void addEdge(int u, int v, double w) {
-        if (valid(u) && valid(v)) {
-            adj[u].push_back({v, w});
-        }
-    }
-
-    int size() const { return N; }
-
-    const vector<vector<Edge>>& getAdj() const { return adj; }
-
-private:
-    int N;
+struct Graph {
+    int n;
     vector<vector<Edge>> adj;
-
-    bool valid(int x) const { return x >= 0 && x < N; }
-};
-
-// ============================================================================
-// Dijkstra Implementation
-// ============================================================================
-
-struct DijkstraResult {
-    vector<double> dist;
-    vector<int> parent;
-};
-
-class Dijkstra {
-public:
-    static DijkstraResult run(const Graph &g, int source) {
-        int n = g.size();
-        DijkstraResult res;
-        res.dist.assign(n, INF);
-        res.parent.assign(n, -1);
-
-        res.dist[source] = 0.0;
-
-        using P = pair<double,int>;  // (dist,node)
+    Graph(int n=0): n(n), adj(n) {}
+    void add_edge(int u,int v,double w){ if(u>=0 && v>=0){ if(u>=n || v>=n){ int newn = max(n, max(u+1,v+1)); adj.resize(newn); n=newn; } adj[u].push_back({v,w}); adj[v].push_back({u,w}); } }
+    pair<vector<double>, vector<int>> dijkstra(int s){
+        const double INF = 1e18;
+        vector<double> dist(n, INF);
+        vector<int> par(n, -1);
+        using P = pair<double,int>;
         priority_queue<P, vector<P>, greater<P>> pq;
-        pq.push({0.0, source});
+        dist[s]=0; pq.push({0,s});
+        while(!pq.empty()){
+            auto [d,u]=pq.top(); pq.pop();
+            if(d!=dist[u]) continue;
+            for(auto &e: adj[u]){
+                int v=e.v; double w=e.w;
+                if(dist[v] > d + w){ dist[v]=d+w; par[v]=u; pq.push({dist[v], v}); }
+            }
+        }
+        return {dist, par};
+    }
+    vector<int> reconstruct(const vector<int>&par, int t){
+        vector<int> path; if(t<0||t>=n) return path;
+        for(int cur=t; cur!=-1; cur=par[cur]) path.push_back(cur);
+        reverse(path.begin(), path.end()); return path;
+    }
+};
 
-        const auto &adj = g.getAdj();
+static vector<long long> load_points(const string &path, int &nmax){
+    ifstream in(path);
+    vector<long long> out; nmax=-1;
+    if(!in.is_open()) return out;
+    string line; if(!getline(in,line)) return out;
+    while(getline(in,line)){
+        vector<string> cols; string cur; bool inq=false;
+        for(char c:line){ if(c=='"'){ inq=!inq; continue; } if(c==',' && !inq){ cols.push_back(cur); cur.clear(); } else cur.push_back(c); }
+        cols.push_back(cur);
+        if(cols.size()<3) continue;
+        int u = stoi(cols[0]); int v = stoi(cols[1]); double w = stod(cols[2]);
+        nmax = max(nmax, max(u,v));
+    }
+    return out;
+}
 
-        while (!pq.empty()) {
-            auto [cd, u] = pq.top();
-            pq.pop();
-            if (cd > res.dist[u]) continue;
-
-            for (auto &e : adj[u]) {
-                double nd = cd + e.w;
-                if (nd < res.dist[e.v]) {
-                    res.dist[e.v] = nd;
-                    res.parent[e.v] = u;
-                    pq.push({nd, e.v});
+int main(int argc,char**argv){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    if(argc<2){ cerr<<"Usage: "<<argv[0]<<" <csv>\n"; return 1; }
+    auto raw = load_edges_generic(argv[1]);
+    if(raw.empty()){ cerr<<"no edges\n"; return 1; }
+    int maxn=0;
+    for(auto &t: raw){ int u,v; double w; tie(u,v,w)=t; maxn = max(maxn, max(u,v)); }
+    Graph g(maxn+1);
+    for(auto &t: raw){ int u,v; double w; tie(u,v,w)=t; g.add_edge(u,v,w); }
+    cout<<"Graph nodes="<<g.n<<"\n";
+    cout<<"Commands:\nshortest s t\nmulti s id1 id2 id3 ...\ninspect-tour start k\nexit\n";
+    string line;
+    while(true){
+        cout<<"> ";
+        if(!getline(cin,line)) break;
+        if(line.empty()) continue;
+        stringstream ss(line); string cmd; ss>>cmd;
+        if(cmd=="exit"||cmd=="quit") break;
+        if(cmd=="shortest"){
+            int s,t; ss>>s>>t;
+            if(s<0||s>=g.n||t<0||t>=g.n){ cout<<"invalid\n"; continue; }
+            auto pr = g.dijkstra(s);
+            auto &dist = pr.first; auto &par = pr.second;
+            if(dist[t] > 1e17) { cout<<"unreachable\n"; continue; }
+            auto path = g.reconstruct(par, t);
+            cout<<"cost="<<dist[t]<<" path:";
+            for(auto x:path) cout<<" "<<x;
+            cout<<"\n";
+            continue;
+        }
+        if(cmd=="multi"){
+            int s; ss>>s;
+            vector<int> targets; int x;
+            while(ss>>x) targets.push_back(x);
+            if(s<0||s>=g.n){ cout<<"invalid\n"; continue; }
+            auto pr = g.dijkstra(s);
+            auto &dist = pr.first;
+            for(auto t: targets){
+                if(t<0||t>=g.n) cout<<t<<":invalid\n"; else if(dist[t]>1e17) cout<<t<<":unreach\n"; else cout<<t<<":"<<dist[t]<<"\n";
+            }
+            continue;
+        }
+        if(cmd=="inspect-tour"){
+            int start,k; ss>>start>>k;
+            if(start<0||start>=g.n){ cout<<"invalid\n"; continue; }
+            vector<int> remaining;
+            for(int i=0;i<g.n;++i) remaining.push_back(i);
+            vector<int> tour; tour.push_back(start);
+            int cur = start;
+            for(int step=0; step<k && !remaining.empty(); ++step){
+                auto pr = g.dijkstra(cur);
+                auto &dist = pr.first;
+                int best=-1; double bestd=1e18;
+                for(auto node: remaining){
+                    if(node==cur) continue;
+                    if(dist[node] < bestd){ bestd = dist[node]; best = node; }
                 }
+                if(best==-1) break;
+                tour.push_back(best);
+                remaining.erase(find(remaining.begin(), remaining.end(), best));
+                cur = best;
             }
+            cout<<"tour:";
+            for(auto v:tour) cout<<" "<<v;
+            cout<<"\n";
+            continue;
         }
-        return res;
+        cout<<"unknown\n";
     }
-
-    static vector<int> path(int target, const vector<int> &parent) {
-        vector<int> p;
-        if (target < 0) return p;
-        int cur = target;
-        while (cur != -1) {
-            p.push_back(cur);
-            cur = parent[cur];
-        }
-        reverse(p.begin(), p.end());
-        return p;
-    }
-};
-
-// ============================================================================
-// Inspector Routing System for Aroha Nagar
-// ============================================================================
-
-class InspectionSystem {
-public:
-    void addNode(const string &name, const string &type) {
-        int id = nodes.size();
-        nodes.push_back({id, name, type});
-    }
-
-    void allocateGraph() {
-        g.init(nodes.size());
-    }
-
-    bool addRoute(int u, int v, double cost) {
-        if (!valid(u) || !valid(v)) return false;
-        g.addEdge(u, v, cost);
-        g.addEdge(v, u, cost); // undirected roads
-        return true;
-    }
-
-    int count() const { return nodes.size(); }
-
-    vector<Node> listNodes() const { return nodes; }
-
-    const Node& getNode(int id) const { return nodes.at(id); }
-
-    bool valid(int id) const { return id >= 0 && id < (int)nodes.size(); }
-
-    DijkstraResult computeFrom(int src) {
-        return Dijkstra::run(g, src);
-    }
-
-    vector<int> buildPath(int target, const vector<int> &parent) {
-        return Dijkstra::path(target, parent);
-    }
-
-    // Export full distance array
-    void exportDistances(const DijkstraResult &res, const string &file) {
-        ofstream out(file);
-        if (!out.is_open()) return;
-
-        out << "nodeId,nodeName,distance\n";
-        for (int i = 0; i < count(); ++i) {
-            out << i << "," << nodes[i].name << ",";
-            if (res.dist[i] >= INF/2) out << "INF";
-            else out << fixed << setprecision(3) << res.dist[i];
-            out << "\n";
-        }
-        out.close();
-    }
-
-    // Export path to CSV
-    void exportPath(const vector<int> &path, const string &file) {
-        ofstream out(file);
-        if (!out.is_open()) return;
-        out << "order,nodeId,nodeName\n";
-        for (int i = 0; i < (int)path.size(); i++) {
-            int id = path[i];
-            out << i << "," << id << "," << nodes[id].name << "\n";
-        }
-        out.close();
-    }
-
-    // Decide next inspection targets based on type
-    vector<int> allInspectionTargets() {
-        vector<int> res;
-        for (auto &n : nodes) {
-            if (n.type == "inspection-point" || n.type == "warehouse") {
-                res.push_back(n.id);
-            }
-        }
-        return res;
-    }
-
-private:
-    vector<Node> nodes;
-    Graph g;
-};
-
-// ============================================================================
-// CLI
-// ============================================================================
-
-static string readTrim(const string &prompt) {
-    cout << prompt;
-    string s;
-    getline(cin, s);
-    size_t a = s.find_first_not_of(" \t\r\n");
-    if (a == string::npos) return "";
-    size_t b = s.find_last_not_of(" \t\r\n");
-    return s.substr(a, b-a+1);
-}
-
-static int readInt(const string &prompt, int def) {
-    string s = readTrim(prompt);
-    if (s.empty()) return def;
-    try { return stoi(s); } catch (...) { return def; }
-}
-
-static double readDouble(const string &prompt, double def) {
-    string s = readTrim(prompt);
-    if (s.empty()) return def;
-    try { return stod(s); } catch (...) { return def; }
-}
-
-static void printPath(const vector<int> &p, const InspectionSystem &sys) {
-    if (p.empty()) { cout << "No path.\n"; return; }
-    for (int i = 0; i < (int)p.size(); i++) {
-        cout << sys.getNode(p[i]).name;
-        if (i+1 < (int)p.size()) cout << " -> ";
-    }
-    cout << "\n";
-}
-
-// CLI driver
-class InspectionCLI {
-public:
-    InspectionCLI(InspectionSystem &s) : sys(s) {}
-
-    void run() {
-        bool quit = false;
-        while (!quit) {
-            menu();
-            string c = readTrim("Choice> ");
-            if (c == "1") listNodes();
-            else if (c == "2") addNode();
-            else if (c == "3") addRoute();
-            else if (c == "4") computeRoutes();
-            else if (c == "5") queryPath();
-            else if (c == "6") exportDistances();
-            else if (c == "7") exportPathFile();
-            else if (c == "8") listInspectionTargets();
-            else if (c == "q") quit = true;
-        }
-    }
-
-private:
-    InspectionSystem &sys;
-    DijkstraResult last;
-    int lastSource = -1;
-
-    void menu() {
-        cout << "\nAroha Nagar Inspection — Options\n"
-             << " 1) List nodes\n"
-             << " 2) Add node\n"
-             << " 3) Add route (bidirectional)\n"
-             << " 4) Compute Dijkstra from a source\n"
-             << " 5) Query path to a node\n"
-             << " 6) Export distance table\n"
-             << " 7) Export a path\n"
-             << " 8) List recommended inspection targets\n"
-             << " q) Quit\n";
-    }
-
-    void listNodes() {
-        auto v = sys.listNodes();
-        cout << "Nodes:\n";
-        for (auto &n : v) {
-            cout << n.id << " | " << n.name << " | " << n.type << "\n";
-        }
-    }
-
-    void addNode() {
-        string name = readTrim("Name: ");
-        string type = readTrim("Type (warehouse/shop/datahub/inspection-point): ");
-        if (type.empty()) type = "inspection-point";
-        sys.addNode(name, type);
-        sys.allocateGraph();
-        cout << "Node added.\n";
-    }
-
-    void addRoute() {
-        int u = readInt("From: ", -1);
-        int v = readInt("To: ", -1);
-        double w = readDouble("Cost: ", 1.0);
-        if (sys.addRoute(u, v, w)) cout << "Route added.\n";
-        else cout << "Invalid route\n";
-    }
-
-    void computeRoutes() {
-        int src = readInt("Source id: ", 0);
-        last = sys.computeFrom(src);
-        lastSource = src;
-        cout << "Computed Dijkstra from " << src << "\n";
-    }
-
-    void queryPath() {
-        if (lastSource == -1) { cout << "Compute Dijkstra first.\n"; return; }
-        int t = readInt("Target id: ", -1);
-        auto p = sys.buildPath(t, last.parent);
-        cout << "Cost: " 
-             << (last.dist[t] >= INF/2 ? -1 : last.dist[t]) 
-             << "\n";
-        printPath(p, sys);
-    }
-
-    void exportDistances() {
-        string f = readTrim("Filename: ");
-        if (f.empty()) f = "distances.csv";
-        sys.exportDistances(last, f);
-        cout << "Exported.\n";
-    }
-
-    void exportPathFile() {
-        int t = readInt("Target id: ", -1);
-        auto p = sys.buildPath(t, last.parent);
-        string f = readTrim("Filename: ");
-        if (f.empty()) f = "path.csv";
-        sys.exportPath(p, f);
-        cout << "Exported path.\n";
-    }
-
-    void listInspectionTargets() {
-        auto v = sys.allInspectionTargets();
-        cout << "Inspection targets:\n";
-        for (int id : v) {
-            cout << id << " | " << sys.getNode(id).name << "\n";
-        }
-    }
-};
-
-// Default population
-static void populateDefault(InspectionSystem &sys) {
-    sys.addNode("Central Warehouse","warehouse");
-    sys.addNode("South Warehouse","warehouse");
-    sys.addNode("Food Hub 1","inspection-point");
-    sys.addNode("Food Hub 2","inspection-point");
-    sys.addNode("Data Center","datahub");
-    sys.addNode("Repair Market","shop");
-    sys.allocateGraph();
-    sys.addRoute(0,2,4.5);
-    sys.addRoute(2,1,6.0);
-    sys.addRoute(0,3,8.0);
-    sys.addRoute(3,4,3.0);
-    sys.addRoute(4,5,5.0);
-    sys.addRoute(1,5,7.5);
-}
-
-int main(int argc, char **argv) {
-    InspectionSystem sys;
-
-    if (argc >= 2 && string(argv[1]) == "--demo") {
-        populateDefault(sys);
-        DijkstraResult res = sys.computeFrom(0);
-        sys.exportDistances(res, "demo_dijkstra.csv");
-        auto p = sys.buildPath(5, res.parent);
-        sys.exportPath(p, "demo_path.csv");
-        cout << "Demo export done.\n";
-        return 0;
-    }
-
-    populateDefault(sys);
-    InspectionCLI cli(sys);
-    cli.run();
     return 0;
 }
