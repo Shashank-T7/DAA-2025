@@ -7,19 +7,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#061325;
-      --panel:#071826;
+      --bg:#051225;
       --muted:#9fb0c4;
       --accent-1:#ff5fa2;
       --accent-2:#7aa2ff;
       --accent-grad: linear-gradient(135deg,#ff5fa2,#7aa2ff);
-      --glass: rgba(255,255,255,0.03);
-      --card-border: rgba(122,162,255,0.12);
-      --radius:22px;
+      --card-border: rgba(122,162,255,0.06);
+      --radius:20px;
       --max-width:1200px;
       --shadow-lg: 0 30px 70px rgba(2,6,18,0.75);
       --mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
-      --title-size: 2.4rem;
     }
 
     *{box-sizing:border-box}
@@ -36,7 +33,7 @@
       background:
         radial-gradient(900px at 8% 18%, rgba(122,162,255,0.04), transparent 40%),
         radial-gradient(700px at 92% 12%, rgba(255,95,162,0.03), transparent 35%),
-        linear-gradient(180deg,#051225 0%, #07182b 40%, #04121a 100%);
+        linear-gradient(180deg,#041022 0%, #07182b 40%, #04121a 100%);
       overflow-y:auto;
     }
 
@@ -49,10 +46,10 @@
       z-index:2;
     }
 
-    /* big header card similar to image */
+    /* Header */
     .header-card{
       border-radius:28px;
-      padding:34px;
+      padding:30px;
       background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.008));
       border:1px solid rgba(255,255,255,0.03);
       box-shadow: var(--shadow-lg);
@@ -64,40 +61,37 @@
       position:relative;
     }
     .header-left{flex:1 1 720px}
-    .breadcrumb{ color:var(--accent-2); font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; font-weight:700; margin-bottom:10px; opacity:0.95; }
-    .header-title{ margin:0; font-size:var(--title-size); font-weight:800; color:#f6fbff; line-height:1.02; }
+    .breadcrumb{ color:var(--accent-2); font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; font-weight:700; margin-bottom:8px; opacity:0.95; }
+    .header-title{ margin:0; font-size:2.1rem; font-weight:800; color:#f6fbff; line-height:1.02; }
     .header-sub{ margin:12px 0 0 0; color:var(--muted); font-size:1.02rem; max-width:920px; }
 
-    .header-right{ display:flex;align-items:center;gap:12px; flex-shrink:0; }
-    .cta-pill{ padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.03); background:linear-gradient(90deg, rgba(122,162,255,0.03), rgba(255,95,162,0.02)); color:var(--muted); font-weight:700; }
-    .back-pill{ padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.04); color:var(--accent-2); font-weight:700; background:transparent; }
-
-    .header-actions{ display:flex;flex-direction:column; gap:10px; align-items:flex-end; min-width:300px; }
+    .header-actions{ display:flex;flex-direction:column; gap:8px; align-items:flex-end; min-width:300px; }
     .header-search{ display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.02); min-width:260px; }
     .header-search input{ background:transparent;border:0;outline:0;color:inherit;font-size:0.95rem;width:100% }
-
-    /* view controls */
     .controls-inline{ display:flex; gap:8px; align-items:center; margin-top:6px; }
-    .view-btn{
-      padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-weight:700;cursor:pointer;
-    }
+    .view-btn{ padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-weight:700;cursor:pointer; }
     .view-btn.active{ background:linear-gradient(90deg,#0f1a2b,#24162a); color:var(--accent-2); border:1px solid rgba(122,162,255,0.09); box-shadow:0 8px 24px rgba(8,20,40,0.6); }
 
-    /* main stacked cases area */
+    /* stacked list view */
     .cases-stack{ display:flex;flex-direction:column; gap:20px; margin-top:12px; }
     .case-large{
       border-radius:18px;
       padding:22px;
       background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.004));
-      border:1px solid rgba(122,162,255,0.06);
+      border:1px solid var(--card-border);
       box-shadow: 0 18px 44px rgba(2,8,20,0.55);
       display:flex;
       gap:16px;
       align-items:flex-start;
       position:relative;
       overflow:hidden;
+      transform: translateY(6px);
+      opacity: 0;
+      transition: transform .36s cubic-bezier(.2,.9,.3,1), box-shadow .18s, opacity .36s;
     }
-    /* left content column */
+    .case-large.in{ transform: translateY(0); opacity:1; }
+    .case-large:hover{ transform: translateY(-6px); box-shadow: 0 30px 80px rgba(10,8,20,0.65); }
+
     .case-left{ flex:1 1 auto; min-width:420px; }
     .case-meta{ font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.16em; margin-bottom:6px; }
     .case-title{ margin:0; font-size:1.18rem; font-weight:700; color:#f6fbff; }
@@ -105,7 +99,6 @@
     .case-tags{ margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
     .tag-pill{ background:rgba(255,255,255,0.02); padding:6px 9px; border-radius:999px; border:1px solid rgba(255,255,255,0.02); color:var(--muted); font-size:0.82rem; }
 
-    /* right column small label + button */
     .case-right{ width:220px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0; }
     .case-side-label{ font-size:0.86rem; color:var(--muted); background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent); padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); text-align:right; }
     .view-code{
@@ -113,6 +106,25 @@
       background: linear-gradient(90deg, #48C6FF 0%, #8E7BFF 40%, #FF80BF 100%);
       box-shadow: 0 8px 30px rgba(74,85,200,0.12), inset 0 -6px 20px rgba(255,255,255,0.04);
     }
+
+    /* grid view (2 cards per row) */
+    .grid-board{ display:grid; grid-template-columns: repeat(2, 1fr); gap:20px; margin-top:12px; align-items:start; }
+    .grid-card{
+      border-radius:16px;
+      padding:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.004));
+      border:1px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(2,6,18,0.45);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height:170px;
+      transform: translateY(8px);
+      opacity: 0;
+      transition: transform .36s cubic-bezier(.2,.9,.3,1), box-shadow .18s, opacity .36s;
+    }
+    .grid-card.in{ transform: translateY(0); opacity:1; }
+    .grid-card:hover{ transform: translateY(-6px); box-shadow: 0 30px 80px rgba(10,8,20,0.65); }
 
     /* table */
     .table-wrap{background:transparent;border-radius:12px;overflow:auto;border:1px solid rgba(255,255,255,0.02); margin-top:6px}
@@ -122,36 +134,39 @@
 
     footer{margin-top:18px;color:var(--muted);font-size:0.85rem;text-align:right}
 
-    /* modal (code preview) */
+    /* modal */
     .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.72);display:none;align-items:center;justify-content:center;z-index:80;padding:24px}
     .modal{width:min(1080px,98%);max-height:86vh;border-radius:12px;background:linear-gradient(180deg, rgba(8,16,28,0.98), rgba(5,10,18,0.98));box-shadow:0 30px 80px rgba(3,8,20,0.9);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;overflow:hidden;font-family:var(--mono)}
     .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.02);background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
     .modal-title{display:flex;gap:12px;align-items:center;font-weight:700;color:#e6f6ff;}
     .modal-actions{display:flex;gap:10px;align-items:center}
     .modal-actions .btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 11px;border-radius:8px;color:var(--muted)}
-    .modal-actions .btn.primary{background:var(--accent-2);color:#081225;border:none}
 
     .editor{display:grid;grid-template-columns: 64px 1fr;gap:0;height:100%;min-height:420px}
     .gutter{background:rgba(7,18,26,0.9);color:#5b6a78;padding:12px 10px;overflow:auto;text-align:right;font-family:var(--mono);font-size:12px;line-height:20px;border-right:1px solid rgba(255,255,255,0.02);user-select:none}
     .code-area{background:linear-gradient(180deg,#061426,#041024);color:#cfeefe;padding:12px 18px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:20px;white-space:pre}
 
-    .modal .gutter::-webkit-scrollbar, .modal .code-area::-webkit-scrollbar { width:12px; height:12px; }
-    .modal .gutter::-webkit-scrollbar-thumb, .modal .code-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius:8px; border: 3px solid transparent; background-clip: padding-box; }
+    /* animations: stagger via CSS var set in JS */
+    .grid-card { transition-delay: calc(var(--i, 0) * 40ms); }
+    .case-large { transition-delay: calc(var(--i, 0) * 28ms); }
 
     @media (max-width:1100px){
       .header-card{flex-direction:column;align-items:flex-start;padding:20px}
       .header-actions{width:100%}
-      .case-right{width:180px; align-items:flex-end}
+      .grid-board{ grid-template-columns: repeat(2, 1fr); }
       .editor{grid-template-columns:48px 1fr}
       .modal{width:95%}
     }
     @media (max-width:720px){
-      .header-search{min-width:120px}
+      .grid-board{ grid-template-columns: 1fr; }
       .case-large{flex-direction:column}
       .case-right{width:100%; align-items:flex-start}
       .editor{grid-template-columns:40px 1fr}
     }
-
+    /* reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .case-large, .grid-card { transition:none !important; transform:none !important; opacity:1 !important; }
+    }
   </style>
 </head>
 <body>
@@ -160,13 +175,14 @@
     <div class="header-card" role="region" aria-label="Page header">
       <div class="header-left">
         <div class="breadcrumb">BUSINESS CASE STUDIES · Shashank R Yende</div>
-        <h1 class="header-title">Mobility,Infrastructure & Industrial Operations — DS & Algo Case Studies</h1> <p class="header-sub">This domain includes all movement, transport, automotive, manufacturing, and physical infrastructure systems.</p>
+        <h1 class="header-title">Environment & Infrastructure — DS & Algo Case Studies</h1>
+        <p class="header-sub">Ten sustainability-focused systems designed using graphs, trees, greedy heuristics, clustering and pattern matching — mapped from theory to real-world, city-scale problems.</p>
       </div>
 
       <div class="header-actions" role="region" aria-label="Header controls">
         <div style="display:flex;gap:10px;align-items:center;">
-          <button class="back-pill" title="Back to Arohanagara">← Back to Arohanagara</button>
-          <button class="cta-pill">10 case studies · 20+ algorithms</button>
+          <button class="view-btn" title="Back to Arohanagara">← Back to Arohanagara</button>
+          <button class="view-btn">10 case studies · 20+ algorithms</button>
         </div>
 
         <div style="display:flex;flex-direction:column;align-items:flex-end">
@@ -185,11 +201,11 @@
       </div>
     </div>
 
-    <!-- stacked cases (list style like image) -->
+    <!-- LIST (stacked) -->
     <section id="listContainer" class="cases-stack" aria-live="polite"></section>
 
-    <!-- grid (hidden by default but available) -->
-    <section id="board" class="board" aria-live="polite" style="display:none"></section>
+    <!-- GRID (2 columns) -->
+    <section id="board" class="grid-board" aria-live="polite" style="display:none"></section>
 
     <!-- table -->
     <section id="tableView" style="display:none">
@@ -290,15 +306,15 @@
     const gridBtn = document.getElementById('gridViewBtn');
     const downloadBtn = document.getElementById('downloadBtn');
 
-    // helper
     function el(tag, cls='', inner=''){ const e=document.createElement(tag); if(cls) e.className=cls; if(inner!==undefined) e.innerHTML=inner; return e; }
     function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-    // render list (stacked large cards)
+    // render list (stacked)
     function renderStacked(list){
       listContainer.innerHTML='';
-      list.forEach(c=>{
+      list.forEach((c, idx)=>{
         const card = el('article','case-large');
+        card.style.setProperty('--i', idx);
         card.id = 'case'+c.id;
         const left = el('div','case-left');
         left.innerHTML = `
@@ -309,48 +325,54 @@
         `;
 
         const right = el('div','case-right');
-        right.innerHTML = `
-          <div class="case-side-label">${esc(c.tag)} · ${esc(c.implText)}</div>
-        `;
+        right.innerHTML = `<div class="case-side-label">${esc(c.tag)} · ${esc(c.implText)}</div>`;
         const btn = el('button','view-code');
         btn.setAttribute('data-link', esc(c.implLink));
         btn.setAttribute('data-title', esc(c.title));
-        btn.innerHTML = `<span aria-hidden="true">View C++ Code</span>`;
+        btn.innerHTML = `View C++ Code`;
         right.appendChild(btn);
 
         card.appendChild(left);
         card.appendChild(right);
         listContainer.appendChild(card);
+
+        // force reflow then add 'in' to trigger transition with stagger
+        requestAnimationFrame(()=> requestAnimationFrame(()=> card.classList.add('in')));
       });
       attachModalTriggers();
     }
 
-    // grid renderer (kept for grid view)
+    // render grid (2 per row)
     function renderGrid(list){
       board.innerHTML='';
-      list.forEach(c=>{
-        const card = el('article','case-large');
+      list.forEach((c, idx)=>{
+        const card = el('article','grid-card');
+        card.style.setProperty('--i', idx);
+        card.id = 'case-grid-'+c.id;
         card.innerHTML = `
-          <div class="case-left">
-            <div class="case-meta">${esc(c.kicker)}</div>
-            <h3 class="case-title">${esc(c.title)}</h3>
-            <div class="case-summary">${esc(c.summary)}</div>
-            <div class="case-tags">${c.tags.map(t=>`<span class="tag-pill">${esc(t)}</span>`).join('')}</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+            <div style="flex:1">
+              <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">${esc(c.kicker)}</div>
+              <h3 style="margin:0;font-size:1.04rem;font-weight:700;color:#f6fbff">${esc(c.title)}</h3>
+              <div style="margin-top:8px;color:var(--muted);font-size:0.92rem;line-height:1.45;max-height:5.3em;overflow:hidden">${esc(c.summary)}</div>
+            </div>
           </div>
-          <div class="case-right">
-            <div class="case-side-label">${esc(c.tag)}</div>
-            <button class="view-code" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">View C++ Code</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:12px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap">${c.tags.map(t=>`<span class="tag-pill">${esc(t)}</span>`).join('')}</div>
+            <button class="view-code" data-link="${esc(c.implLink)}" data-title="${esc(c.title)}">View C++</button>
           </div>
         `;
         board.appendChild(card);
+        // staggered entrance
+        requestAnimationFrame(()=> requestAnimationFrame(()=> card.classList.add('in')));
       });
       attachModalTriggers();
     }
 
-    // table renderer (data same)
+    // table renderer
     function renderTable(list){
       tableBody.innerHTML='';
-      list.forEach(c=>{
+      list.forEach((c)=>{
         const tr = el('tr');
         tr.innerHTML = `<td>${c.id}</td><td>${esc(c.kicker)}</td><td>${esc(c.title)}</td><td>${esc(c.tags.join(', '))}</td>`;
         const td = el('td');
@@ -380,7 +402,7 @@
       openModal(title, link);
     }
 
-    // modal open logic
+    // modal open
     function openModal(title, link){
       modalTitle.textContent = title + ' — Code preview';
       modalSub.textContent = link;
@@ -426,32 +448,29 @@
     function clearActive(){ [listBtn, tableBtn, gridBtn].forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); }); }
     function showView(view){
       if(view === 'list'){
-        document.getElementById('board').style.display = 'none';
+        board.style.display = 'none';
         document.getElementById('tableView').style.display = 'none';
-        document.getElementById('listContainer').style.display = 'flex';
+        listContainer.style.display = 'flex';
         clearActive(); listBtn.classList.add('active'); listBtn.setAttribute('aria-pressed','true');
       } else if(view === 'table'){
-        document.getElementById('board').style.display = 'none';
-        document.getElementById('listContainer').style.display = 'none';
+        board.style.display = 'none';
+        listContainer.style.display = 'none';
         document.getElementById('tableView').style.display = 'block';
         clearActive(); tableBtn.classList.add('active'); tableBtn.setAttribute('aria-pressed','true');
       } else {
-        document.getElementById('listContainer').style.display = 'none';
+        listContainer.style.display = 'none';
         document.getElementById('tableView').style.display = 'none';
-        document.getElementById('board').style.display = 'block';
+        board.style.display = 'grid';
         clearActive(); gridBtn.classList.add('active'); gridBtn.setAttribute('aria-pressed','true');
       }
-      // focus top
+      // focus top of view
       setTimeout(()=>{ const v = document.querySelector(view==='grid'? '#board' : view==='table'? '#tableView' : '#listContainer'); if(v) v.scrollIntoView({behavior:'smooth'}); }, 60);
     }
 
-    // wire view events
     listBtn.addEventListener('click', ()=> showView('list'));
     tableBtn.addEventListener('click', ()=> showView('table'));
     gridBtn.addEventListener('click', ()=> showView('grid'));
-    downloadBtn.addEventListener('click', ()=> {
-      alert('Download: in this demo, files must be hosted to download. On a server I can wire a zip endpoint.');
-    });
+    downloadBtn.addEventListener('click', ()=> { alert('Download: files must be hosted to download.'); });
 
     // keyboard shortcuts
     document.addEventListener('keydown', (e)=>{
@@ -461,7 +480,7 @@
       if(e.key === '/' && document.activeElement !== filterInput){ e.preventDefault(); filterInput.focus(); }
     });
 
-    // search filter
+    // filter
     function applyFilter(){
       const q = (filterInput.value||'').trim().toLowerCase();
       const filtered = cases.filter(c => {
@@ -475,13 +494,13 @@
     }
     filterInput.addEventListener('input', applyFilter);
 
-    // initial render and default
+    // initial render & default view
     renderStacked(cases);
     renderGrid(cases);
     renderTable(cases);
     showView('list');
 
-    // reduce motion
+    // respect reduced motion
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.style.setProperty('--shadow-lg', 'none');
     }
