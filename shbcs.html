@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Shashank R. Yende — Arohanagara · Business Use Cases (Dark)</title>
+  <title>Shashank R. Yende — Arohanagara · Business Use Cases (Vibrant)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      /* Dark mode refreshed palette */
-      --bg:#050814; /* deeper near-black navy */
-      --panel:#071026;
-      --muted:#9aa5b3;
+      /* Vibrant theme: magenta → violet → cyan */
+      --bg:#08020b; /* base dark */
+      --panel:#081124;
+      --muted:#aeb8c6;
       --glass: rgba(255,255,255,0.03);
-      --accent-1: #3ee7c6; /* teal */
+      --accent-1: #ff5fa2; /* vibrant magenta */
       --accent-2: #7aa2ff; /* soft blue */
-      --accent-3: linear-gradient(135deg,#7aa2ff,#3ee7c6);
-      --card-border: rgba(255,255,255,0.035);
-      --glass-strong: rgba(255,255,255,0.03);
+      --accent-3: linear-gradient(135deg,#ff5fa2,#7aa2ff);
+      --card-border: rgba(255,255,255,0.04);
+      --glass-strong: rgba(255,255,255,0.035);
       --radius:16px;
       --max-width:1240px;
-      --shadow-lg: 0 22px 60px rgba(2,6,23,0.8);
-      --glass-blur: 12px;
+      --shadow-lg: 0 24px 70px rgba(14,6,30,0.85);
+      --glass-blur: 14px;
     }
 
     *{box-sizing:border-box}
@@ -28,25 +28,58 @@
     body{
       margin:0;
       font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,"Helvetica Neue",Arial;
-      /* dark background with subtle cool gradients */
-      background:
-       radial-gradient(700px 260px at 6% 8%, rgba(58,123,213,0.06), transparent 8%),
-       radial-gradient(650px 220px at 92% 18%, rgba(62,231,198,0.04), transparent 8%),
-       linear-gradient(180deg,#020316 0%, var(--bg) 100%);
-      color:#e6eef8;
+      color:#e9f6ff;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
       padding:28px;
       display:flex;justify-content:center;
+      background-color:var(--bg);
+      /* dynamic animated vibrant background built from layered gradients */
+      background-image:
+        radial-gradient(600px 220px at 8% 10%, rgba(255,95,162,0.08), transparent 8%),
+        radial-gradient(560px 200px at 92% 20%, rgba(122,162,255,0.06), transparent 8%),
+        linear-gradient(180deg, rgba(2,4,10,0.95), rgba(8,10,22,0.95));
+      background-blend-mode: screen, screen, normal;
+      overflow-x:hidden;
+    }
+
+    /* animated floating color orbs using pseudo element for motion */
+    body::before{
+      content:'';
+      position:fixed;
+      left:-20%;
+      top:-10%;
+      width:140%;
+      height:140%;
+      pointer-events:none;
+      background:
+        radial-gradient(420px 160px at 10% 15%, rgba(255,95,162,0.10), transparent 10%),
+        radial-gradient(360px 140px at 85% 20%, rgba(122,162,255,0.08), transparent 10%),
+        radial-gradient(520px 200px at 50% 80%, rgba(62,231,198,0.06), transparent 10%);
+      mix-blend-mode: screen;
+      filter: blur(36px) saturate(120%);
+      opacity:0.95;
+      animation: float 14s linear infinite;
+      z-index:0;
+    }
+
+    @keyframes float{
+      0%{ transform: translateY(0) rotate(0deg) scale(1) }
+      25%{ transform: translateY(-18px) rotate(6deg) scale(1.02) }
+      50%{ transform: translateY(0) rotate(12deg) scale(1) }
+      75%{ transform: translateY(18px) rotate(-6deg) scale(0.99) }
+      100%{ transform: translateY(0) rotate(0deg) scale(1) }
     }
 
     .wrap{
+      position:relative;
       width:100%;
       max-width:var(--max-width);
       display:grid;
       grid-template-columns: 300px 1fr;
       gap:22px;
       align-items:start;
+      z-index:2; /* above animated background */
     }
 
     /* SIDEBAR */
@@ -54,10 +87,10 @@
       position:sticky; top:28px;
       border-radius:var(--radius);
       padding:20px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.006));
       border:1px solid var(--card-border);
       backdrop-filter: blur(var(--glass-blur));
-      box-shadow:0 10px 40px rgba(3,8,20,0.6);
+      box-shadow:0 14px 40px rgba(2,6,23,0.55);
       height:fit-content;
     }
     .brand{
@@ -66,7 +99,7 @@
     .logo{
       width:56px;height:56px;border-radius:12px;
       background:var(--accent-3);display:flex;align-items:center;justify-content:center;
-      font-weight:700;color:#021022;font-size:1.1rem;box-shadow:0 10px 30px rgba(45,88,169,0.12);
+      font-weight:800;color:#031027;font-size:1.1rem;box-shadow:0 12px 36px rgba(255,95,162,0.08);
     }
     .author{line-height:1}
     .author h3{margin:0;font-size:1.02rem}
@@ -80,7 +113,7 @@
 
     .link-primary{
       display:inline-flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;
-      background:linear-gradient(90deg, rgba(122,162,255,0.10), rgba(62,231,198,0.06));
+      background:linear-gradient(90deg, rgba(255,95,162,0.08), rgba(122,162,255,0.06));
       color:var(--accent-2);text-decoration:none;font-weight:700;border:1px solid rgba(122,162,255,0.06);
       margin-top:10px;
     }
@@ -117,9 +150,9 @@
       font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.02);
     }
     .btn.primary{
-      background:linear-gradient(90deg,#0e2940,#14263a); color:var(--accent-2);
+      background:linear-gradient(90deg,#1b2133,#24162a); color:var(--accent-2);
       border:1px solid rgba(122,162,255,0.08);
-      box-shadow:0 8px 24px rgba(8,20,40,0.6);
+      box-shadow:0 10px 30px rgba(8,20,40,0.6);
     }
 
     /* content area */
@@ -132,7 +165,7 @@
 
     /* card */
     .case{
-      background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008));
+      background:linear-gradient(180deg, rgba(255,255,255,0.014), rgba(255,255,255,0.008));
       border-radius:14px;padding:18px;border:1px solid var(--card-border);
       box-shadow:0 10px 30px rgba(2,6,23,0.6);
       transition:transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
@@ -152,7 +185,7 @@
     .listview{display:flex;flex-direction:column;gap:12px}
     .list-item{display:flex;gap:14px;padding:14px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid var(--card-border)}
     .list-left{display:flex;gap:12px;align-items:center}
-    .case-num{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#294e9f,#3ee7c6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#021022}
+    .case-num{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#ff5fa2,#7aa2ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#021022}
     .list-body h4{margin:0}
     .list-body p{color:var(--muted);margin-top:8px}
 
@@ -237,7 +270,7 @@
         <div class="hero">
           <div>
             <h1>Business Use-Case Analysis — Aroha Nagar</h1>
-            <p>Ten engineering modules mapping algorithms &amp; data structures to realistic city systems. Dark, adaptive, and production-oriented dashboard.</p>
+            <p>Ten engineering modules mapping algorithms &amp; data structures to realistic city systems. Vibrant, dynamic, production-oriented dashboard.</p>
           </div>
         </div>
 
