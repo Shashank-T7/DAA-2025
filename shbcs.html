@@ -1,3 +1,4 @@
+<!-- ASSET_URL: /mnt/data/353e2af0-d844-495c-b7cd-d2e2a48ae707.png -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,11 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#041225;
+      --bg:#000000;                 /* pure black background */
       --muted:#9fb0c4;
       --accent-1:#ff5fa2;
       --accent-2:#7aa2ff;
-      --card-border: rgba(122,162,255,0.06);
+      --card-border: rgba(255,255,255,0.04);
       --mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
       --editor-bg: linear-gradient(180deg,#041826,#02111a);
       --max-width:1240px;
@@ -23,15 +24,13 @@
     body{
       margin:0;
       font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,"Helvetica Neue",Arial;
-      color:#e6f9ff;
+      color:#f5faff;
       padding:28px;
       display:flex;
       justify-content:center;
-      background:
-        radial-gradient(900px at 8% 18%, rgba(122,162,255,0.04), transparent 40%),
-        radial-gradient(700px at 92% 12%, rgba(255,95,162,0.03), transparent 35%),
-        linear-gradient(180deg,#041022 0%, #07182b 40%, #04121a 100%);
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      background: var(--bg);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
       min-height:100vh;
     }
 
@@ -44,88 +43,92 @@
       z-index:2;
     }
 
-    /* Header: stronger separation & Outlook-like title */
+    /* Header: bold neon outline and glassy inner panel */
     .header-card{
-      border-radius:26px;
+      border-radius:20px;
       padding:28px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006)),
-        rgba(6,18,30,0.72);
-      border: 1px solid rgba(122,162,255,0.09);
-      box-shadow: 0 18px 50px rgba(2,6,20,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.006));
+      border: 2px solid rgba(0,160,255,0.48); /* neon cyan */
+      box-shadow:
+        0 20px 60px rgba(0,160,255,0.12),
+        inset 0 8px 30px rgba(255,255,255,0.02);
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:18px;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       position:relative;
       z-index:5;
     }
     .header-card::after{
-      content: "";
-      position:absolute;
-      inset: -1px;
-      border-radius:28px;
-      pointer-events:none;
-      box-shadow: 0 0 0 1px rgba(122,162,255,0.02), 0 0 50px rgba(122,162,255,0.01) inset;
-      mix-blend-mode: overlay;
+      content:"";
+      position:absolute; inset:-2px; border-radius:22px; pointer-events:none;
+      box-shadow: 0 0 40px rgba(0,160,255,0.06), inset 0 0 30px rgba(0,160,255,0.02);
+      mix-blend-mode: screen;
     }
 
     .header-left { flex:1 1 680px; min-width:300px; }
-    .breadcrumb{ color:var(--accent-2); font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; font-weight:700; margin-bottom:8px; opacity:0.95; }
+    .breadcrumb{ color:var(--accent-2); font-size:0.78rem; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; margin-bottom:8px; opacity:0.95; }
     .header-title{
       margin:0;
-      font-size:2.6rem;
+      font-size:2.2rem;
       font-weight:800;
-      color:#fbfcff;
+      color:#ffffff;
       line-height:1.02;
-      letter-spacing: -0.01em;
-      text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+      letter-spacing:-0.01em;
+      text-shadow: 0 6px 26px rgba(0,160,255,0.06);
     }
-    .header-sub{ margin-top:12px; color:var(--muted); font-size:1.02rem; max-width:880px; }
+    .header-sub{ margin-top:10px; color:var(--muted); font-size:1.02rem; max-width:880px; }
 
     .header-actions{ display:flex; flex-direction:column; gap:10px; align-items:flex-end; min-width:320px; }
     .header-actions .top-row{ display:flex; gap:10px; align-items:center; }
     .pill{
       padding:10px 14px;
       border-radius:999px;
-      background: linear-gradient(90deg, rgba(122,162,255,0.04), rgba(255,95,162,0.02));
-      border:1px solid rgba(255,255,255,0.02);
-      color:var(--muted);
+      background: linear-gradient(90deg, rgba(0,160,255,0.12), rgba(255,80,160,0.06));
+      border:1px solid rgba(255,255,255,0.04);
+      color:#ffffff;
       font-weight:700;
+      box-shadow: 0 6px 18px rgba(0,160,255,0.06);
     }
 
-    .header-search{ display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.02); min-width:260px; }
+    .header-search{ display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02); min-width:260px; }
     .header-search input{ background:transparent;border:0;outline:0;color:inherit;font-size:0.95rem;width:100% }
 
     .controls-inline{ display:flex; gap:8px; align-items:center; margin-top:6px; }
     .view-btn{ padding:8px 12px;border-radius:999px;background: rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-weight:700;cursor:pointer; }
-    .view-btn.active{ background: linear-gradient(90deg,#101826,#2b1729); color:var(--accent-2); border:1px solid rgba(122,162,255,0.12); box-shadow:0 8px 24px rgba(8,20,40,0.6); }
+    .view-btn.active{ background: linear-gradient(90deg,#081826,#2b1222); color:var(--accent-2); border:1px solid rgba(255,255,255,0.06); box-shadow: 0 10px 30px rgba(0,160,255,0.08); }
 
-    /* content layout */
-    .cases-stack{ display:flex;flex-direction:column; gap:20px; margin-top:18px; }
+    /* layout for cards */
+    .cases-stack{ display:flex;flex-direction:column; gap:18px; margin-top:18px; }
+
+    /* vibrant card – pink border / glow */
     .case-large{
-      border-radius:18px;
-      padding:22px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.004));
-      border:1px solid var(--card-border);
-      box-shadow: 0 18px 44px rgba(2,8,20,0.55);
+      border-radius:14px;
+      padding:20px;
+      background: rgba(8,8,10,0.85);
+      border: 2px solid rgba(255,60,180,0.62); /* hot pink border */
+      box-shadow:
+        0 8px 30px rgba(255,60,180,0.06),
+        inset 0 0 18px rgba(255,60,180,0.02);
       display:flex;
       gap:16px;
       align-items:flex-start;
       position:relative;
       overflow:hidden;
-      transform: translateY(6px);
+      transform: translateY(8px);
       opacity: 0;
-      transition: transform .36s cubic-bezier(.2,.9,.3,1), box-shadow .18s, opacity .36s;
+      transition: transform .36s cubic-bezier(.2,.9,.3,1), opacity .36s, box-shadow .2s;
     }
     .case-large.in{ transform: translateY(0); opacity:1; }
-    .case-left{ flex:1 1 auto; min-width:420px; }
-    .case-meta{ font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.16em; margin-bottom:6px; }
-    .case-title{ margin:0; font-size:1.18rem; font-weight:700; color:#f6fbff; }
-    .case-summary{ margin-top:10px; color:var(--muted); line-height:1.5; max-height:9.6em; overflow:hidden; font-size:0.97rem; }
-    .case-tags{ margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
-    .tag-pill{ background:rgba(255,255,255,0.02); padding:6px 9px; border-radius:999px; border:1px solid rgba(255,255,255,0.02); color:var(--muted); font-size:0.82rem; }
+    .case-large:hover{ box-shadow: 0 18px 60px rgba(255,60,180,0.12); transform: translateY(-6px); }
+
+    .case-left{ flex:1 1 auto; min-width:360px; }
+    .case-meta{ font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.14em; margin-bottom:6px; }
+    .case-title{ margin:0; font-size:1.12rem; font-weight:700; color:#fff; }
+    .case-summary{ margin-top:8px; color:var(--muted); line-height:1.5; max-height:6.6em; overflow:hidden; font-size:0.96rem; }
+    .case-tags{ margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+    .tag-pill{ background: rgba(255,255,255,0.02); padding:6px 9px; border-radius:999px; border:1px solid rgba(255,255,255,0.02); color:var(--muted); font-size:0.82rem; }
 
     .case-right{ width:220px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex-shrink:0; }
     .case-side-label{ font-size:0.86rem; color:var(--muted); background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent); padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); text-align:right; }
@@ -135,23 +138,26 @@
       box-shadow: 0 8px 30px rgba(74,85,200,0.12), inset 0 -6px 20px rgba(255,255,255,0.04);
     }
 
-    /* grid view: 2 columns */
-    .grid-board{ display:grid; grid-template-columns: repeat(2, 1fr); gap:20px; margin-top:12px; align-items:start; }
+    /* grid view: purple neon scheme */
+    .grid-board{ display:grid; grid-template-columns: repeat(2, 1fr); gap:18px; margin-top:12px; align-items:start; }
     .grid-card{
-      border-radius:16px;
-      padding:18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.004));
-      border:1px solid var(--card-border);
-      box-shadow: 0 10px 30px rgba(2,6,18,0.45);
+      border-radius:12px;
+      padding:16px;
+      background: rgba(10,10,12,0.86);
+      border: 2px solid rgba(120,90,255,0.68); /* purple border */
+      box-shadow:
+        0 8px 30px rgba(120,90,255,0.06),
+        inset 0 0 16px rgba(120,90,255,0.02);
       display:flex;
       flex-direction:column;
       gap:10px;
-      min-height:170px;
+      min-height:160px;
       transform: translateY(8px);
       opacity: 0;
-      transition: transform .36s cubic-bezier(.2,.9,.3,1), box-shadow .18s, opacity .36s;
+      transition: transform .36s cubic-bezier(.2,.9,.3,1), opacity .36s, box-shadow .18s;
     }
     .grid-card.in{ transform: translateY(0); opacity:1; }
+    .grid-card:hover{ box-shadow: 0 18px 60px rgba(120,90,255,0.12); transform: translateY(-6px); }
 
     /* table */
     .table-wrap{background:transparent;border-radius:12px;overflow:auto;border:1px solid rgba(255,255,255,0.02); margin-top:6px}
@@ -164,8 +170,8 @@
     /* Modal / code preview styling */
     .modal-backdrop{
       position:fixed; inset:0;
-      background:linear-gradient(180deg, rgba(2,6,23,0.8), rgba(2,6,23,0.88));
-      display:none; align-items:center; justify-content:center; z-index:120; padding:32px;
+      background:linear-gradient(180deg, rgba(0,0,0,0.65), rgba(2,2,4,0.9));
+      display:none; align-items:center; justify-content:center; z-index:120; padding:24px;
       backdrop-filter: blur(6px);
     }
     .modal {
@@ -191,7 +197,7 @@
       display:grid; grid-template-columns: 56px 1fr; gap:0; min-height:420px; height:72vh; align-items:stretch;
     }
     .gutter {
-      background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.06));
+      background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.04));
       color:#6f7f89; font-family:var(--mono); font-size:12px; line-height:20px;
       padding:12px 10px; text-align:right; overflow:auto; border-right:1px solid rgba(255,255,255,0.02);
       user-select:none;
@@ -219,10 +225,6 @@
       background: rgba(255,255,255,0.06); border-radius:8px; border: 3px solid transparent; background-clip: padding-box;
     }
 
-    /* animation stagger variables */
-    .grid-card { transition-delay: calc(var(--i, 0) * 40ms); }
-    .case-large { transition-delay: calc(var(--i, 0) * 28ms); }
-
     @media (max-width:1100px){
       .grid-board{ grid-template-columns: repeat(2, 1fr); }
       .editor { grid-template-columns:48px 1fr }
@@ -242,12 +244,12 @@
 <body>
   <div class="wrap">
     <main role="main">
-      <!-- Header (Outlook-like) -->
+      <!-- Header -->
       <div class="header-card" role="region" aria-label="Page header">
         <div class="header-left">
           <div class="breadcrumb">BUSINESS CASE STUDIES · SHASHANK R YENDE</div>
-          <h1 class="header-title">Mobility & Industial Purposes <br/>Case Studies</h1>
-          <p class="header-sub">Ten sustainability-focused systems designed for movement, transport, automotive, manufacturing, and physical infrastructure systems.</p>
+          <h1 class="header-title">Environment &amp; Infrastructure — DS &amp; Algo<br/>Case Studies</h1>
+          <p class="header-sub">Ten sustainability-focused systems designed using graphs, trees, greedy heuristics, clustering and pattern matching — mapped from theory to real-world, city-scale problems.</p>
         </div>
 
         <div class="header-actions" role="region" aria-label="Header controls">
@@ -272,7 +274,7 @@
         </div>
       </div>
 
-      <!-- List (stacked) -->
+      <!-- List -->
       <section id="listContainer" class="cases-stack" aria-live="polite"></section>
 
       <!-- Grid -->
@@ -318,7 +320,7 @@
   </div>
 
   <script>
-    // === data (unchanged) ===
+    // Data (same cases)
     const cases = [
       { id:1, tag:'Ride-Sharing', title:'Ride-Sharing & Dynamic Dispatch System', kicker:'Case 1 · Ride-Sharing',
         summary:`A ride-sharing and dynamic dispatch system is designed for real-time driver–rider matching and route optimization. It rapidly locates nearby available drivers using geospatial methods, ranks them (often by estimated time of arrival or distance), and optimally assigns ride requests. Route optimization ensures the chosen driver uses the shortest or fastest path to the pickup and drop-off points, often utilizing algorithms like Dijkstra or Bellman-Ford. Data structures like heaps (priority queues) prioritize drivers, regular queues buffer ride requests, and hashing supports fast lookups of drivers and users in a large, live system.`,
@@ -361,7 +363,7 @@
         implText:'Traffic counts & Corridors', implLink:'Shashank/Case10.cpp', tags:['Fenwick','Segment','Corridors','Queues'] }
     ];
 
-    // === refs ===
+    // refs
     const listContainer = document.getElementById('listContainer');
     const board = document.getElementById('board');
     const tableBody = document.getElementById('tableBody');
@@ -378,10 +380,11 @@
     const gridBtn = document.getElementById('gridViewBtn');
     const downloadBtn = document.getElementById('downloadBtn');
 
+    // helpers
     function el(tag, cls='', inner=''){ const e=document.createElement(tag); if(cls) e.className=cls; if(inner!==undefined) e.innerHTML=inner; return e; }
     function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-    // === renderers ===
+    // renderers
     function renderStacked(list){
       if(!listContainer) return;
       listContainer.innerHTML='';
@@ -426,7 +429,7 @@
           <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
             <div style="flex:1">
               <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">${esc(c.kicker)}</div>
-              <h3 style="margin:0;font-size:1.04rem;font-weight:700;color:#f6fbff">${esc(c.title)}</h3>
+              <h3 style="margin:0;font-size:1.04rem;font-weight:700;color:#fff">${esc(c.title)}</h3>
               <div style="margin-top:8px;color:var(--muted);font-size:0.92rem;line-height:1.45;max-height:5.3em;overflow:hidden">${esc(c.summary)}</div>
             </div>
           </div>
@@ -474,7 +477,7 @@
       openModal(title, link);
     }
 
-    // === Syntax highlighter & modal (defensive) ===
+    // syntax highlighter utilities
     function escapeHtml(s){
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
@@ -486,21 +489,26 @@
       s = s.replace(/(^|\n)(\s*#\s*[A-Za-z_]+\b[^\n]*)/g, (m,p1,p2)=> `${p1}<span class="tok-preproc">${p2}</span>`);
       s = s.replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, (m)=> `<span class="tok-string">${m}</span>`);
       s = s.replace(/\b(\d+(\.\d+)?(f|F|u|U|L|l)?)\b/g, `<span class="tok-number">$1</span>`);
+
       const keywords = ['alignas','alignof','and','and_eq','asm','auto','bitand','bitor','bool','break','case','catch','char','class','const','constexpr','continue','decltype','default','delete','do','double','else','enum','extern','false','float','for','friend','goto','if','inline','int','long','namespace','new','noexcept','operator','private','protected','public','return','short','signed','sizeof','static','struct','switch','template','this','throw','true','try','typedef','typename','union','unsigned','using','virtual','void','volatile','while'];
       const kwRegex = new RegExp('\\b(' + keywords.join('|') + ')\\b','g');
       s = s.replace(kwRegex, `<span class="tok-keyword">$1</span>`);
+
       const types = ['size_t','std::string','string','std::vector','vector','std::map','map','unordered_map','unordered_set','pair','tuple','int32_t','int64_t','uint32_t','uint64_t','long','short','bool','float','double','auto','void'];
       const tyRegex = new RegExp('\\b(' + types.map(t=>t.replace(/\./g,'\\.')).join('|') + ')\\b', 'g');
       s = s.replace(tyRegex, `<span class="tok-type">$1</span>`);
+
       s = s.replace(/([A-Za-z_]\w*)(?=\s*\()/g, `<span class="tok-fn">$1</span>`);
       s = s.replace(/\b([A-Z_]{2,}[A-Z0-9_]*)\b/g, `<span class="tok-const">$1</span>`);
+
       const lines = s.split(/\r\n|\r|\n/);
       return lines.map(line => `<span class="line">${line || '&nbsp;'}</span>`).join('\n');
     }
 
-    // defensive element getters
+    // safe DOM getter
     const safe = id => document.getElementById(id) || null;
 
+    // modal open
     function openModal(title, link){
       const mb = safe('modalBackdrop');
       const gt = safe('gutter');
@@ -597,7 +605,7 @@
       if(e.key === '/' && document.activeElement !== filterInput){ e.preventDefault(); if(filterInput) filterInput.focus(); }
     });
 
-    // filter/search
+    // search filter
     function applyFilter(){
       const q = (filterInput && filterInput.value? filterInput.value : '').trim().toLowerCase();
       const filtered = cases.filter(c => {
@@ -611,18 +619,18 @@
     }
     if(filterInput) filterInput.addEventListener('input', applyFilter);
 
-    // initial render & default view
+    // initial render and default view
     renderStacked(cases);
     renderGrid(cases);
     renderTable(cases);
     showView('list');
 
-    // reduced motion
+    // reduced motion preference
     if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.style.setProperty('--shadow-lg', 'none');
     }
 
-    // expose openModal globally for existing buttons that use openModal(title, link)
+    // expose openModal globally
     window.openCodeModal = openModal;
   </script>
 </body>
