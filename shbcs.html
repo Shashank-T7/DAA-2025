@@ -2,23 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Shashank R. Yende | Business Use-Case Analysis — Aroha Nagar</title>
+  <title>Shashank | Business Use-Case Analysis — Aroha Nagar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --panel-bg: #020617;
-      --card-bg: rgba(15,23,42,0.97);
-      --card-border: rgba(148,163,184,0.28);
+      --bg-main: #020617;
+      --bg-surface: #020617;
+      --card-bg: #020617;
+      --card-elevated: #020617;
+      --card-border: rgba(148,163,184,0.32);
       --accent: #38bdf8;
-      --accent-soft: rgba(56,189,248,0.25);
+      --accent-soft: rgba(56,189,248,0.18);
       --accent-strong: #0ea5e9;
       --text-main: #e5e7eb;
-      --text-muted: #94a3b8;
+      --text-muted: #9ca3af;
       --radius-lg: 18px;
-      --shadow-soft: 0 22px 70px rgba(15,23,42,0.95);
+      --shadow-soft: 0 20px 60px rgba(15,23,42,0.9);
     }
 
     * { box-sizing:border-box; margin:0; padding:0; }
@@ -26,18 +28,15 @@
     body {
       font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.14) 0, transparent 45%),
-        radial-gradient(circle at 100% 0%, rgba(129,140,248,0.2) 0, transparent 55%),
-        linear-gradient(135deg,#020617 0%,#020617 55%,#000 100%);
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.10) 0, transparent 50%),
+        radial-gradient(circle at 100% 0%, rgba(79,70,229,0.16) 0, transparent 55%),
+        radial-gradient(circle at 50% 120%, rgba(8,47,73,0.85) 0, #020617 55%);
       color:var(--text-main);
       line-height:1.6;
-      padding:24px 16px 40px;
+      padding:24px 18px 40px;
       -webkit-font-smoothing:antialiased;
-      position:relative;
-      overflow-x:hidden;
     }
 
-    /* subtle grid overlay */
     body::before {
       content:"";
       position:fixed;
@@ -45,40 +44,40 @@
       background-image:
         linear-gradient(rgba(15,23,42,0.45) 1px, transparent 1px),
         linear-gradient(90deg, rgba(15,23,42,0.45) 1px, transparent 1px);
-      background-size:64px 64px;
-      opacity:0.22;
+      background-size:56px 56px;
+      opacity:0.16;
       pointer-events:none;
       z-index:-1;
     }
 
     .page-shell {
-      max-width:1220px;
+      max-width:1180px;
       margin:0 auto;
       display:grid;
-      grid-template-columns:270px minmax(0,1fr);
+      grid-template-columns:260px minmax(0,1fr);
+      gap:24px;
+    }
+
+    /* LEFT PROFILE */
+
+    .side-panel {
+      background:radial-gradient(circle at top left,#020617 0,#020617 65%);
+      border-radius:22px;
+      padding:20px 18px 18px;
+      border:1px solid rgba(51,65,85,0.9);
+      box-shadow:0 20px 60px rgba(15,23,42,0.95);
+      display:flex;
+      flex-direction:column;
       gap:20px;
     }
 
-    /* LEFT PROFILE PANEL */
-
-    .side-panel {
-      background:radial-gradient(circle at top left,#1f2937 0,#020617 55%);
-      border-radius:24px;
-      padding:20px 18px;
-      border:1px solid rgba(51,65,85,0.9);
-      box-shadow:0 20px 70px rgba(15,23,42,0.95);
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .side-title {
-      font-size:1.05rem;
+    .side-header-title {
+      font-size:1.02rem;
       font-weight:600;
     }
 
-    .side-sub {
-      font-size:0.82rem;
+    .side-header-sub {
+      font-size:0.8rem;
       color:var(--text-muted);
       margin-top:4px;
     }
@@ -90,15 +89,15 @@
     }
 
     .avatar-circle {
-      width:56px;
-      height:56px;
+      width:54px;
+      height:54px;
       border-radius:999px;
       background:linear-gradient(135deg,#22c1c3,#4f46e5);
       display:flex;
       align-items:center;
       justify-content:center;
       font-weight:700;
-      font-size:1.2rem;
+      font-size:1.15rem;
       letter-spacing:0.08em;
     }
 
@@ -111,19 +110,19 @@
     }
 
     .meta-value {
-      font-size:0.9rem;
+      font-size:0.88rem;
       font-weight:500;
     }
 
     .side-section {
-      padding:10px 0 0;
-      border-top:1px solid rgba(15,23,42,0.85);
+      padding-top:10px;
+      border-top:1px solid rgba(15,23,42,0.9);
     }
 
     .summary-stat {
-      font-size:0.82rem;
+      font-size:0.8rem;
       color:var(--text-muted);
-      margin-top:2px;
+      margin-top:3px;
     }
 
     .github-btn {
@@ -138,10 +137,10 @@
       border-radius:12px;
       background:linear-gradient(135deg,#22c1c3,#60a5fa);
       color:#020617;
-      box-shadow:0 16px 40px rgba(37,99,235,0.55);
+      box-shadow:0 16px 40px rgba(37,99,235,0.6);
     }
 
-    /* MAIN AREA */
+    /* MAIN COLUMN */
 
     .main-area {
       display:flex;
@@ -149,31 +148,31 @@
       gap:16px;
     }
 
-    .header-card {
-      background:radial-gradient(circle at top left,#020617 0,#020617 55%,#020617 100%);
-      border-radius:24px;
-      padding:18px 22px;
+    .hero-card {
+      background:radial-gradient(circle at top left,#020617 0,#020617 70%);
+      border-radius:22px;
+      padding:18px 22px 18px;
       border:1px solid rgba(51,65,85,0.9);
       box-shadow:0 18px 60px rgba(15,23,42,0.9);
       display:flex;
       flex-direction:column;
-      gap:8px;
+      gap:10px;
     }
 
-    .header-top-row {
+    .hero-top {
       display:flex;
       justify-content:space-between;
-      align-items:baseline;
-      gap:10px;
+      align-items:flex-start;
+      gap:14px;
       flex-wrap:wrap;
     }
 
-    .main-heading {
+    .hero-title {
       font-size:1.5rem;
       font-weight:650;
     }
 
-    .header-subtitle {
+    .hero-sub {
       font-size:0.95rem;
       color:var(--text-muted);
       max-width:720px;
@@ -182,7 +181,7 @@
 
     .meta-chip {
       border-radius:999px;
-      border:1px solid rgba(148,163,184,0.5);
+      border:1px solid rgba(148,163,184,0.55);
       padding:6px 14px;
       font-size:0.78rem;
       color:var(--text-muted);
@@ -192,7 +191,7 @@
       background:rgba(15,23,42,0.96);
     }
 
-    .meta-chip span.dot {
+    .meta-chip .dot {
       width:7px;
       height:7px;
       border-radius:999px;
@@ -200,14 +199,13 @@
       box-shadow:0 0 0 4px var(--accent-soft);
     }
 
-    .cases-header {
+    .hero-meta-row {
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:16px;
-      margin-top:6px;
       flex-wrap:wrap;
-      font-size:0.8rem;
+      font-size:0.78rem;
       text-transform:uppercase;
       letter-spacing:0.18em;
       color:#9ca3af;
@@ -215,13 +213,13 @@
 
     .search-box {
       position:relative;
-      max-width:280px;
+      max-width:270px;
       width:100%;
     }
 
     .search-box input {
       width:100%;
-      background:rgba(15,23,42,0.95);
+      background:#020617;
       border-radius:999px;
       border:1px solid rgba(51,65,85,0.9);
       padding:7px 14px;
@@ -231,7 +229,8 @@
       outline:none;
     }
 
-    .search-box input::placeholder{color:#64748b;}
+    .search-box input::placeholder { color:#64748b; }
+
     .search-icon {
       position:absolute;
       left:10px;
@@ -245,14 +244,14 @@
 
     .case-card {
       margin-top:10px;
-      border-radius:var(--radius-lg);
-      background:radial-gradient(circle at top left,rgba(15,23,42,0.98),rgba(15,23,42,0.94));
+      border-radius:20px;
+      background:#020617;
       border:1px solid var(--card-border);
-      padding:14px 16px 12px;
-      box-shadow:var(--shadow-soft);
+      padding:13px 16px 12px;
+      box-shadow:0 16px 55px rgba(15,23,42,0.95);
       position:relative;
       overflow:hidden;
-      transition:transform 0.18s ease,box-shadow 0.18s ease,border-color 0.18s ease;
+      transition:transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
 
     .case-card::before {
@@ -260,14 +259,15 @@
       position:absolute;
       inset:-40%;
       background:radial-gradient(circle at top left,var(--accent-soft),transparent 65%);
-      opacity:0.45;
+      opacity:0.4;
       pointer-events:none;
     }
 
     .case-card:hover {
       transform:translateY(-3px);
-      border-color:rgba(148,163,184,0.6);
-      box-shadow:0 26px 80px rgba(15,23,42,0.95);
+      border-color:rgba(148,163,184,0.7);
+      box-shadow:0 24px 80px rgba(15,23,42,0.98);
+      background:#020617;
     }
 
     .case-inner {
@@ -279,7 +279,7 @@
       align-items:center;
     }
 
-    .case-main {display:flex;flex-direction:column;gap:6px;}
+    .case-main { display:flex; flex-direction:column; gap:6px; }
 
     .case-top {
       display:flex;
@@ -287,13 +287,13 @@
       align-items:baseline;
       gap:8px;
       flex-wrap:wrap;
-      margin-bottom:4px;
+      margin-bottom:3px;
     }
 
     .case-kicker {
       font-size:0.7rem;
       text-transform:uppercase;
-      letter-spacing:0.26em;
+      letter-spacing:0.24em;
       color:#9ca3af;
     }
 
@@ -313,7 +313,7 @@
     .case-tag {
       padding:3px 9px;
       border-radius:999px;
-      border:1px solid rgba(148,163,184,0.4);
+      border:1px solid rgba(148,163,184,0.45);
       color:#cbd5f5;
       background:rgba(15,23,42,0.96);
     }
@@ -334,24 +334,24 @@
       align-self:center;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:8px;
       min-width:170px;
     }
 
     .action-strip {
       border-radius:999px;
-      background:rgba(15,23,42,0.98);
-      border:1px solid rgba(148,163,184,0.4);
+      background:#020617;
+      border:1px solid rgba(148,163,184,0.45);
       padding:6px 10px 6px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      box-shadow:0 0 0 1px rgba(15,23,42,1), 0 0 20px rgba(15,23,42,0.9);
+      box-shadow:0 0 0 1px #020617, 0 0 18px rgba(15,23,42,0.9);
     }
 
     .case-card:hover .action-strip {
-      box-shadow:0 0 0 1px rgba(15,23,42,1), 0 0 32px rgba(37,99,235,0.65);
+      box-shadow:0 0 0 1px #020617, 0 0 28px rgba(37,99,235,0.65);
     }
 
     .action-label {
@@ -372,7 +372,7 @@
       align-items:center;
       gap:6px;
       border-radius:999px;
-      border:1px solid rgba(148,163,184,0.6);
+      border:1px solid rgba(148,163,184,0.7);
       padding:6px 12px;
       font-size:0.78rem;
       text-decoration:none;
@@ -383,9 +383,9 @@
       white-space:nowrap;
     }
 
-    .pill-btn span.icon{font-size:0.85rem;color:var(--accent-strong);}
+    .pill-btn span.icon { font-size:0.85rem; color:var(--accent-strong); }
 
-    .pill-btn:hover{
+    .pill-btn:hover {
       transform:translateY(-1px);
       border-color:var(--accent);
       box-shadow:0 10px 28px rgba(15,23,42,0.9);
@@ -393,23 +393,25 @@
       color:#0f172a;
     }
 
-    footer{
-      margin-top:20px;
+    footer {
+      margin-top:22px;
       font-size:0.75rem;
       color:#6b7280;
       text-align:right;
     }
 
-    @media(max-width:960px){
-      .page-shell{grid-template-columns:minmax(0,1fr);}
+    @media (max-width:960px) {
+      .page-shell { grid-template-columns:minmax(0,1fr); }
     }
-    @media(max-width:768px){
-      .case-inner{grid-template-columns:minmax(0,1fr);}
-      .case-actions{align-self:flex-start;}
+
+    @media (max-width:768px) {
+      .case-inner { grid-template-columns:minmax(0,1fr); }
+      .case-actions { align-self:flex-start; }
     }
-    @media(max-width:640px){
-      body{padding:20px 10px 32px;}
-      .case-card{padding:12px 10px 10px;}
+
+    @media (max-width:640px) {
+      body { padding:18px 10px 30px; }
+      .case-card { padding:12px 10px 10px; }
     }
   </style>
 </head>
@@ -418,8 +420,8 @@
     <!-- LEFT PROFILE -->
     <aside class="side-panel">
       <div>
-        <div class="side-title">Shashank — Case Studies</div>
-        <div class="side-sub">
+        <div class="side-header-title">Shashank — Case Studies</div>
+        <div class="side-header-sub">
           Mobility, Infrastructure &amp; Industrial Operations<br>
           — Aroha Nagar
         </div>
@@ -451,13 +453,13 @@
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN -->
     <main class="main-area">
-      <section class="header-card">
-        <div class="header-top-row">
+      <section class="hero-card">
+        <div class="hero-top">
           <div>
-            <div class="main-heading">Business Use-Case Analysis — Aroha Nagar</div>
-            <p class="header-subtitle">
+            <div class="hero-title">Business Use-Case Analysis — Aroha Nagar</div>
+            <p class="hero-sub">
               Ten engineering-grade modules for Mobility, Infrastructure &amp; Industrial Operations.
               Each system links data structures, algorithms and C++ implementations to real-world behaviour.
             </p>
@@ -468,7 +470,7 @@
           </div>
         </div>
 
-        <div class="cases-header">
+        <div class="hero-meta-row">
           <span>Business Case Studies · 10 Systems · 20+ Algorithms</span>
           <div class="search-box">
             <span class="search-icon">🔍</span>
