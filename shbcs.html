@@ -1,265 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Shashank R. Yende — Arohanagara · Business Use Cases (Dynamic Views + Pretty Code)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#041225;
-      --muted:#9fb0c4;
-      --accent-1:#ff5fa2;
-      --accent-2:#7aa2ff;
-      --card-border: rgba(122,162,255,0.06);
-      --mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
-      --editor-bg: linear-gradient(180deg,#041826,#02111a);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,"Helvetica Neue",Arial;
-      color:#e6f9ff;
-      padding:28px;
-      display:flex;
-      justify-content:center;
-      background:
-        radial-gradient(900px at 8% 18%, rgba(122,162,255,0.04), transparent 40%),
-        linear-gradient(180deg,#041022 0%, #07182b 40%, #04121a 100%);
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
+<div class="header-card" role="region" aria-label="Page header">
+  <div class="header-left">
+    <div class="breadcrumb">BUSINESS CASE STUDIES · SHASHANK R YENDE</div>
+    <h1 class="header-title">Environment &amp; Infrastructure — DS &amp; Algo<br/>Case Studies</h1>
+    <p class="header-sub">Ten sustainability-focused systems designed using graphs, trees, greedy heuristics, clustering and pattern matching — mapped from theory to real-world, city-scale problems.</p>
+  </div>
 
-    /* (---- keep your page layout CSS from earlier here ----)
-       For brevity I removed unrelated parts — assume index contains header, list/grid/table renderers etc.
-       Below are the modal/editor related styles and JS enhancements you asked for. */
+  <div class="header-actions" role="region" aria-label="Header controls">
+    <div class="top-row">
+      <button class="pill" title="Back">← Back to Arohanagara</button>
+      <button class="pill">10 case studies · 20+ algorithms</button>
+    </div>
 
-    /* Modal / code preview styling (new & improved) */
-    .modal-backdrop{
-      position:fixed; inset:0;
-      background:linear-gradient(180deg, rgba(2,6,23,0.8), rgba(2,6,23,0.88));
-      display:none; align-items:center; justify-content:center; z-index:120; padding:32px;
-      backdrop-filter: blur(6px);
-    }
-    .modal {
-      width:min(1100px,98%); max-height:86vh; border-radius:12px;
-      background: linear-gradient(180deg, rgba(6,18,30,0.99), rgba(3,12,20,0.98));
-      box-shadow: 0 40px 110px rgba(0,0,0,0.7);
-      border: 1px solid rgba(255,255,255,0.03);
-      overflow:hidden; display:flex; flex-direction:column; font-family:var(--mono); color:#dff7ff;
-    }
-    .modal-head{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.03);
-      background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
-    }
-    .modal-title{display:flex; gap:12px; align-items:center; font-weight:700; color:#e8f9ff;}
-    .modal-sub{font-size:12px;color:var(--muted)}
-    .modal-actions{display:flex; gap:10px; align-items:center}
-    .modal-actions .btn{background:transparent;border:1px solid rgba(255,255,255,0.04); padding:8px 11px; border-radius:8px; color:var(--muted); cursor:pointer}
-    .modal-actions .btn.primary{ background: linear-gradient(90deg,var(--accent-2),var(--accent-1)); color:#031021; border:none; }
-
-    /* code editor layout */
-    .editor {
-      display:grid; grid-template-columns: 56px 1fr; gap:0; min-height:420px; height:72vh; align-items:stretch;
-    }
-    .gutter {
-      background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.06));
-      color:#6f7f89; font-family:var(--mono); font-size:12px; line-height:20px;
-      padding:12px 10px; text-align:right; overflow:auto; border-right:1px solid rgba(255,255,255,0.02);
-      user-select:none;
-    }
-    .code-area {
-      background: var(--editor-bg);
-      padding:14px 18px; overflow:auto; font-family:var(--mono); font-size:13px; line-height:20px; white-space:pre;
-      color:#cfeefe; tab-size:4;
-    }
-
-    /* Syntax token colors */
-    .tok-preproc { color:#ffa86b; font-weight:600; }      /* preprocessor (orange) */
-    .tok-keyword { color:#ff9bb3; font-weight:700; }      /* keywords (pinkish) */
-    .tok-type    { color:#8fbaff; font-weight:700; }      /* types (blue) */
-    .tok-number  { color:#ffb86b; }                      /* numbers (amber) */
-    .tok-string  { color:#a6f3b6; }                      /* strings (green) */
-    .tok-comment { color:#60707a; font-style:italic; }   /* comments (muted gray) */
-    .tok-fn      { color:#ffd6ff; }                      /* function names / identifiers */
-    .tok-const   { color:#f7e79a; }                      /* constants */
-
-    /* make HTML inside code safe & pre-wrap */
-    .code-area .line { display:block; white-space:pre; }
-
-    /* nice scrollbar */
-    .gutter::-webkit-scrollbar, .code-area::-webkit-scrollbar { width:12px; height:12px; }
-    .gutter::-webkit-scrollbar-thumb, .code-area::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.06); border-radius:8px; border: 3px solid transparent; background-clip: padding-box;
-    }
-
-    /* small copy/close icons are the .btn elements in modal-actions */
-
-    @media (max-width:820px){
-      .editor { grid-template-columns: 48px 1fr; }
-      .modal { height:86vh; }
-    }
-    @media (prefers-reduced-motion: reduce){
-      .modal, .editor { transition:none !important; }
-    }
-  </style>
-</head>
-<body>
-  <!-- Your existing page header / content goes above — omitted here for clarity -->
-
-  <!-- Modal (new pretty highlighter integrated) -->
-  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" role="document" aria-labelledby="modalTitle">
-      <div class="modal-head">
-        <div>
-          <div class="modal-title" id="modalTitle">Case code</div>
-          <div class="modal-sub" id="modalSub">Shashank/Case1.cpp</div>
-        </div>
-
-        <div class="modal-actions" aria-hidden="false">
-          <button id="copyBtn" class="btn" title="Copy code">Copy</button>
-          <button id="closeModal" class="btn" title="Close preview">Close</button>
-        </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end">
+      <div class="header-search" title="Search (e.g. Dijkstra, microgrid, TSP...)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-4.35-4.35" stroke="#9aa5b3" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="5" stroke="#9aa5b3" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <input id="filter" placeholder="Search (e.g. Dijkstra, microgrid, TSP...)" aria-label="Search cases">
       </div>
 
-      <div class="editor" role="region" aria-label="Code editor">
-        <pre id="gutter" class="gutter" aria-hidden="true"></pre>
-        <pre id="codeArea" class="code-area" tabindex="0" aria-label="Code content">Loading preview...</pre>
+      <div class="controls-inline" role="tablist" aria-label="View selectors" style="margin-top:10px">
+        <button id="listViewBtn" class="view-btn active" aria-pressed="true" title="List view (1)">List</button>
+        <button id="tableViewBtn" class="view-btn" aria-pressed="false" title="Table view (2)">Table</button>
+        <button id="gridViewBtn" class="view-btn" aria-pressed="false" title="Grid view (3)">Grid</button>
+        <button id="downloadBtn" class="view-btn" title="Download">Download</button>
       </div>
     </div>
   </div>
-
-  <script>
-    /* Lightweight C/C++ syntax highlighter (regex-based).
-       Not meant to replace a full parser but gives attractive styling for typical C/C++ code.
-       Usage: highlightCPP(sourceCode) -> HTML string with <span class="tok-..."> tokens.
-    */
-
-    function escapeHtml(s){
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    function highlightCPP(src){
-      // operate on escaped string
-      let s = escapeHtml(src);
-
-      // handle multi-line block comments first (so inner tokens aren't highlighted)
-      s = s.replace(/\/\*[\s\S]*?\*\//g, (m)=> `<span class="tok-comment">${m}</span>`);
-
-      // single-line comments
-      s = s.replace(/\/\/.*$/gm, (m)=> `<span class="tok-comment">${m}</span>`);
-
-      // preprocessor directives (start of line: #...)
-      s = s.replace(/(^|\n)(\s*#\s*[A-Za-z_]+\b[^\n]*)/g, (m,p1,p2)=> `${p1}<span class="tok-preproc">${p2}</span>`);
-
-      // strings (double and single)
-      s = s.replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, (m)=> `<span class="tok-string">${m}</span>`);
-
-      // numeric literals (simple)
-      s = s.replace(/\b(\d+(\.\d+)?(f|F|u|U|L|l)?)\b/g, `<span class="tok-number">$1</span>`);
-
-      // common C/C++ keywords (update list as needed)
-      const keywords = [
-        'alignas','alignof','and','and_eq','asm','auto','bitand','bitor','bool','break','case','catch','char','char16_t','char32_t','class','compl',
-        'const','constexpr','const_cast','continue','decltype','default','delete','do','double','dynamic_cast','else','enum','explicit','export',
-        'extern','false','float','for','friend','goto','if','inline','int','long','mutable','namespace','new','noexcept','not','not_eq','operator',
-        'private','protected','public','register','reinterpret_cast','return','short','signed','sizeof','static','static_assert','static_cast','struct',
-        'switch','template','this','thread_local','throw','true','try','typedef','typeid','typename','union','unsigned','using','virtual','void','volatile','while','override','final','import','module'
-      ];
-      const kwRegex = new RegExp('\\b(' + keywords.join('|') + ')\\b','g');
-      s = s.replace(kwRegex, `<span class="tok-keyword">$1</span>`);
-
-      // types / common std types: size_t, std::string, vector, map, unordered_map, etc.
-      const types = ['size_t','std::string','string','std::vector','vector','std::map','map','unordered_map','unordered_set','deque','pair','tuple','int32_t','int64_t','uint32_t','uint64_t','long','short','bool','float','double','auto','void'];
-      const tyRegex = new RegExp('\\b(' + types.map(t=>t.replace(/\./g,'\\.')).join('|') + ')\\b', 'g');
-      s = s.replace(tyRegex, `<span class="tok-type">$1</span>`);
-
-      // function names (simple heuristic: identifier followed by '(')
-      s = s.replace(/([A-Za-z_]\w*)(?=\s*\()/g, `<span class="tok-fn">$1</span>`);
-
-      // constants / macros in all caps (heuristic)
-      s = s.replace(/\b([A-Z_]{2,}[A-Z0-9_]*)\b/g, `<span class="tok-const">$1</span>`);
-
-      // finally, preserve line breaks by splitting lines into <span class="line">
-      const lines = s.split(/\r\n|\r|\n/);
-      const wrapped = lines.map(line => `<span class="line">${line || '&nbsp;'}</span>`).join('\n');
-      return wrapped;
-    }
-
-    // --- modal open / load logic (integrates highlighter) ---
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const gutter = document.getElementById('gutter');
-    const codeArea = document.getElementById('codeArea');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalSub = document.getElementById('modalSub');
-
-    function openModal(title, link){
-      modalTitle.textContent = title + ' — Code preview';
-      modalSub.textContent = link;
-      modalBackdrop.style.display = 'flex';
-      modalBackdrop.setAttribute('aria-hidden', 'false');
-      gutter.textContent = '';
-      codeArea.textContent = 'Loading preview...';
-
-      // fetch file (as we did before). If not available, show raw message.
-      fetch(link).then(r=>{
-        if(!r.ok) throw new Error('Could not fetch file (CORS / not hosted).');
-        return r.text();
-      }).then(txt=>{
-        // build gutter numbers
-        const lines = txt.split(/\r\n|\r|\n/);
-        const ln = [];
-        for(let i=1;i<=lines.length;i++) ln.push(i);
-        gutter.textContent = ln.join('\n');
-
-        // highlight into HTML and place in code area
-        codeArea.innerHTML = highlightCPP(txt);
-
-        // sync scrolls
-        syncScrolls();
-      }).catch(err=>{
-        gutter.textContent = '';
-        // show fallback with escaped text (no highlight)
-        codeArea.innerText = `Preview not available from this host.\n\nFile: ${link}\n\nError: ${err.message}`;
-      });
-    }
-
-    function syncScrolls(){
-      gutter.scrollTop = 0;
-      codeArea.scrollTop = 0;
-      codeArea.addEventListener('scroll', () => { gutter.scrollTop = codeArea.scrollTop; });
-      gutter.addEventListener('scroll', () => { codeArea.scrollTop = gutter.scrollTop; });
-    }
-
-    function closeModal(){ modalBackdrop.style.display='none'; modalBackdrop.setAttribute('aria-hidden','true'); gutter.textContent=''; codeArea.textContent=''; }
-    document.getElementById('closeModal').addEventListener('click', closeModal);
-    modalBackdrop.addEventListener('click', (ev)=>{ if(ev.target === modalBackdrop) closeModal(); });
-
-    document.getElementById('copyBtn').addEventListener('click', ()=>{
-      // copy plain text (strip tags if highlighted)
-      let txt;
-      if (codeArea && codeArea.innerText) txt = codeArea.innerText;
-      else txt = '';
-      if(!txt) return;
-      navigator.clipboard?.writeText(txt).then(()=> {
-        // subtle visual confirmation
-        const b = document.getElementById('copyBtn');
-        b.textContent = 'Copied';
-        setTimeout(()=> b.textContent = 'Copy', 1200);
-      }, ()=> {
-        alert('Copy not supported');
-      });
-    });
-
-    // For demo purposes: expose openModal globally so existing buttons can call openModal(title, link)
-    window.openCodeModal = openModal;
-  </script>
-
-  <!-- Example usage (for testing) -->
-  <script>
-    // Uncomment to auto-open a local sample on load (only if file exists):
-    // window.addEventListener('load', ()=> openModal('Sample', 'Shashank/Case1.cpp'));
-  </script>
-</body>
-</html>
+</div>
