@@ -1,395 +1,377 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// ============================================================================
-// Product and Warehouse Structures
-// ============================================================================
-
-struct Product {
+struct Item {
     int id;
     string name;
     string category;
     int quantity;
+    int warehouse;
+    double weight;
+    double score;
 };
 
-struct Warehouse {
-    int id;
-    string name;
-    string zone;
-};
-
-// ============================================================================
-// Custom Hash Table (Open Addressing with Linear Probing)
-// Key: productId
-// Value: warehouseId
-// ============================================================================
-
-class HashMap {
-public:
-    struct Entry {
-        int key;
-        int value;
-        bool used;
-        bool deleted;
-        Entry() : key(0), value(0), used(false), deleted(false) {}
-    };
-
-    HashMap(int cap = 128) {
-        capacity = cap;
-        table.assign(cap, Entry());
-        usedCount = 0;
-    }
-
-    void put(int key, int value) {
-        if ((double)usedCount / capacity > 0.6) {
-            rehash(capacity * 2);
+static vector<vector<string>> read_csv_generic(const string &path){
+    ifstream in(path);
+    vector<vector<string>> out;
+    if(!in.is_open()) return out;
+    string line;
+    if(!getline(in,line)) return out;
+    while(getline(in,line)){
+        vector<string> cols;
+        string cur; bool inq=false;
+        for(char c: line){
+            if(c=='"'){ inq=!inq; continue; }
+            if(c==',' && !inq){ cols.push_back(cur); cur.clear(); }
+            else cur.push_back(c);
         }
-        insertInternal(key, value);
+        cols.push_back(cur);
+        out.push_back(cols);
     }
+    return out;
+}
 
-    bool get(int key, int &outValue) {
-        int idx = findIndex(key);
-        if (idx == -1) return false;
-        outValue = table[idx].value;
-        return true;
+static void write_csv_items(const string &path, const vector<Item> &v){
+    ofstream out(path);
+    out<<"id,name,category,quantity,warehouse,weight,score\n";
+    for(auto &x: v){
+        out<<x.id<<","<<x.name<<","<<x.category<<","<<x.quantity<<","<<x.warehouse<<","<<x.weight<<","<<x.score<<"\n";
     }
+    out.close();
+}
 
-    void removeKey(int key) {
-        int idx = findIndex(key);
-        if (idx != -1) table[idx].deleted = true;
+static vector<string> split_ws(const string &s){
+    vector<string> out; string tmp; stringstream ss(s);
+    while(ss>>tmp) out.push_back(tmp);
+    return out;
+}
+
+static string to_lower(const string &s){
+    string r=s;
+    for(char &c:r) c=tolower(c);
+    return r;
+}
+
+struct SkipNode {
+    Item val;
+    vector<SkipNode*> next;
+    SkipNode(const Item &v,int lvl):val(v),next(lvl,nullptr){}
+};
+
+struct SkipList {
+    int maxlvl;
+    double p;
+    SkipNode* head;
+    mt19937_64 rng;
+    SkipList(int mx=20,double pp=0.5):maxlvl(mx),p(pp){
+        head=new SkipNode(Item(),maxlvl);
+        rng.seed(chrono::high_resolution_clock::now().time_since_epoch().count());
     }
-
-    bool contains(int key) {
-        return findIndex(key) != -1;
+    int random_level(){
+        int lvl=1;
+        uniform_real_distribution<double> d(0.0,1.0);
+        while(d(rng)<p && lvl<maxlvl) lvl++;
+        return lvl;
     }
-
-    vector<pair<int,int>> allPairs() const {
-        vector<pair<int,int>> out;
-        for (auto &e : table) {
-            if (e.used && !e.deleted) out.push_back({e.key, e.value});
+    void insert_item(const Item &it){
+        vector<SkipNode*> up(maxlvl,nullptr);
+        SkipNode* cur=head;
+        for(int lvl=maxlvl-1; lvl>=0; --lvl){
+            while(cur->next[lvl] && cur->next[lvl]->val.score < it.score){
+                cur = cur->next[lvl];
+            }
+            up[lvl] = cur;
+        }
+        int lvl = random_level();
+        SkipNode* nn = new SkipNode(it,lvl);
+        for(int i=0;i<lvl;++i){
+            nn->next[i] = up[i]->next[i];
+            up[i]->next[i] = nn;
+        }
+    }
+    bool erase_item(int id){
+        SkipNode* cur=head;
+        bool found=false;
+        for(int lvl=maxlvl-1; lvl>=0; --lvl){
+            while(cur->next[lvl] && cur->next[lvl]->val.id < id){
+                cur = cur->next[lvl];
+            }
+            while(cur->next[lvl] && cur->next[lvl]->val.id == id){
+                found=true;
+                SkipNode* d=cur->next[lvl];
+                cur->next[lvl] = d->next[lvl];
+            }
+        }
+        return found;
+    }
+    vector<Item> top_k(int k){
+        vector<Item> out;
+        SkipNode* cur=head->next[0];
+        while(cur && (int)out.size()<k){
+            out.push_back(cur->val);
+            cur=cur->next[0];
         }
         return out;
     }
-
-private:
-    int capacity;
-    int usedCount;
-    vector<Entry> table;
-
-    int hashFunc(int key) const {
-        key ^= (key << 5);
-        key ^= (key >> 7);
-        return abs(key) % capacity;
+    vector<Item> all_sorted(){
+        vector<Item> out;
+        SkipNode* cur=head->next[0];
+        while(cur){ out.push_back(cur->val); cur=cur->next[0]; }
+        return out;
     }
+};
 
-    void insertInternal(int key, int value) {
-        int idx = hashFunc(key);
-        for (int i = 0; i < capacity; i++) {
-            int p = (idx + i) % capacity;
-            if (!table[p].used || table[p].deleted) {
-                table[p].key = key;
-                table[p].value = value;
-                table[p].used = true;
-                table[p].deleted = false;
-                usedCount++;
-                return;
+class Inventory {
+public:
+    unordered_map<int, Item> h;
+    unordered_map<string, vector<int>> bycat;
+    unordered_map<string, vector<int>> byname;
+    SkipList sk;
+    Inventory():sk(24,0.55){}
+    static double score_of(const Item &x){
+        return x.quantity*0.6 + x.weight*0.4 + (x.warehouse%7)*0.1 + 1.0;
+    }
+    void load_csv(const string &path){
+        auto rows = read_csv_generic(path);
+        for(auto &r: rows){
+            if(r.size() < 6) continue;
+            Item it;
+            it.id = stoi(r[0]);
+            it.name = r[1];
+            it.category = r[2];
+            it.quantity = stoi(r[3]);
+            it.warehouse = stoi(r[4]);
+            it.weight = stod(r[5]);
+            it.score = score_of(it);
+            add_item(it);
+        }
+    }
+    void add_item(const Item &it){
+        h[it.id] = it;
+        bycat[to_lower(it.category)].push_back(it.id);
+        byname[to_lower(it.name)].push_back(it.id);
+        sk.insert_item(it);
+    }
+    bool remove_item(int id){
+        if(!h.count(id)) return false;
+        auto it = h[id];
+        auto &vc = bycat[to_lower(it.category)];
+        vc.erase(remove(vc.begin(), vc.end(), it.id), vc.end());
+        auto &vn = byname[to_lower(it.name)];
+        vn.erase(remove(vn.begin(), vn.end(), it.id), vn.end());
+        sk.erase_item(id);
+        h.erase(id);
+        return true;
+    }
+    vector<Item> list_category(const string &cat){
+        vector<Item> out;
+        auto key = to_lower(cat);
+        if(!bycat.count(key)) return out;
+        for(int id: bycat[key]) out.push_back(h[id]);
+        return out;
+    }
+    vector<Item> name_prefix(const string &prefix){
+        vector<Item> out;
+        string p = to_lower(prefix);
+        for(auto &kv: byname){
+            if(kv.first.size()>=p.size() && kv.first.compare(0,p.size(),p)==0){
+                for(int id: kv.second) out.push_back(h[id]);
+            }
+        }
+        return out;
+    }
+    vector<Item> warehouse_range(int l,int r){
+        vector<Item> out;
+        for(auto &kv: h){
+            if(kv.second.warehouse >= l && kv.second.warehouse <= r){
+                out.push_back(kv.second);
+            }
+        }
+        return out;
+    }
+    vector<Item> get_top_k(int k){
+        return sk.top_k(k);
+    }
+    vector<Item> sorted_inventory(){ return sk.all_sorted(); }
+    void export_all(const string &path){
+        auto v = sorted_inventory();
+        write_csv_items(path,v);
+    }
+    vector<Item> global_search(const string &q){
+        vector<Item> out;
+        string s = to_lower(q);
+        for(auto &kv: h){
+            auto &it = kv.second;
+            string nm = to_lower(it.name);
+            string ct = to_lower(it.category);
+            if(nm.find(s)!=string::npos || ct.find(s)!=string::npos) out.push_back(it);
+        }
+        return out;
+    }
+    vector<Item> multi_index_query(const string &term,int wmin,int wmax){
+        vector<Item> namehits = name_prefix(term);
+        vector<Item> out;
+        for(auto &x: namehits){
+            if(x.warehouse>=wmin && x.warehouse<=wmax) out.push_back(x);
+        }
+        return out;
+    }
+    void rebalance(){
+        vector<Item> v = sorted_inventory();
+        sk = SkipList(24,0.55);
+        bycat.clear();
+        byname.clear();
+        h.clear();
+        for(auto &x: v){
+            add_item(x);
+        }
+    }
+    void stress_ops(int n){
+        mt19937_64 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
+        uniform_int_distribution<int> d(1,9999999);
+        for(int i=0;i<n;++i){
+            int op = d(rng) % 5;
+            if(op==0){
+                Item it;
+                it.id = d(rng);
+                it.name = "item"+to_string(it.id%1000);
+                it.category = "cat"+to_string(it.id%10);
+                it.quantity = d(rng)%500;
+                it.warehouse = d(rng)%20;
+                it.weight = (d(rng)%200)/10.0;
+                it.score = score_of(it);
+                add_item(it);
+            } else if(op==1){
+                if(!h.empty()){
+                    auto it = h.begin();
+                    advance(it, d(rng)%h.size());
+                    remove_item(it->first);
+                }
+            } else if(op==2){
+                auto hits = global_search("a");
+            } else if(op==3){
+                auto v = get_top_k(10);
+            } else {
+                if(i%200==0) rebalance();
             }
         }
     }
-
-    int findIndex(int key) {
-        int idx = hashFunc(key);
-        for (int i = 0; i < capacity; i++) {
-            int p = (idx + i) % capacity;
-            if (!table[p].used) return -1;
-            if (table[p].used && !table[p].deleted && table[p].key == key) return p;
-        }
-        return -1;
-    }
-
-    void rehash(int newCap) {
-        vector<Entry> old = table;
-        table.assign(newCap, Entry());
-        int oldCap = capacity;
-        capacity = newCap;
-        usedCount = 0;
-        for (auto &e : old) {
-            if (e.used && !e.deleted) insertInternal(e.key, e.value);
-        }
-    }
 };
 
-// ============================================================================
-// Warehouse Registry & Product Registry
-// ============================================================================
-
-class WarehouseRegistry {
-public:
-    void addWarehouse(const Warehouse &w) {
-        wh[w.id] = w;
-    }
-
-    bool exists(int id) const {
-        return wh.count(id);
-    }
-
-    Warehouse get(int id) const {
-        return wh.at(id);
-    }
-
-    vector<Warehouse> all() const {
-        vector<Warehouse> v;
-        for (auto &p : wh) v.push_back(p.second);
-        return v;
-    }
-
-private:
-    unordered_map<int,Warehouse> wh;
+struct Timer {
+    chrono::high_resolution_clock::time_point s;
+    void start(){ s=chrono::high_resolution_clock::now(); }
+    long long ms(){ return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now()-s).count(); }
 };
 
-class ProductRegistry {
-public:
-    void addProduct(const Product &p) {
-        items[p.id] = p;
+int main(int argc,char**argv){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    if(argc<2){
+        cerr<<"Usage: "<<argv[0]<<" <inventory.csv>\n";
+        return 1;
     }
-
-    bool exists(int id) const {
-        return items.count(id);
-    }
-
-    Product get(int id) const {
-        return items.at(id);
-    }
-
-    vector<Product> all() const {
-        vector<Product> v;
-        for (auto &p : items) v.push_back(p.second);
-        return v;
-    }
-
-private:
-    unordered_map<int,Product> items;
-};
-
-// ============================================================================
-// Inventory Manager: Maps product → warehouse using HashMap
-// ============================================================================
-
-class InventoryMapper {
-public:
-    InventoryMapper(WarehouseRegistry &wr, ProductRegistry &pr)
-        : warehouses(wr), products(pr), map(256) { }
-
-    void assignProduct(int productId, int warehouseId) {
-        if (!products.exists(productId)) return;
-        if (!warehouses.exists(warehouseId)) return;
-        map.put(productId, warehouseId);
-    }
-
-    bool getLocation(int productId, Warehouse &out) {
-        int wid;
-        if (!map.get(productId, wid)) return false;
-        if (!warehouses.exists(wid)) return false;
-        out = warehouses.get(wid);
-        return true;
-    }
-
-    vector<pair<Product,Warehouse>> allAssignments() {
-        vector<pair<Product,Warehouse>> out;
-        auto pairs = map.allPairs();
-        for (auto &p : pairs) {
-            int pid = p.first;
-            int wid = p.second;
-            if (!products.exists(pid)) continue;
-            if (!warehouses.exists(wid)) continue;
-            out.push_back({products.get(pid), warehouses.get(wid)});
+    string csv = argv[1];
+    Inventory inv;
+    Timer t; t.start();
+    inv.load_csv(csv);
+    cerr<<"load "<<t.ms()<<"ms\n";
+    cout<<"items="<<inv.h.size()<<"\n";
+    cout<<"cmds:\nadd id nm cat q wh wt\nremove id\ncat c\nnamepref p\nrange l r\ntopk k\nexport f.csv\nglob term\nmix term l r\nsorted\nrebalance\nstress n\nquit\n";
+    string line;
+    while(true){
+        cout<<"> ";
+        if(!getline(cin,line)) break;
+        if(line.empty()) continue;
+        auto v = split_ws(line);
+        if(v.empty()) continue;
+        string c=v[0];
+        if(c=="quit"||c=="exit") break;
+        if(c=="add"){
+            if(v.size()<7){ cout<<"add id nm cat q wh wt\n"; continue; }
+            Item it;
+            it.id=stoi(v[1]);
+            it.name=v[2];
+            it.category=v[3];
+            it.quantity=stoi(v[4]);
+            it.warehouse=stoi(v[5]);
+            it.weight=stod(v[6]);
+            it.score=Inventory::score_of(it);
+            inv.add_item(it);
+            cout<<"added\n";
+            continue;
         }
-        return out;
-    }
-
-private:
-    WarehouseRegistry &warehouses;
-    ProductRegistry &products;
-    HashMap map;
-};
-
-// ============================================================================
-// Product Assignment Simulator
-// ============================================================================
-
-class InventorySimulator {
-public:
-    InventorySimulator(InventoryMapper &im, WarehouseRegistry &wr, ProductRegistry &pr)
-        : mapper(im), warehouses(wr), products(pr) {
-        rng.seed(time(nullptr));
-    }
-
-    void streamAssignments(int count) {
-        auto prd = products.all();
-        auto whs = warehouses.all();
-        if (prd.empty() || whs.empty()) return;
-
-        uniform_int_distribution<int> p(0, prd.size()-1);
-        uniform_int_distribution<int> w(0, whs.size()-1);
-
-        for (int i = 0; i < count; i++) {
-            int pid = prd[p(rng)].id;
-            int wid = whs[w(rng)].id;
-            mapper.assignProduct(pid, wid);
+        if(c=="remove"){
+            if(v.size()<2){ cout<<"remove id\n"; continue; }
+            int id=stoi(v[1]);
+            cout<<(inv.remove_item(id)?"ok\n":"nf\n");
+            continue;
         }
-    }
-
-private:
-    InventoryMapper &mapper;
-    WarehouseRegistry &warehouses;
-    ProductRegistry &products;
-    mt19937 rng;
-};
-
-// ============================================================================
-// CLI
-// ============================================================================
-
-static string trimRead(const string &prompt) {
-    cout << prompt;
-    string s;
-    getline(cin, s);
-    size_t a = s.find_first_not_of(" \t\r\n");
-    if (a == string::npos) return "";
-    size_t b = s.find_last_not_of(" \t\r\n");
-    return s.substr(a, b - a + 1);
-}
-
-static int readInt(const string &prompt, int def) {
-    string s = trimRead(prompt);
-    if (s.empty()) return def;
-    try { return stoi(s); } catch (...) { return def; }
-}
-
-class InventoryCLI {
-public:
-    InventoryCLI(WarehouseRegistry &wr, ProductRegistry &pr, InventoryMapper &im, InventorySimulator &sim)
-        : warehouses(wr), products(pr), mapper(im), simulator(sim) { }
-
-    void run() {
-        bool quit = false;
-        while (!quit) {
-            menu();
-            string cmd = trimRead("Choice> ");
-            if (cmd == "1") listWarehouses();
-            else if (cmd == "2") listProducts();
-            else if (cmd == "3") assignProduct();
-            else if (cmd == "4") queryProductLocation();
-            else if (cmd == "5") listAssignments();
-            else if (cmd == "6") simulate();
-            else if (cmd == "q") quit = true;
-            else cout << "Unknown option\n";
+        if(c=="cat"){
+            if(v.size()<2){ cout<<"cat c\n"; continue; }
+            auto out=inv.list_category(v[1]);
+            for(auto &x: out) cout<<x.id<<","<<x.name<<","<<x.score<<"\n";
+            continue;
         }
-    }
-
-private:
-    WarehouseRegistry &warehouses;
-    ProductRegistry &products;
-    InventoryMapper &mapper;
-    InventorySimulator &simulator;
-
-    void menu() {
-        cout << "\nInventory Mapping — Options\n";
-        cout << " 1) List warehouses\n";
-        cout << " 2) List products\n";
-        cout << " 3) Assign product to warehouse\n";
-        cout << " 4) Query product location\n";
-        cout << " 5) List all assignments\n";
-        cout << " 6) Simulate random assignments\n";
-        cout << " q) Quit\n";
-    }
-
-    void listWarehouses() {
-        auto all = warehouses.all();
-        cout << "Warehouses:\n";
-        for (auto &w : all) {
-            cout << " " << w.id << " | " << w.name << " | " << w.zone << "\n";
+        if(c=="namepref"){
+            if(v.size()<2){ cout<<"namepref p\n"; continue; }
+            auto out=inv.name_prefix(v[1]);
+            for(auto &x: out) cout<<x.id<<","<<x.name<<","<<x.score<<"\n";
+            continue;
         }
-    }
-
-    void listProducts() {
-        auto all = products.all();
-        cout << "Products:\n";
-        for (auto &p : all) {
-            cout << " " << p.id << " | " << p.name << " | " << p.category
-                 << " | qty=" << p.quantity << "\n";
+        if(c=="range"){
+            if(v.size()<3){ cout<<"range l r\n"; continue; }
+            int l=stoi(v[1]), r=stoi(v[2]);
+            auto out=inv.warehouse_range(l,r);
+            for(auto &x: out) cout<<x.id<<","<<x.warehouse<<","<<x.score<<"\n";
+            continue;
         }
-    }
-
-    void assignProduct() {
-        int pid = readInt("Product ID: ", -1);
-        int wid = readInt("Warehouse ID: ", -1);
-        mapper.assignProduct(pid, wid);
-        cout << "Assigned.\n";
-    }
-
-    void queryProductLocation() {
-        int pid = readInt("Product ID: ", -1);
-        Warehouse w;
-        if (mapper.getLocation(pid, w)) {
-            cout << "Located at: " << w.name << " (" << w.zone << ")\n";
-        } else {
-            cout << "Product not mapped.\n";
+        if(c=="topk"){
+            if(v.size()<2){ cout<<"topk k\n"; continue; }
+            int k=stoi(v[1]);
+            auto out=inv.get_top_k(k);
+            for(auto &x: out) cout<<x.id<<","<<x.score<<"\n";
+            continue;
         }
-    }
-
-    void listAssignments() {
-        auto all = mapper.allAssignments();
-        cout << "Assignments:\n";
-        for (auto &p : all) {
-            cout << " Product " << p.first.name << " -> " << p.second.name << " (" << p.second.zone << ")\n";
+        if(c=="export"){
+            if(v.size()<2){ cout<<"export f.csv\n"; continue; }
+            inv.export_all(v[1]);
+            cout<<"done\n";
+            continue;
         }
+        if(c=="glob"){
+            if(v.size()<2){ cout<<"glob term\n"; continue; }
+            auto out=inv.global_search(v[1]);
+            for(auto &x: out) cout<<x.id<<","<<x.name<<","<<x.category<<"\n";
+            continue;
+        }
+        if(c=="mix"){
+            if(v.size()<4){ cout<<"mix term l r\n"; continue; }
+            string term=v[1];
+            int l=stoi(v[2]), r=stoi(v[3]);
+            auto out=inv.multi_index_query(term,l,r);
+            for(auto &x: out) cout<<x.id<<","<<x.name<<","<<x.warehouse<<"\n";
+            continue;
+        }
+        if(c=="sorted"){
+            auto out=inv.sorted_inventory();
+            for(auto &x: out) cout<<x.id<<","<<x.score<<"\n";
+            continue;
+        }
+        if(c=="rebalance"){
+            inv.rebalance();
+            cout<<"rebuilt\n";
+            continue;
+        }
+        if(c=="stress"){
+            if(v.size()<2){ cout<<"stress n\n"; continue; }
+            int n=stoi(v[1]);
+            t.start();
+            inv.stress_ops(n);
+            cout<<"done "<<t.ms()<<"ms\n";
+            continue;
+        }
+        cout<<"unknown\n";
     }
-
-    void simulate() {
-        int count = readInt("How many random assignments? ", 10);
-        simulator.streamAssignments(count);
-        cout << "Simulation done.\n";
-    }
-};
-
-// ============================================================================
-// Default Data for Aroha Nagar
-// ============================================================================
-
-static void populateWarehouses(WarehouseRegistry &wr) {
-    wr.addWarehouse({1,"Central Depot","Central"});
-    wr.addWarehouse({2,"North Storage","North"});
-    wr.addWarehouse({3,"East Hub","East"});
-    wr.addWarehouse({4,"South ColdStore","South"});
-    wr.addWarehouse({5,"West Reserve","West"});
-}
-
-static void populateProducts(ProductRegistry &pr) {
-    pr.addProduct({101,"Processors","Electronics",500});
-    pr.addProduct({102,"Mobile Screens","Electronics",300});
-    pr.addProduct({103,"Charging Units","Electronics",700});
-    pr.addProduct({201,"Wheat Bags","Agro",1200});
-    pr.addProduct({202,"Rice Packets","Agro",900});
-    pr.addProduct({203,"Groundnut Boxes","Agro",450});
-    pr.addProduct({301,"Router Units","Networking",200});
-    pr.addProduct({401,"Laptops","Computers",80});
-}
-
-// ============================================================================
-// Main
-// ============================================================================
-
-int main() {
-    WarehouseRegistry wr;
-    ProductRegistry pr;
-    populateWarehouses(wr);
-    populateProducts(pr);
-
-    InventoryMapper mapper(wr, pr);
-    InventorySimulator simulator(mapper, wr, pr);
-    InventoryCLI cli(wr, pr, mapper, simulator);
-
-    cli.run();
     return 0;
 }
