@@ -1,466 +1,456 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// ========================================================================
-// Disjoint Set Union (Union-Find)
-// ========================================================================
-
-class DSU {
-public:
-    DSU(int n = 0) { init(n); }
-
-    void init(int n) {
-        parent.resize(n+1);
-        rnk.resize(n+1, 0);
-        for (int i = 0; i <= n; i++) parent[i] = i;
-    }
-
-    int find(int x) {
-        while (parent[x] != x) {
-            parent[x] = parent[parent[x]];
-            x = parent[x];
-        }
-        return x;
-    }
-
-    bool unite(int a, int b) {
-        a = find(a);
-        b = find(b);
-        if (a == b) return false;
-        if (rnk[a] < rnk[b]) swap(a,b);
-        parent[b] = a;
-        if (rnk[a] == rnk[b]) rnk[a]++;
-        return true;
-    }
-
-private:
-    vector<int> parent;
-    vector<int> rnk;
-};
-
-// ========================================================================
-// Graph Structures for Regions
-// ========================================================================
-// Node: region in Aroha Nagar
-// Edge: potential road or transport cost between two regions
-// Kruskal MST will pick the cheapest edges needed to connect all regions
-// ========================================================================
-
 struct Edge {
-    int u, v;
+    int u;
+    int v;
     double w;
-};
-
-struct Region {
     int id;
-    string name;
-    string zone;
-    double x, y; // coordinate-like representation for distance modeling
+    Edge() : u(0), v(0), w(0.0), id(-1) {}
+    Edge(int _u,int _v,double _w,int _id):u(_u),v(_v),w(_w),id(_id){}
 };
 
-class RegionMap {
-public:
-    void addRegion(int id, const string &name, const string &zone, double x, double y) {
-        regions[id] = Region{id, name, zone, x, y};
+struct DSU {
+    int n;
+    vector<int> p;
+    vector<int> r;
+    vector<int> sz;
+    DSU():n(0){}
+    DSU(int n_){ init(n_); }
+    void init(int n_){
+        n = n_;
+        p.resize(n);
+        r.assign(n,0);
+        sz.assign(n,1);
+        for(int i=0;i<n;++i) p[i]=i;
     }
-
-    vector<Region> list() const {
-        vector<Region> v;
-        for (auto &p : regions) v.push_back(p.second);
-        return v;
+    int find(int a){
+        while(p[a]!=a){ p[a]=p[p[a]]; a=p[a]; }
+        return a;
     }
-
-    bool exists(int id) const {
-        return regions.count(id);
-    }
-
-    Region get(int id) const {
-        return regions.at(id);
-    }
-
-private:
-    unordered_map<int, Region> regions;
-};
-
-// ========================================================================
-// Graph and Kruskal MST
-// ========================================================================
-
-class WarehouseGraph {
-public:
-    WarehouseGraph(int n = 0) : N(n) { edges.clear(); }
-
-    void init(int n) {
-        N = n;
-        edges.clear();
-    }
-
-    void addEdge(int u, int v, double w) {
-        edges.push_back({u,v,w});
-    }
-
-    vector<Edge> computeMST() {
-        vector<Edge> res;
-        DSU dsu(N);
-        sort(edges.begin(), edges.end(), [](const Edge &a, const Edge &b){
-            return a.w < b.w;
-        });
-        for (auto &e : edges) {
-            if (dsu.unite(e.u, e.v)) {
-                res.push_back(e);
-            }
-        }
-        return res;
-    }
-
-private:
-    int N;
-    vector<Edge> edges;
-};
-
-// ========================================================================
-// Simulator to build a distance graph between regions
-// ========================================================================
-
-class WarehouseSimulator {
-public:
-    WarehouseSimulator(RegionMap &rm) : reg(rm) {
-        rng.seed(time(nullptr));
-    }
-
-    // Build a complete graph with approximate costs based on distance + random factors
-    WarehouseGraph generateGraph() {
-        auto all = reg.list();
-        int n = all.size();
-        WarehouseGraph G(n);
-
-        for (int i = 0; i < n; i++) {
-            for (int j = i+1; j < n; j++) {
-                double w = baseCost(all[i], all[j]);
-                G.addEdge(all[i].id, all[j].id, w);
-            }
-        }
-        return G;
-    }
-
-private:
-    RegionMap &reg;
-    mt19937 rng;
-
-    double baseCost(const Region &a, const Region &b) {
-        double dx = a.x - b.x;
-        double dy = a.y - b.y;
-        double dist = sqrt(dx*dx + dy*dy);
-        uniform_real_distribution<double> noise(0.9, 1.25);
-        return dist * noise(rng);
-    }
-};
-
-// ========================================================================
-// Warehouse Planning Output + Export
-// ========================================================================
-
-class WarehouseExporter {
-public:
-    static bool exportMST(const vector<Edge> &mst, const string &filename) {
-        ofstream out(filename);
-        if (!out.is_open()) return false;
-        out << "u,v,weight\n";
-        for (auto &e : mst) {
-            out << e.u << "," << e.v << "," << fixed << setprecision(3) << e.w << "\n";
-        }
-        out.close();
+    bool unite(int a,int b){
+        a=find(a); b=find(b);
+        if(a==b) return false;
+        if(r[a]<r[b]) swap(a,b);
+        p[b]=a;
+        sz[a]+=sz[b];
+        if(r[a]==r[b]) r[a]++;
         return true;
     }
-
-    static bool exportFullGraph(const WarehouseGraph &G, const vector<Edge> &edges, const string &filename) {
-        ofstream out(filename);
-        if (!out.is_open()) return false;
-        out << "u,v,weight\n";
-        for (auto &e : edges)
-            out << e.u << "," << e.v << "," << fixed << setprecision(3) << e.w << "\n";
-        out.close();
-        return true;
-    }
+    int size(int a){ return sz[find(a)]; }
 };
 
-
-class WarehouseReport {
-public:
-    static string summary(const vector<Edge> &mst) {
-        double total = 0.0;
-        for (auto &e : mst) total += e.w;
-
-        ostringstream ss;
-        ss << "Warehouse MST Summary\n";
-        ss << "Edges used: " << mst.size() << "\n";
-        ss << "Total transport cost: " << fixed << setprecision(3) << total << "\n";
-        ss << "Connections:\n";
-        for (auto &e : mst) {
-            ss << "  " << e.u << " <-> " << e.v 
-               << "  cost=" << fixed << setprecision(3) << e.w << "\n";
-        }
-        return ss.str();
-    }
-};
-
-#include <iomanip>
-#include <sstream>
-#include <fstream>
-#include <random>
-
-// =============================================================
-// Simple CLI helpers
-// =============================================================
-
-static string readTrim(const string &prompt) {
-    cout << prompt;
-    string s;
-    if (!getline(cin, s)) return string();
-    size_t a = s.find_first_not_of(" \t\r\n");
-    if (a == string::npos) return string();
-    size_t b = s.find_last_not_of(" \t\r\n");
-    return s.substr(a, b - a + 1);
-}
-
-static int readIntDefault(const string &prompt, int dflt) {
-    string s = readTrim(prompt);
-    if (s.empty()) return dflt;
-    try { return stoi(s); } catch (...) { return dflt; }
-}
-
-static double readDoubleDefault(const string &prompt, double dflt) {
-    string s = readTrim(prompt);
-    if (s.empty()) return dflt;
-    try { return stod(s); } catch (...) { return dflt; }
-}
-
-// =============================================================
-// Interactive Warehouse Planner
-// =============================================================
-
-class WarehousePlanner {
-public:
-    WarehousePlanner(RegionMap &rm) : reg(rm) { }
-
-    void run() {
-        bool stop = false;
-        while (!stop) {
-            printMenu();
-            string cmd = readTrim("Choice> ");
-            if (cmd == "1") actionListRegions();
-            else if (cmd == "2") actionAddRegion();
-            else if (cmd == "3") actionGenerateGraphAndMST();
-            else if (cmd == "4") actionExportMST();
-            else if (cmd == "5") actionShowReport();
-            else if (cmd == "6") actionRandomizeRegions();
-            else if (cmd == "7") actionBulkSimulate();
-            else if (cmd == "q" || cmd == "quit") stop = true;
-            else cout << "Unknown option\n";
-        }
-    }
-
-private:
-    RegionMap &reg;
-    vector<Edge> lastGraphEdges;
-    vector<Edge> lastMST;
-
-    void printMenu() {
-        cout << "\nWarehouse Planner — Options\n";
-        cout << " 1) List regions\n";
-        cout << " 2) Add region\n";
-        cout << " 3) Generate graph and compute MST\n";
-        cout << " 4) Export last MST to CSV\n";
-        cout << " 5) Show last MST report\n";
-        cout << " 6) Randomize region coordinates\n";
-        cout << " 7) Bulk simulation: generate multiple graphs and average MST cost\n";
-        cout << " q) Quit\n";
-    }
-
-    void actionListRegions() {
-        auto all = reg.list();
-        cout << "Regions (" << all.size() << "):\n";
-        for (auto &r : all) {
-            cout << " id=" << r.id << " name=" << r.name << " zone=" << r.zone
-                 << " coord=(" << fixed << setprecision(3) << r.x << "," << r.y << ")\n";
-        }
-    }
-
-    void actionAddRegion() {
-        int id = readIntDefault("Region id (int): ", -1);
-        if (id < 0) { cout << "Invalid id\n"; return; }
-        string name = readTrim("Region name: ");
-        string zone = readTrim("Zone: ");
-        double x = readDoubleDefault("X coordinate: ", 0.0);
-        double y = readDoubleDefault("Y coordinate: ", 0.0);
-        if (reg.exists(id)) {
-            cout << "Region id exists — overwriting.\n";
-        }
-        reg.addRegion(id, name, zone, x, y);
-        cout << "Added region " << id << "\n";
-    }
-
-    void actionGenerateGraphAndMST() {
-        WarehouseSimulator sim(reg);
-        WarehouseGraph G = sim.generateGraph();
-
-        // Extract edges by regenerating (WarehouseGraph does not expose edges directly).
-        // To get edges cheaply, we will re-create them similarly here.
-        // Use region list
-        auto all = reg.list();
-        lastGraphEdges.clear();
-        for (size_t i = 0; i < all.size(); ++i) {
-            for (size_t j = i+1; j < all.size(); ++j) {
-                double dx = all[i].x - all[j].x;
-                double dy = all[i].y - all[j].y;
-                double dist = sqrt(dx*dx + dy*dy);
-                // same noise approach as simulator: use deterministic noise seed
-                double w = dist; // keep deterministic for display; simulator's noise omitted here
-                lastGraphEdges.push_back({all[i].id, all[j].id, w});
-            }
-        }
-
-        // Build a graph object for Kruskal execution (we'll pass edges manually)
-        // Sorting edges by weight then DSU unite logic:
-        sort(lastGraphEdges.begin(), lastGraphEdges.end(), [](const Edge &a, const Edge &b){ return a.w < b.w; });
-        DSU dsu((int)all.size()+5);
-        lastMST.clear();
-        for (auto &e : lastGraphEdges) {
-            if (dsu.unite(e.u, e.v)) lastMST.push_back(e);
-        }
-        cout << "MST computed. Edges in MST: " << lastMST.size() << "\n";
-        cout << WarehouseReport::summary(lastMST) << "\n";
-    }
-
-    void actionExportMST() {
-        if (lastMST.empty()) { cout << "No MST present. Generate first.\n"; return; }
-        string fname = readTrim("Filename to export (default=mst.csv): ");
-        if (fname.empty()) fname = "mst.csv";
-        bool ok = WarehouseExporter::exportMST(lastMST, fname);
-        cout << "Export " << (ok ? "OK" : "FAILED") << " -> " << fname << "\n";
-    }
-
-    void actionShowReport() {
-        if (lastMST.empty()) { cout << "No MST present. Generate first.\n"; return; }
-        cout << WarehouseReport::summary(lastMST) << "\n";
-    }
-
-    void actionRandomizeRegions() {
-        double radius = readDoubleDefault("Randomization radius (units): ", 5.0);
-        randomDeviceRd(radius);
-        cout << "Randomized region coordinates within radius " << radius << "\n";
-    }
-
-    void randomDeviceRd(double radius) {
-        auto all = reg.list();
-        mt19937 rng((unsigned)chrono::high_resolution_clock::now().time_since_epoch().count());
-        uniform_real_distribution<double> off(-radius, radius);
-        for (auto &r : all) {
-            reg.addRegion(r.id, r.name, r.zone, r.x + off(rng), r.y + off(rng));
-        }
-    }
-
-    void actionBulkSimulate() {
-        int runs = readIntDefault("Number of simulation runs: ", 10);
-        int nregions = (int)reg.list().size();
-        if (nregions < 2) { cout << "Need at least 2 regions\n"; return; }
-        double totalCost = 0.0;
-        for (int k = 0; k < runs; ++k) {
-            WarehouseSimulator sim(reg);
-            WarehouseGraph G = sim.generateGraph();
-
-            // Build local edge list similarly to earlier approach but with noise
-            vector<Edge> edges;
-            auto all = reg.list();
-            mt19937 rng((unsigned)k + 12345);
-            uniform_real_distribution<double> noise(0.9, 1.25);
-            for (size_t i = 0; i < all.size(); ++i) {
-                for (size_t j = i+1; j < all.size(); ++j) {
-                    double dx = all[i].x - all[j].x;
-                    double dy = all[i].y - all[j].y;
-                    double dist = sqrt(dx*dx + dy*dy);
-                    double w = dist * noise(rng);
-                    edges.push_back({all[i].id, all[j].id, w});
-                }
-            }
-            sort(edges.begin(), edges.end(), [](const Edge &a, const Edge &b){ return a.w < b.w; });
-            DSU dsu((int)all.size()+5);
-            double cost = 0.0;
-            int used = 0;
-            for (auto &e : edges) {
-                if (dsu.unite(e.u, e.v)) {
-                    cost += e.w;
-                    used++;
-                    if (used == (int)all.size() - 1) break;
-                }
-            }
-            totalCost += cost;
-        }
-        cout << "Average MST cost over " << runs << " runs: " << (totalCost / runs) << "\n";
-    }
-};
-
-// =============================================================
-// Helper: populate a default set of regions for Aroha Nagar
-// =============================================================
-
-static void populateDefaultRegions(RegionMap &rm) {
-    rm.addRegion(1, "Central Market", "Central", 10.0, 10.0);
-    rm.addRegion(2, "North Gate", "North", 12.5, 18.0);
-    rm.addRegion(3, "East Park", "East", 18.0, 11.0);
-    rm.addRegion(4, "South Depot", "South", 9.0, 4.5);
-    rm.addRegion(5, "West End", "West", 3.5, 9.0);
-    rm.addRegion(6, "Industrial Zone", "South", 14.0, 3.0);
-    rm.addRegion(7, "University", "East", 20.0, 16.0);
-    rm.addRegion(8, "Harbor", "South", 5.0, 2.0);
-    rm.addRegion(9, "Airport", "East", 25.0, 8.0);
-    rm.addRegion(10, "Ring Road", "Central", 13.0, 13.0);
-}
-
-// =============================================================
-// Main for Kruskal Warehouse Planner
-// =============================================================
-
-int main(int argc, char **argv) {
-    RegionMap rm;
-    populateDefaultRegions(rm);
-
-    // headless mode: compute an MST and write files
-    if (argc >= 2 && string(argv[1]) == "--headless") {
-        WarehouseSimulator sim(rm);
-        WarehouseGraph G = sim.generateGraph();
-
-        // create edges with noise and output MST
-        auto all = rm.list();
+struct GraphLoader {
+    string path;
+    int declared_n;
+    GraphLoader(const string &p=""):path(p),declared_n(-1){}
+    vector<Edge> load_edges(int &n_out){
         vector<Edge> edges;
-        mt19937 rng((unsigned)chrono::high_resolution_clock::now().time_since_epoch().count());
-        uniform_real_distribution<double> noise(0.9, 1.25);
-        for (size_t i = 0; i < all.size(); ++i) {
-            for (size_t j = i+1; j < all.size(); ++j) {
-                double dx = all[i].x - all[j].x;
-                double dy = all[i].y - all[j].y;
-                double dist = sqrt(dx*dx + dy*dy);
-                double w = dist * noise(rng);
-                edges.push_back({all[i].id, all[j].id, w});
+        ifstream in(path);
+        if(!in.is_open()){ n_out = 0; return edges; }
+        string line;
+        if(!getline(in, line)){ n_out=0; return edges; }
+        bool first_is_header = false;
+        {
+            string tmp=line;
+            bool isnum=true;
+            for(char c: tmp) if(!isdigit((unsigned char)c) && c!=' ' && c!=',' && c!='\t' && c!='-'){ isnum=false; break; }
+            first_is_header = !isnum;
+        }
+        int idcnt=0;
+        if(!first_is_header){
+            {
+                stringstream ss(line);
+                vector<string> tokens;
+                string tok;
+                while(getline(ss, tok, ',')) tokens.push_back(tok);
+                if(tokens.size()>=3){
+                    int a = stoi(tokens[0]);
+                    int b = stoi(tokens[1]);
+                    double w = stod(tokens[2]);
+                    edges.emplace_back(a,b,w,idcnt++);
+                }
             }
         }
-        sort(edges.begin(), edges.end(), [](const Edge &a, const Edge &b){ return a.w < b.w; });
-        DSU dsu((int)all.size()+5);
-        vector<Edge> mst;
-        for (auto &e : edges) {
-            if (dsu.unite(e.u, e.v)) mst.push_back(e);
+        while(getline(in, line)){
+            if(line.empty()) continue;
+            vector<string> cols;
+            string cur; bool inq=false;
+            for(char ch: line){
+                if(ch=='"'){ inq=!inq; continue; }
+                if(ch==',' && !inq){ cols.push_back(cur); cur.clear(); } else cur.push_back(ch);
+            }
+            if(!cur.empty()) cols.push_back(cur);
+            if(cols.size() < 3) continue;
+            int u = stoi(cols[0]);
+            int v = stoi(cols[1]);
+            double w = stod(cols[2]);
+            edges.emplace_back(u,v,w,idcnt++);
         }
-        WarehouseExporter::exportMST(mst, "mst_headless.csv");
-        ofstream out("mst_report_headless.txt");
-        out << WarehouseReport::summary(mst) << "\n";
-        out.close();
-        cout << "Headless MST computed and exported.\n";
-        return 0;
+        int maxnode = -1;
+        for(auto &e: edges) maxnode = max(maxnode, max(e.u, e.v));
+        n_out = maxnode + 1;
+        return edges;
     }
+};
 
-    // interactive planner
-    WarehousePlanner planner(rm);
-    planner.run();
+struct KruskalSolver {
+    vector<Edge> edges;
+    int n;
+    KruskalSolver():n(0){}
+    void load_from_csv(const string &path){
+        GraphLoader gl(path);
+        int nout=0;
+        edges = gl.load_edges(nout);
+        n = nout;
+    }
+    pair<vector<Edge>, double> mst_kruskal(){
+        vector<Edge> out;
+        double total=0.0;
+        if(n<=0) return {out,total};
+        vector<int> ord(edges.size());
+        for(size_t i=0;i<edges.size(); ++i) ord[i]=i;
+        sort(ord.begin(), ord.end(), [&](int a,int b){ if(edges[a].w==edges[b].w) return edges[a].id < edges[b].id; return edges[a].w < edges[b].w; });
+        DSU dsu(n);
+        for(int idx: ord){
+            auto &e = edges[idx];
+            if(dsu.unite(e.u, e.v)){
+                out.push_back(e);
+                total += e.w;
+                if((int)out.size() == n-1) break;
+            }
+        }
+        return {out, total};
+    }
+    vector<vector<pair<int,double>>> build_adj_from_mst(const vector<Edge> &mst){
+        vector<vector<pair<int,double>>> adj(n);
+        for(auto &e: mst){
+            if(e.u >=0 && e.u < n && e.v >=0 && e.v < n){
+                adj[e.u].push_back({e.v, e.w});
+                adj[e.v].push_back({e.u, e.w});
+            }
+        }
+        return adj;
+    }
+    vector<vector<pair<int,double>>> build_adj_full(){
+        vector<vector<pair<int,double>>> adj(n);
+        for(auto &e: edges){
+            if(e.u>=0 && e.u<n && e.v>=0 && e.v<n){
+                adj[e.u].push_back({e.v, e.w});
+                adj[e.v].push_back({e.u, e.w});
+            }
+        }
+        return adj;
+    }
+    vector<pair<int,int>> cluster_by_threshold(double threshold){
+        DSU dsu(n);
+        for(auto &e: edges){
+            if(e.w <= threshold) dsu.unite(e.u, e.v);
+        }
+        unordered_map<int,int> compmap;
+        int cnt=0;
+        vector<pair<int,int>> compSizes;
+        for(int i=0;i<n;++i){
+            int r = dsu.find(i);
+            if(!compmap.count(r)) compmap[r] = cnt++;
+        }
+        vector<int> sizes(cnt,0);
+        for(int i=0;i<n;++i) sizes[compmap[dsu.find(i)]]++;
+        for(int i=0;i<cnt;++i) compSizes.push_back({i, sizes[i]});
+        return compSizes;
+    }
+    vector<Edge> k_shortest_mst_variants(int k){
+        vector<Edge> base = mst_kruskal().first;
+        vector<Edge> result = base;
+        for(int attempt=0; attempt<k-1; ++attempt){
+            if(edges.empty()) break;
+            int ridx = attempt % edges.size();
+            Edge blocked = edges[ridx];
+            vector<Edge> cand;
+            double total=0.0;
+            vector<int> ord(edges.size());
+            for(size_t i=0;i<edges.size(); ++i) ord[i]=i;
+            sort(ord.begin(), ord.end(), [&](int a,int b){ if(edges[a].id==blocked.id) return false; if(edges[b].id==blocked.id) return true; if(edges[a].w==edges[b].w) return edges[a].id < edges[b].id; return edges[a].w < edges[b].w; });
+            DSU dsu(n);
+            for(int idx: ord){
+                auto &e = edges[idx];
+                if(e.id == blocked.id) continue;
+                if(dsu.unite(e.u, e.v)){
+                    cand.push_back(e);
+                    total += e.w;
+                    if((int)cand.size() == n-1) break;
+                }
+            }
+            if((int)cand.size()==n-1){
+                for(auto &e: cand) result.push_back(e);
+            }
+        }
+        return result;
+    }
+};
+
+struct ShortestPath {
+    int n;
+    vector<vector<pair<int,double>>> adj;
+    ShortestPath():n(0){}
+    void build_from_adj(const vector<vector<pair<int,double>>> &adj_){ adj = adj_; n = adj.size(); }
+    pair<vector<double>, vector<int>> dijkstra(int s){
+        const double INF = 1e18;
+        vector<double> dist(n, INF);
+        vector<int> par(n, -1);
+        using P = pair<double,int>;
+        priority_queue<P, vector<P>, greater<P>> pq;
+        if(s<0 || s>=n) return {dist,par};
+        dist[s]=0.0;
+        pq.push({0.0, s});
+        while(!pq.empty()){
+            auto [d,u] = pq.top(); pq.pop();
+            if(d != dist[u]) continue;
+            for(auto &pr: adj[u]){
+                int v = pr.first;
+                double w = pr.second;
+                if(dist[v] > d + w){
+                    dist[v] = d + w;
+                    par[v] = u;
+                    pq.push({dist[v], v});
+                }
+            }
+        }
+        return {dist, par};
+    }
+    vector<int> path_from_par(const vector<int> &par, int t){
+        vector<int> path;
+        if(t<0 || t>=n) return path;
+        for(int cur=t; cur!=-1; cur=par[cur]) path.push_back(cur);
+        reverse(path.begin(), path.end());
+        return path;
+    }
+};
+
+struct IOHelper {
+    static vector<string> split_ws(const string &s){
+        vector<string> out; string tmp; stringstream ss(s);
+        while(ss>>tmp) out.push_back(tmp);
+        return out;
+    }
+    static string now_iso(){
+        auto t = chrono::system_clock::now();
+        time_t tt = chrono::system_clock::to_time_t(t);
+        char buf[64];
+        strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", gmtime(&tt));
+        return string(buf);
+    }
+    static void write_mst_to_csv(const string &path, const vector<Edge> &mst){
+        ofstream out(path);
+        out<<"u,v,w,id\n";
+        for(auto &e: mst) out<<e.u<<","<<e.v<<","<<e.w<<","<<e.id<<"\n";
+        out.close();
+    }
+    static void write_components_csv(const string &path, const vector<pair<int,int>> &comps){
+        ofstream out(path);
+        out<<"component_id,size\n";
+        for(auto &p: comps) out<<p.first<<","<<p.second<<"\n";
+        out.close();
+    }
+    static void write_edges_csv(const string &path, const vector<Edge> &edges){
+        ofstream out(path);
+        out<<"u,v,w,id\n";
+        for(auto &e: edges) out<<e.u<<","<<e.v<<","<<e.w<<","<<e.id<<"\n";
+        out.close();
+    }
+};
+
+struct Bench {
+    static long long now_ms(){
+        return chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now().time_since_epoch()).count();
+    }
+    static void time_fn(function<void()> fn, const string &label){
+        long long s = now_ms();
+        fn();
+        long long e = now_ms();
+        cerr<<label<<" "<<(e-s)<<" ms\n";
+    }
+};
+
+struct Simulator {
+    KruskalSolver solver;
+    vector<Edge> mst;
+    vector<vector<pair<int,double>>> adj_mst;
+    vector<vector<pair<int,double>>> adj_full;
+    ShortestPath sp;
+    Simulator(){}
+    void init(const string &edges_csv){
+        solver.load_from_csv(edges_csv);
+        auto tmp = solver.mst_kruskal();
+        mst = tmp.first;
+        adj_mst = solver.build_adj_from_mst(mst);
+        adj_full = solver.build_adj_full();
+        sp.build_from_adj(adj_full);
+    }
+    void refresh(){
+        auto tmp = solver.mst_kruskal();
+        mst = tmp.first;
+        adj_mst = solver.build_adj_from_mst(mst);
+        adj_full = solver.build_adj_full();
+        sp.build_from_adj(adj_full);
+    }
+    void run_routing_batch(const vector<pair<int,int>> &pairs, const string &outcsv){
+        ofstream out(outcsv);
+        out<<"s,t,cost,path\n";
+        for(auto &pr: pairs){
+            int s = pr.first; int t = pr.second;
+            auto res = sp.dijkstra(s);
+            auto &dist = res.first; auto &par = res.second;
+            if(t >=0 && t < (int)dist.size() && dist[t] < 1e17){
+                auto path = sp.path_from_par(par, t);
+                out<<s<<","<<t<<","<<dist[t]<<",\"";
+                for(size_t i=0;i<path.size();++i){ if(i) out<<"-"; out<<path[i]; }
+                out<<"\"\n";
+            } else {
+                out<<s<<","<<t<<",INF,\n";
+            }
+        }
+        out.close();
+    }
+    vector<pair<int,double>> nearest_k_from(int s, int k){
+        auto res = sp.dijkstra(s);
+        auto &dist = res.first;
+        vector<pair<int,double>> nodes;
+        for(int i=0;i<(int)dist.size();++i) if(i!=s && dist[i] < 1e17) nodes.push_back({i, dist[i]});
+        sort(nodes.begin(), nodes.end(), [](auto &a, auto &b){ if(a.second==b.second) return a.first < b.first; return a.second < b.second; });
+        if((int)nodes.size() > k) nodes.resize(k);
+        return nodes;
+    }
+    vector<pair<int,int>> generate_random_pairs(int m){
+        vector<pair<int,int>> out;
+        int n = max(1, solver.n);
+        mt19937_64 rng((uint64_t)chrono::high_resolution_clock::now().time_since_epoch().count());
+        uniform_int_distribution<int> d(0, n-1);
+        for(int i=0;i<m;++i){
+            int a = d(rng);
+            int b = d(rng);
+            out.push_back({a,b});
+        }
+        return out;
+    }
+    void stress_test(int ops){
+        mt19937_64 rng((uint64_t)chrono::high_resolution_clock::now().time_since_epoch().count());
+        uniform_int_distribution<int> dd(1,100);
+        for(int i=0;i<ops;++i){
+            int t = dd(rng)%4;
+            if(t==0){
+                auto p = generate_random_pairs(50);
+                run_routing_batch(p, "/tmp/kruskal_batch.csv");
+            } else if(t==1){
+                solver.edges.insert(solver.edges.end(), {0,0, (double)(dd(rng)%100), (int)solver.edges.size()});
+                refresh();
+            } else if(t==2){
+                auto comps = solver.cluster_by_threshold(10.0);
+                IOHelper::write_components_csv("/tmp/components.csv", comps);
+            } else {
+                auto nn = nearest_k_from(0, 5);
+            }
+            if(i%50==0) refresh();
+        }
+    }
+};
+
+int main(int argc,char**argv){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    if(argc < 2){
+        cerr<<"Usage: "<<argv[0]<<" <edges-csv>\n";
+        return 1;
+    }
+    string csv = argv[1];
+    Simulator sim;
+    Bench::time_fn([&](){ sim.init(csv); }, "init");
+    cout<<"Nodes="<<sim.solver.n<<" Edges="<<sim.solver.edges.size()<<"\n";
+    cout<<"Commands:\nshowmst\nwritemst out.csv\ncomponents thresh\ncluster thresh\nkshort k\nroute s t\nbatch n out.csv\nnearest s k\nstress n\nexport edges out.csv\nexit\n";
+    string line;
+    while(true){
+        cout<<"> ";
+        if(!getline(cin, line)) break;
+        if(line.empty()) continue;
+        vector<string> parts = IOHelper::split_ws(line);
+        if(parts.empty()) continue;
+        string cmd = parts[0];
+        if(cmd=="exit" || cmd=="quit") break;
+        if(cmd=="showmst"){
+            for(auto &e: sim.mst) cout<<e.u<<","<<e.v<<","<<e.w<<","<<e.id<<"\n";
+            continue;
+        }
+        if(cmd=="writemst"){
+            if(parts.size()<2){ cout<<"writemst out.csv\n"; continue; }
+            IOHelper::write_mst_to_csv(parts[1], sim.mst);
+            cout<<"wrote "<<parts[1]<<"\n";
+            continue;
+        }
+        if(cmd=="components"){
+            if(parts.size()<2){ cout<<"components thresh\n"; continue; }
+            double thr = stod(parts[1]);
+            auto comps = sim.solver.cluster_by_threshold(thr);
+            for(auto &c: comps) cout<<c.first<<","<<c.second<<"\n";
+            continue;
+        }
+        if(cmd=="cluster"){
+            if(parts.size()<2){ cout<<"cluster thresh\n"; continue; }
+            double thr = stod(parts[1]);
+            auto comps = sim.solver.cluster_by_threshold(thr);
+            IOHelper::write_components_csv("components.csv", comps);
+            cout<<"wrote components.csv\n";
+            continue;
+        }
+        if(cmd=="kshort"){
+            if(parts.size()<2){ cout<<"kshort k\n"; continue; }
+            int k = stoi(parts[1]);
+            auto v = sim.solver.k_shortest_mst_variants(k);
+            IOHelper::write_edges_csv("kshort_edges.csv", v);
+            cout<<"wrote kshort_edges.csv count="<<v.size()<<"\n";
+            continue;
+        }
+        if(cmd=="route"){
+            if(parts.size()<3){ cout<<"route s t\n"; continue; }
+            int s = stoi(parts[1]); int t = stoi(parts[2]);
+            auto res = sim.sp.dijkstra(s);
+            auto &dist = res.first; auto &par = res.second;
+            if(t<0 || t>= (int)dist.size() || dist[t] > 1e17){ cout<<"unreachable\n"; continue; }
+            auto path = sim.sp.path_from_par(par, t);
+            cout<<"cost="<<dist[t]<<" path:";
+            for(size_t i=0;i<path.size(); ++i){ if(i) cout<<"-"; cout<<path[i]; }
+            cout<<"\n";
+            continue;
+        }
+        if(cmd=="batch"){
+            if(parts.size()<3){ cout<<"batch n out.csv\n"; continue; }
+            int n = stoi(parts[1]);
+            string out = parts[2];
+            auto pairs = sim.generate_random_pairs(n);
+            sim.run_routing_batch(pairs, out);
+            cout<<"wrote "<<out<<"\n";
+            continue;
+        }
+        if(cmd=="nearest"){
+            if(parts.size()<3){ cout<<"nearest s k\n"; continue; }
+            int s = stoi(parts[1]); int k = stoi(parts[2]);
+            auto v = sim.nearest_k_from(s, k);
+            for(auto &p: v) cout<<p.first<<","<<p.second<<"\n";
+            continue;
+        }
+        if(cmd=="stress"){
+            if(parts.size()<2){ cout<<"stress n\n"; continue; }
+            int n = stoi(parts[1]);
+            Bench::time_fn([&](){ sim.stress_test(n); }, "stress");
+            cout<<"stress done\n";
+            continue;
+        }
+        if(cmd=="export"){
+            if(parts.size()<3){ cout<<"export edges out.csv\n"; continue; }
+            if(parts[1]=="edges"){ IOHelper::write_edges_csv(parts[2], sim.solver.edges); cout<<"wrote "<<parts[2]<<"\n"; }
+            else cout<<"unknown export\n";
+            continue;
+        }
+        cout<<"unknown\n";
+    }
     return 0;
 }
-
