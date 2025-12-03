@@ -16,13 +16,13 @@
       --bg: #2E3440;
       --surface: #3B4252;
       --card: #ECEFF4;
-      --card-text: #2E3440;
+      --card-text: #111827;
       --text: #E5E9F0;
       --muted: #D8DEE9;
       --accent: #88C0D0;
       --accent-strong: #5E81AC;
       --border-subtle: rgba(216, 222, 233, 0.18);
-      --radius-lg: 16px;
+      --radius-lg: 14px;
       --radius-xl: 20px;
       --shadow-soft: 0 14px 32px rgba(0, 0, 0, 0.35);
       --transition-fast: 160ms ease-out;
@@ -49,13 +49,13 @@
       border-radius: 22px;
       border: 1px solid var(--border-subtle);
       box-shadow: var(--shadow-soft);
-      padding: 22px 22px 24px;
+      padding: 22px 22px 26px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
-    /* ------------ Header ------------ */
+    /* ------------ Header (keep this ribbon) ------------ */
     .header {
       display: flex;
       flex-wrap: wrap;
@@ -88,7 +88,7 @@
     .subtitle {
       font-size: 0.9rem;
       color: var(--muted);
-      max-width: 560px;
+      max-width: 620px;
       line-height: 1.5;
     }
 
@@ -130,212 +130,142 @@
       border: 1px solid rgba(129, 161, 193, 0.6);
     }
 
-    /* ------------ Layout (Tabs + Content) ------------ */
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
-      gap: 18px;
-      align-items: flex-start;
-      margin-top: 4px;
-    }
-
-    /* Tabs column */
-    .tabs-panel {
-      background: rgba(46, 52, 64, 0.85);
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--border-subtle);
-      padding: 14px 12px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .tabs-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 6px;
-      align-items: center;
-    }
-
-    .tabs-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    .search-input {
-      width: 100%;
+    /* ------------ Toolbar ------------ */
+    .toolbar {
       margin-top: 6px;
-      padding: 7px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(216, 222, 233, 0.4);
-      background: rgba(59, 66, 82, 0.9);
-      color: var(--text);
-      font-size: 0.84rem;
-      outline: none;
-      transition: border-color var(--transition-med),
-        box-shadow var(--transition-med),
-        background var(--transition-med);
-    }
-
-    .search-input::placeholder {
-      color: #9CA3AF;
-    }
-
-    .search-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(136, 192, 208, 0.6);
-      background: #3B4252;
-    }
-
-    .tabs-list {
-      list-style: none;
-      margin-top: 4px;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      max-height: 430px;
-      overflow-y: auto;
-      padding-right: 4px;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .case-tab {
-      width: 100%;
-      text-align: left;
-      border: none;
-      background: transparent;
-      color: var(--muted);
+    .toolbar-left {
       font-size: 0.86rem;
-      padding: 8px 9px;
-      border-radius: 10px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      transition: background var(--transition-fast),
-        color var(--transition-fast),
-        transform var(--transition-fast);
+      color: var(--muted);
     }
 
-    .case-tab span.case-label-small {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
+    .search-wrapper {
+      flex: 1 1 220px;
+      max-width: 360px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(46, 52, 64, 0.9);
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid rgba(216, 222, 233, 0.35);
+    }
+
+    .search-icon {
+      font-size: 0.86rem;
       opacity: 0.8;
     }
 
-    .case-tab span.case-name {
-      font-size: 0.9rem;
-      font-weight: 500;
+    #searchInput {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 0.86rem;
     }
 
-    .case-tab:hover {
-      background: rgba(76, 86, 106, 0.95);
-      transform: translateY(-1px);
+    #searchInput::placeholder {
+      color: #9CA3AF;
     }
 
-    .case-tab.active {
-      background: #5E81AC;
-      color: #ECEFF4;
+    /* ------------ Card Grid ------------ */
+    .case-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
     }
 
-    /* Content column */
-    .content-panel {
+    .case-card {
       background: var(--card);
       color: var(--card-text);
-      border-radius: var(--radius-xl);
-      padding: 18px 18px 20px;
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
-      border: 1px solid rgba(209, 213, 219, 0.6);
-      min-height: 260px;
-    }
-
-    .case-panel {
-      display: none;
-      animation: fadeIn 180ms ease-out;
-    }
-
-    .case-panel.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(4px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .case-panel-header {
+      border-radius: var(--radius-lg);
+      padding: 14px 14px 16px;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(209, 213, 219, 0.7);
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform var(--transition-med), box-shadow var(--transition-med),
+        border-color var(--transition-med), background var(--transition-med);
+    }
+
+    .case-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.28);
+      border-color: var(--accent-strong);
+    }
+
+    .case-tag-row {
+      display: flex;
       justify-content: space-between;
-      gap: 8px;
       align-items: baseline;
-      margin-bottom: 8px;
+      gap: 8px;
     }
 
-    .case-panel-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .case-panel-tag {
+    .case-tag {
       font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: #6B7280;
     }
 
-    .case-panel-domain {
-      font-size: 0.88rem;
+    .case-domain {
+      font-size: 0.8rem;
       color: #4B5563;
-      margin-bottom: 8px;
       font-weight: 500;
+      text-align: right;
     }
 
-    .case-panel-body {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: #374151;
-      margin-bottom: 10px;
-      white-space: pre-line;
-    }
-
-    .case-panel-section-title {
-      font-size: 0.9rem;
+    .case-title {
+      font-size: 1rem;
       font-weight: 600;
-      margin-top: 8px;
-      margin-bottom: 4px;
+      margin-top: 2px;
+      color: #111827;
+    }
+
+    .case-desc {
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: #374151;
+      margin-top: 2px;
+    }
+
+    .case-section-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-top: 6px;
+      margin-bottom: 2px;
       color: #111827;
     }
 
     .algo-list {
       list-style: disc;
       padding-left: 18px;
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       color: #374151;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
-    .meta-row {
+    .card-footer {
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
+      align-items: flex-end;
       gap: 8px;
-      align-items: center;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(209, 213, 219, 0.8);
+      margin-top: 4px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(209, 213, 219, 0.85);
     }
 
-    .meta-text {
-      font-size: 0.83rem;
+    .card-meta {
+      font-size: 0.8rem;
       color: #4B5563;
     }
 
@@ -343,13 +273,14 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      justify-content: flex-end;
     }
 
     .btn {
       border-radius: 999px;
       border: 1px solid #CBD5F1;
-      padding: 6px 12px;
-      font-size: 0.83rem;
+      padding: 5px 11px;
+      font-size: 0.8rem;
       cursor: pointer;
       background: white;
       color: #1F2933;
@@ -371,13 +302,7 @@
 
     .btn-primary:hover {
       background: #1D4ED8;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary:hover {
-      background: #F3F4F6;
-      box-shadow: 0 8px 16px rgba(148, 163, 184, 0.4);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.4);
       transform: translateY(-1px);
     }
 
@@ -385,16 +310,16 @@
       font-size: 0.9rem;
     }
 
-    /* Empty state when search hides all tabs */
-    .tabs-empty {
-      font-size: 0.8rem;
-      color: #E5E9F0;
-      opacity: 0.85;
-      margin-top: 10px;
-      border-radius: 10px;
-      padding: 8px 10px;
-      background: rgba(76, 86, 106, 0.8);
+    /* Empty state if filter hides everything */
+    .empty-state {
+      margin-top: 14px;
+      font-size: 0.86rem;
+      color: var(--muted);
       display: none;
+    }
+
+    .empty-state strong {
+      color: var(--accent);
     }
 
     /* ------------ Responsive ------------ */
@@ -403,11 +328,8 @@
         padding: 12px;
       }
       .page {
-        padding: 18px 16px 20px;
+        padding: 18px 16px 22px;
         border-radius: 18px;
-      }
-      .layout {
-        grid-template-columns: minmax(0, 1fr);
       }
     }
 
@@ -419,19 +341,25 @@
       .header-actions {
         align-items: flex-start;
       }
+      .toolbar {
+        align-items: flex-start;
+      }
+      .search-wrapper {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <!-- HEADER -->
+    <!-- HEADER RIBBON (unchanged) -->
     <header class="header">
       <div class="title-block">
         <div class="eyebrow">Business Case Studies · Varun B</div>
         <h1>Environment & Infrastructure — DS & Algo Case Studies</h1>
         <p class="subtitle">
           Ten sustainability-focused systems designed using graphs, trees, greedy heuristics,
-          clustering and pattern matching — mapped from theory to real-world city-scale problems.
+          clustering and pattern matching — mapped from theory to real-world, city-scale problems.
         </p>
       </div>
 
@@ -443,536 +371,394 @@
       </div>
     </header>
 
-    <!-- MAIN LAYOUT -->
-    <section class="layout">
-      <!-- LEFT: TABS -->
-      <aside class="tabs-panel">
-        <div class="tabs-header">
-          <div class="tabs-title">Case Studies</div>
-        </div>
+    <!-- TOOLBAR -->
+    <section class="toolbar">
+      <div class="toolbar-left">
+        Scroll through the case studies or filter by keyword / algorithm.
+      </div>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
         <input
           id="searchInput"
-          class="search-input"
           type="text"
-          placeholder="Filter by title, domain, algorithm..."
+          placeholder="Search (e.g. Dijkstra, microgrid, TSP, segment tree)..."
         />
-
-        <ul class="tabs-list" id="tabsList">
-          <li>
-            <button class="case-tab active" data-target="case1">
-              <span class="case-label-small">Case 1</span>
-              <span class="case-name">Renewable Energy Grid</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case2">
-              <span class="case-label-small">Case 2</span>
-              <span class="case-name">EV Charging Network</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case3">
-              <span class="case-label-small">Case 3</span>
-              <span class="case-name">Waste Collection Routing</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case4">
-              <span class="case-label-small">Case 4</span>
-              <span class="case-name">Water Quality Monitoring</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case5">
-              <span class="case-label-small">Case 5</span>
-              <span class="case-name">Urban Farming Analytics</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case6">
-              <span class="case-label-small">Case 6</span>
-              <span class="case-name">Ecological Corridors</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case7">
-              <span class="case-label-small">Case 7</span>
-              <span class="case-name">Drone-Based Monitoring</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case8">
-              <span class="case-label-small">Case 8</span>
-              <span class="case-name">Microgrid & Storage</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case9">
-              <span class="case-label-small">Case 9</span>
-              <span class="case-name">Pollution Analytics</span>
-            </button>
-          </li>
-          <li>
-            <button class="case-tab" data-target="case10">
-              <span class="case-label-small">Case 10</span>
-              <span class="case-name">Waste-to-Energy Scheduling</span>
-            </button>
-          </li>
-        </ul>
-
-        <div class="tabs-empty" id="tabsEmpty">
-          No case matches your filter. Try a different keyword.
-        </div>
-      </aside>
-
-      <!-- RIGHT: CONTENT -->
-      <article class="content-panel">
-
-        <!-- CASE 1 -->
-        <section id="case1" class="case-panel active" data-tags="graph mst dijkstra bfs dfs sorting renewable energy grid smart">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 1 · Renewable Energy Installation & Maintenance</div>
-              <h2 class="case-panel-title">Smart Renewable Grid Layout & Routing</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Smart grids, panel/turbine layout, failure-aware routing</div>
-          <div class="case-panel-body">
-Smart renewable networks require selecting optimal panel and turbine placements, minimizing cabling cost and routing electricity with minimal loss. Each building or energy node is modeled as a weighted graph, where edges reflect cable distance and installation cost.
-
-Minimum spanning tree construction is used to create a cost-efficient physical backbone so every node connects with minimum wiring. After installation, energy routing runs on shortest-loss paths between generators and consumers to maintain balanced loads. When failures occur, paths are recomputed around the outage while still obeying capacity and safety constraints.
-
-Historical demand and seasonal patterns trigger dynamic re-optimisation at fixed intervals so the grid remains efficient as it scales. The combination of structural optimisation (MST) and runtime path recalculation (shortest paths) gives a scalable, resilient energy grid.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Kruskal’s and Prim’s MST for minimum wiring cost</li>
-            <li>Dijkstra’s shortest path for low-loss routing</li>
-            <li>BFS / DFS for connectivity and failure impact checks</li>
-            <li>Sorting for cost-based edge and upgrade prioritisation</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: O(E log V) for core MST & shortest-path routines on large city graphs.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 2 -->
-        <section id="case2" class="case-panel" data-tags="graph dijkstra mst bfs dfs priority queue sorting ev charging rental repair">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 2 · EV Charging, Rental & Repair Network</div>
-              <h2 class="case-panel-title">City-Scale EV Infrastructure Optimisation</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Charging station placement, routing, and load balancing</div>
-          <div class="case-panel-body">
-EV infrastructure demands optimal charging station placement, low-cost cabling and fast routing of vehicles to available chargers. City roads are modeled as a weighted graph where weights capture travel time, energy consumption and real-time congestion.
-
-Shortest-path queries send drivers to the lowest-cost station under changing traffic, while station loads are monitored continuously to avoid bottlenecks. Installation planning uses MST-style reasoning to minimise backbone wiring and inter-station distance. When outages occur, reachability checks and redundancy analysis ensure that every region still has access to backup stations.
-
-Sorted data structures and priority queues support fast station ranking (based on queue length, distance and pricing) so assignment decisions can be updated at low latency in a large, dynamic network.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Kruskal / Prim MST for infrastructure backbone planning</li>
-            <li>Dijkstra’s shortest path for driver-to-station routing</li>
-            <li>BFS / DFS for reachability and redundancy checks</li>
-            <li>Priority queue–based dispatching for nearest “best” station</li>
-            <li>Sorting for station ranking by congestion and cost</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: Repeated O(E log V) queries with low memory overhead and high responsiveness.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 3 -->
-        <section id="case3" class="case-panel" data-tags="tsp clustering kmeans 2opt dijkstra routing capacity waste collection recycling">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 3 · Waste Collection & Recycling Optimisation</div>
-              <h2 class="case-panel-title">Capacity-Aware Vehicle Routing for Urban Waste</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Fleet routing, clustering and capacity-constrained tours</div>
-          <div class="case-panel-body">
-Urban waste collection is modeled as a network of pickup points, each tagged with waste volume, location and urgency. Clustering techniques first group nearby pickup points into logical service regions to minimise cross-region travel.
-
-Within each region, a near-optimal route is built using TSP heuristics such as nearest neighbour construction, followed by 2-opt local improvement. Truck capacity constraints split long routes into multiple feasible sub-tours. When bins overflow early or streets are blocked, the system recomputes affected segments with updated edge weights, avoiding full re-planning.
-
-The overall design balances simple heuristics with graph-based distance matrices so that recomputation is fast enough for day-to-day operations and responsive to real-world disruptions.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>K-means clustering for forming local service regions</li>
-            <li>Nearest neighbour TSP heuristic for initial route construction</li>
-            <li>2-opt local optimisation for route refinement</li>
-            <li>Dijkstra-based distance matrix for fast route cost lookups</li>
-            <li>Capacity-based route splitting using simple greedy policies</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: Near-linear heuristic optimisation on top of O(E log V) distance computations.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 4 -->
-        <section id="case4" class="case-panel" data-tags="segment tree sparse table kmp string pattern range min max sensor water purification">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 4 · Water Purification & Environmental Cleaning</div>
-              <h2 class="case-panel-title">Real-Time Water Quality & Alerting Engine</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Time-series monitoring, anomaly detection, text log scanning</div>
-          <div class="case-panel-body">
-Water purification units stream thousands of sensor readings per second, measuring contamination, pressure and flow. The system maintains fast range queries over these readings to detect sudden spikes or drops.
-
-A dynamic segment tree supports online min/max queries and updates for live anomaly detection. For historical reporting, a precomputed sparse table answers static range queries in O(1) time, trading memory for speed. In parallel, contamination incident reports are scanned with KMP pattern matching so that critical terms are detected in linear time without re-checking characters.
-
-Together, these structures keep both updates and queries close to logarithmic or constant time, enabling immediate response to faults in a dense sensor network.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Segment tree for dynamic range min/max on sensor streams</li>
-            <li>Sparse table for O(1) static range queries in compliance audits</li>
-            <li>KMP pattern matching for scanning text-based contamination reports</li>
-            <li>Sorting for ordering events, alerts and maintenance logs</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: O(log N) updates, O(log N) or O(1) queries even at high data velocity.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 5 -->
-        <section id="case5" class="case-panel" data-tags="fenwick tree segment tree sorting kmeans clustering urban farming irrigation yield analytics">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 5 · Urban Farming & Organic Food Systems</div>
-              <h2 class="case-panel-title">Data-Driven Irrigation & Yield Management</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Sensor aggregation, zoning, yield-based planning</div>
-          <div class="case-panel-body">
-Rooftop and vertical farms stream crop-growth, soil-moisture and microclimate data. The system maintains rolling sums and averages across plots to drive irrigation and nutrient decisions in near-real time.
-
-Fenwick trees (binary indexed trees) handle frequent incremental updates while allowing fast prefix and range queries for dashboards. Segment trees track more complex metrics like min/max growth rates per zone. For planning, k-means clustering groups similar plots into zones that can share irrigation schedules or nutrient plans. Sorted views highlight high-yield plots and those needing intervention.
-
-This structure keeps updates lightweight while supporting rich analytics for both current operations and longer-term planning.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Fenwick tree for rolling yield and moisture aggregation</li>
-            <li>Segment tree for more detailed growth and threshold tracking</li>
-            <li>Sorting to prioritise highest and lowest performing plots</li>
-            <li>K-means clustering for farm zoning and shared scheduling</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: O(log N) updates and queries across many farms with responsive dashboards.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 6 -->
-        <section id="case6" class="case-panel" data-tags="graph mst bfs dfs greedy sorting ecological restoration green corridor">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 6 · Green Landscaping & Ecological Restoration</div>
-              <h2 class="case-panel-title">Cost-Efficient Ecological Corridors</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Connectivity analysis, budgeted restoration, city-scale planning</div>
-          <div class="case-panel-body">
-Degraded green zones and parks are represented as nodes in a graph, with edges capturing restoration feasibility and cost. Minimum spanning tree techniques propose a low-cost backbone for ecological corridors that reconnect fragmented habitats.
-
-BFS and DFS over the graph quantify how many disconnected components exist and which regions are most isolated, helping prioritise interventions. Within a fixed budget, a greedy benefit-to-cost strategy chooses restoration segments that maximise ecological impact first.
-
-This approach scales to city-level planning while remaining robust to new survey data as more patches are mapped and cost estimates are updated.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Kruskal’s MST for minimal-cost corridor backbone planning</li>
-            <li>BFS / DFS for component detection and isolation scoring</li>
-            <li>Greedy selection based on benefit / cost ratios</li>
-            <li>Sorting to prepare candidate edges by efficiency</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: O(E log V) backbone generation plus linear-time connectivity analysis.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 7 -->
-        <section id="case7" class="case-panel" data-tags="tsp nearest neighbour 2opt dijkstra drone monitoring battery route">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 7 · Drone-Based Environmental Monitoring</div>
-              <h2 class="case-panel-title">Battery-Constrained Drone Route Planning</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Tour construction, mission slicing, safe return routing</div>
-          <div class="case-panel-body">
-Monitoring zones and sampling waypoints are modeled as nodes with travel costs influenced by distance and wind. For each mission, a tour is built using a nearest neighbour TSP heuristic and then refined using 2-opt swaps to reduce overall travel distance.
-
-Battery capacity limits how long a single mission can run, so long tours are segmented into multiple feasible flights. Dijkstra’s algorithm is used as a safety layer to plan emergency return paths to base or safe landing spots when constraints change mid-flight (for example due to wind or low battery alarms).
-
-The combination of heuristics and shortest paths keeps planning practical while still respecting real drone constraints.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Nearest neighbour TSP heuristic for building baseline tours</li>
-            <li>2-opt local optimisation to reduce distance and energy use</li>
-            <li>Dijkstra’s shortest path for safe return and rerouting</li>
-            <li>Tour segmentation based on battery capacity constraints</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: Polynomial-time heuristics combining TSP approximations with shortest paths.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 8 -->
-        <section id="case8" class="case-panel" data-tags="dijkstra fenwick tree bellman ford greedy microgrid storage time series">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 8 · Microgrid & Energy Storage Management</div>
-              <h2 class="case-panel-title">Hybrid Graph & Time-Series Storage Control</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Power routing, time-slot scheduling, price-aware control</div>
-          <div class="case-panel-body">
-Microgrids coordinate distributed generators, batteries and loads over a constrained network. Power routing is treated as graph traversal with edge weights reflecting loss and line capacity, while time is discretised into indexed slots.
-
-Fenwick trees track cumulative charge and discharge decisions per time slot so that supply can be compared against demand using fast prefix queries. Dijkstra’s algorithm routes power along low-loss paths. When dynamic pricing introduces negative-cost cycles, Bellman–Ford detects arbitrage opportunities or pricing inconsistencies.
-
-Greedy rules decide which battery to discharge during peaks, while the data structures keep simulations efficient across many time steps.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Dijkstra’s shortest path for power routing over the microgrid</li>
-            <li>Fenwick tree for time-series storage scheduling and prefix checks</li>
-            <li>Bellman–Ford for detecting negative-cost cycles in price models</li>
-            <li>Greedy load assignment for peak demand balancing</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: Efficient multi-step simulation combining O(E log V) routing and O(log N) time-series updates.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 9 -->
-        <section id="case9" class="case-panel" data-tags="fenwick tree segment tree sliding window sorting pollution monitoring analytics">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 9 · Pollution Monitoring & Environmental Analytics</div>
-              <h2 class="case-panel-title">Streaming Analytics for Pollution Hotspots</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Streaming anomaly detection, hotspot ranking, trend analysis</div>
-          <div class="case-panel-body">
-A dense network of air-quality sensors produces continuous pollution readings. Fenwick and segment trees provide fast updates and range queries on this stream, enabling instant retrieval of min, max or average pollutant levels over any time window.
-
-Sliding window statistics capture short-term variability and detect outliers beyond thresholds. Sorted summaries rank locations by pollution level to highlight current hotspots. For longer-term analysis, static structures speed up historical compliance queries and trend charts.
-
-The system is tuned so that both updates and queries remain efficient as the number of sensors and frequency of readings grow.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Fenwick tree and segment tree for range aggregates</li>
-            <li>Sliding-window techniques for outlier and threshold detection</li>
-            <li>Sorting for ranking top polluted locations (hotspots)</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: Logarithmic updates with near-constant-time hotspot queries across many streams.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- CASE 10 -->
-        <section id="case10" class="case-panel" data-tags="greedy knapsack sorting dijkstra segment tree waste to energy biofuel time slot">
-          <div class="case-panel-header">
-            <div>
-              <div class="case-panel-tag">Case 10 · Waste-to-Energy & Biofuel Optimisation</div>
-              <h2 class="case-panel-title">Feedstock Batching & Digester Scheduling</h2>
-            </div>
-          </div>
-          <div class="case-panel-domain">Domain: Knapsack-style batching, routing, and time-slot capacity control</div>
-          <div class="case-panel-body">
-Waste-to-energy plants receive heterogeneous feedstock with different calorific values and handling costs. A greedy knapsack approximation sorts incoming waste by energy density and builds near-optimal batches under digester capacity constraints.
-
-Transport of feedstock from collection points to the plant runs over a road graph, using Dijkstra’s algorithm to minimise logistics cost. Inside the plant, multiple digesters are scheduled across time slots, with a segment tree monitoring total load so that no slot exceeds capacity while throughput is maximised.
-
-This design keeps daily operations sustainable, cost-aware and computationally manageable.
-          </div>
-
-          <div class="case-panel-section-title">Algorithms & Data Structures</div>
-          <ul class="algo-list">
-            <li>Greedy knapsack-style batching based on energy density</li>
-            <li>Sorting to order feedstock items by priority</li>
-            <li>Dijkstra’s shortest path for transport cost optimisation</li>
-            <li>Segment tree for time-slot capacity checks in digesters</li>
-          </ul>
-
-          <div class="meta-row">
-            <div class="meta-text">
-              Complexity focus: Greedy approximations plus O(E log V) routing and O(log N) schedule checks.
-            </div>
-            <div class="btn-row">
-              <a href="#" class="btn btn-primary">
-                <span class="btn-icon">🧠</span> View C++ Code (placeholder)
-              </a>
-            </div>
-          </div>
-        </section>
-
-      </article>
+      </div>
     </section>
+
+    <!-- CASE STUDY CARDS (scrollable) -->
+    <main class="case-grid" id="caseGrid">
+      <!-- CASE 1 -->
+      <article class="case-card"
+        data-tags="case1 renewable energy smart grid graph mst kruskal prim dijkstra bfs dfs sorting">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 1 · Renewable Energy Installation & Maintenance</div>
+          <div class="case-domain">Smart Grids · Energy Routing</div>
+        </div>
+        <h2 class="case-title">Smart Renewable Grid Layout & Routing</h2>
+        <p class="case-desc">
+          Smart renewable networks require selecting optimal panel and turbine placements, minimising
+          cabling cost and routing electricity with minimal loss. Each building or energy node is
+          modeled as a weighted graph, where edges reflect cable distance and installation cost.
+          Minimum spanning tree construction gives a cost-efficient backbone that connects all nodes.
+          On top of this structure, shortest-path routing minimises energy loss and balances load
+          between generators and consumers, even when failures occur.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Kruskal’s and Prim’s MST for minimum wiring cost</li>
+          <li>Dijkstra’s shortest path for low-loss routing</li>
+          <li>BFS / DFS for connectivity and failure impact checks</li>
+          <li>Sorting for cost-based edge and upgrade prioritisation</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: O(E log V) MST + shortest paths over large city graphs.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 2 -->
+      <article class="case-card"
+        data-tags="case2 ev charging rental repair mst dijkstra bfs dfs priority queue sorting graph">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 2 · EV Charging, Rental & Repair Network</div>
+          <div class="case-domain">EV Infrastructure · Routing</div>
+        </div>
+        <h2 class="case-title">City-Scale EV Charging & Service Optimisation</h2>
+        <p class="case-desc">
+          EV infrastructure is modeled as a weighted road graph where weights capture travel time,
+          energy usage and congestion. Shortest-path computations send drivers to the lowest-cost
+          station under current traffic. MST-style reasoning keeps installation and wiring costs low.
+          When a station fails, reachability and redundancy checks ensure every region still has
+          backup options. Sorted data structures and priority queues power fast station ranking and
+          vehicle-to-station assignment.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Kruskal / Prim MST for planning backbone infrastructure</li>
+          <li>Dijkstra’s shortest path for driver-to-station routing</li>
+          <li>BFS / DFS for reachability and redundancy metrics</li>
+          <li>Priority queue–based dispatching for nearest “best” station</li>
+          <li>Sorting to rank stations by distance, load and pricing</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: repeated O(E log V) queries with low latency and low memory overhead.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 3 -->
+      <article class="case-card"
+        data-tags="case3 waste collection recycling tsp nearest neighbour 2opt dijkstra kmeans clustering capacity routing">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 3 · Waste Collection & Recycling Optimisation</div>
+          <div class="case-domain">Urban Logistics · Routing</div>
+        </div>
+        <h2 class="case-title">Capacity-Aware Waste Collection Routing</h2>
+        <p class="case-desc">
+          Each pickup point is a node with attributes like waste volume, distance and urgency.
+          K-means clustering groups close-by points into service regions, reducing cross-region travel.
+          Inside each region, a near-optimal tour is built via a nearest neighbour TSP heuristic,
+          refined by 2-opt. Capacity constraints split long tours into feasible sub-routes for trucks.
+          When bins overflow or roads are blocked, affected segments are recomputed using updated edge
+          weights, not the entire city.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>K-means clustering to form service regions</li>
+          <li>Nearest neighbour TSP heuristic for initial tours</li>
+          <li>2-opt local optimisation for route improvement</li>
+          <li>Dijkstra-based distance matrix for fast cost lookup</li>
+          <li>Capacity-based route splitting for truck limits</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: near-linear heuristics layered on top of O(E log V) distance computations.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 4 -->
+      <article class="case-card"
+        data-tags="case4 water purification monitoring segment tree sparse table kmp string pattern range min max logs">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 4 · Water Purification & Environmental Cleaning</div>
+          <div class="case-domain">Time-Series · Pattern Matching</div>
+        </div>
+        <h2 class="case-title">Real-Time Water Quality Monitoring & Alerts</h2>
+        <p class="case-desc">
+          Distributed purification units generate continuous sensor streams, tracking contamination,
+          pressure and flow. A segment tree maintains dynamic range min/max values, enabling
+          instant detection of abnormal spikes. For historical audits, a sparse table answers static
+          range queries in O(1) time. Text-based incident reports are scanned using KMP pattern
+          matching so critical contamination keywords are found in linear time.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Segment tree for dynamic range min/max on sensor data</li>
+          <li>Sparse table for O(1) static range queries in reports</li>
+          <li>KMP pattern matching for scanning incident documents</li>
+          <li>Sorting for event and log ordering</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: O(log N) updates and O(log N) or O(1) queries at high data rates.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 5 -->
+      <article class="case-card"
+        data-tags="case5 urban farming organic food fenwick tree segment tree sorting kmeans clustering irrigation yield">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 5 · Urban Farming & Organic Food Systems</div>
+          <div class="case-domain">Agritech · Analytics</div>
+        </div>
+        <h2 class="case-title">Data-Driven Irrigation & Yield Management</h2>
+        <p class="case-desc">
+          Sensor networks across rooftop and vertical farms record soil moisture, growth and microclimate
+          metrics. Fenwick trees handle high-frequency updates while providing fast rolling sums and
+          averages for dashboards. Segment trees track min/max growth rates or stress indicators.
+          K-means clustering groups similar plots into zones with shared irrigation and nutrient plans,
+          while sorting highlights high-yield and underperforming plots for targeted action.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Fenwick tree for rolling yield and moisture aggregation</li>
+          <li>Segment tree for detailed growth and threshold tracking</li>
+          <li>Sorting to prioritise high- and low-performing plots</li>
+          <li>K-means clustering for farm zoning and scheduling</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: O(log N) updates and queries supporting responsive dashboards.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 6 -->
+      <article class="case-card"
+        data-tags="case6 green landscaping ecological restoration graph mst kruskal bfs dfs greedy sorting corridor">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 6 · Green Landscaping & Ecological Restoration</div>
+          <div class="case-domain">Environment · Connectivity</div>
+        </div>
+        <h2 class="case-title">Cost-Efficient Ecological Corridor Planning</h2>
+        <p class="case-desc">
+          Parks and green patches are modeled as nodes; potential ecological links are edges with
+          restoration cost and benefit. Kruskal’s MST gives a minimal-cost backbone that reconnects
+          fragmented habitats. BFS/DFS component analysis identifies isolated regions and their
+          priority. Under a city budget, a greedy benefit-to-cost strategy selects segments that
+          deliver maximum ecological impact per unit cost.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Kruskal’s MST for low-cost corridor backbone</li>
+          <li>BFS / DFS for component detection and isolation scoring</li>
+          <li>Greedy selection based on benefit/cost ratio</li>
+          <li>Sorting to rank candidate restoration edges</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: O(E log V) planning plus linear-time connectivity checks.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 7 -->
+      <article class="case-card"
+        data-tags="case7 drone monitoring tsp nearest neighbour 2opt dijkstra battery route planning">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 7 · Drone-Based Environmental Monitoring</div>
+          <div class="case-domain">Aerial Monitoring · Routing</div>
+        </div>
+        <h2 class="case-title">Battery-Constrained Drone Route Planning</h2>
+        <p class="case-desc">
+          Monitoring waypoints are treated as nodes with travel costs driven by distance and wind.
+          A nearest neighbour TSP heuristic builds an initial tour, which 2-opt then refines. Battery
+          limits require long tours to be segmented into multiple missions. Dijkstra’s algorithm
+          computes safe return paths to base or an alternate landing zone when conditions change
+          mid-flight due to weather or low battery.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Nearest neighbour TSP heuristic for baseline tours</li>
+          <li>2-opt optimisation to reduce distance and energy use</li>
+          <li>Dijkstra’s shortest path for emergency rerouting</li>
+          <li>Tour segmentation based on battery constraints</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: polynomial-time heuristics combining TSP and shortest paths.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 8 -->
+      <article class="case-card"
+        data-tags="case8 microgrid energy storage dijkstra fenwick tree bellman ford greedy time series">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 8 · Microgrid & Energy Storage Management</div>
+          <div class="case-domain">Power Systems · Scheduling</div>
+        </div>
+        <h2 class="case-title">Hybrid Graph & Time-Series Storage Control</h2>
+        <p class="case-desc">
+          Microgrids are modeled as graphs where edges encode loss and line capacity. Power routing
+          uses Dijkstra to select low-loss paths. Time is discretised into slots; a Fenwick tree
+          tracks cumulative charge/discharge so supply can be compared to demand using prefix queries.
+          Bellman–Ford detects negative-cost cycles in dynamic pricing, revealing arbitrage or errors.
+          Greedy rules choose which battery to discharge during peak load periods.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Dijkstra’s shortest path for microgrid power routing</li>
+          <li>Fenwick tree for time-series storage scheduling</li>
+          <li>Bellman–Ford for negative-cost cycle detection</li>
+          <li>Greedy load assignment during peak demand</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: O(E log V) routing plus O(log N) time-series updates over many steps.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 9 -->
+      <article class="case-card"
+        data-tags="case9 pollution monitoring analytics fenwick tree segment tree sliding window sorting">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 9 · Pollution Monitoring & Environmental Analytics</div>
+          <div class="case-domain">Streaming Data · Hotspots</div>
+        </div>
+        <h2 class="case-title">Streaming Analytics for Pollution Hotspots</h2>
+        <p class="case-desc">
+          A dense sensor network continuously reports air-quality data. Fenwick and segment trees
+          allow fast range queries (min, max, average) over time windows, even as new readings are
+          appended. Sliding-window statistics detect short-term anomalies. Sorting ranks locations by
+          pollutant level, enabling instant hotspot visualisation and targeted interventions.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Fenwick tree and segment tree for range aggregates</li>
+          <li>Sliding-window methods for outlier detection</li>
+          <li>Sorting for ranking top polluted locations</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: logarithmic updates with fast hotspot queries across many sensors.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASE 10 -->
+      <article class="case-card"
+        data-tags="case10 waste to energy biofuel greedy knapsack sorting dijkstra segment tree time slot scheduling">
+        <div class="case-tag-row">
+          <div class="case-tag">Case 10 · Waste-to-Energy & Biofuel Optimisation</div>
+          <div class="case-domain">Operations · Scheduling</div>
+        </div>
+        <h2 class="case-title">Feedstock Batching & Digester Scheduling</h2>
+        <p class="case-desc">
+          Heterogeneous waste streams are batched for digesters under capacity constraints. A greedy
+          knapsack approximation sorts items by energy density and builds near-optimal batches.
+          Logistics from waste sources to the plant are routed using Dijkstra to minimise transport
+          cost. Inside the plant, a segment tree monitors time-slot capacities so no digester is
+          overloaded while daily throughput is maximised.
+        </p>
+        <div class="case-section-title">Algorithms & Data Structures</div>
+        <ul class="algo-list">
+          <li>Greedy knapsack approximation using energy density</li>
+          <li>Sorting to order feedstock by priority</li>
+          <li>Dijkstra’s shortest path for transport optimisation</li>
+          <li>Segment tree for time-slot capacity checks</li>
+        </ul>
+        <div class="card-footer">
+          <div class="card-meta">
+            Complexity focus: greedy batching plus O(E log V) routing and O(log N) schedule checks.
+          </div>
+          <div class="btn-row">
+            <a href="#" class="btn btn-primary">
+              <span class="btn-icon">🧠</span> View C++ Code
+            </a>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <p class="empty-state" id="emptyState">
+      No case studies match <strong>your current search</strong>. Try another keyword or clear the filter.
+    </p>
   </div>
 
   <script>
     (function () {
-      const tabs = Array.from(document.querySelectorAll(".case-tab"));
-      const panels = Array.from(document.querySelectorAll(".case-panel"));
       const searchInput = document.getElementById("searchInput");
-      const tabsList = document.getElementById("tabsList");
-      const tabsEmpty = document.getElementById("tabsEmpty");
+      const cards = Array.from(document.querySelectorAll(".case-card"));
+      const emptyState = document.getElementById("emptyState");
 
-      function setActive(id) {
-        tabs.forEach(tab => {
-          tab.classList.toggle("active", tab.getAttribute("data-target") === id);
-        });
-        panels.forEach(panel => {
-          panel.classList.toggle("active", panel.id === id);
-        });
-      }
-
-      // Tab click behaviour
-      tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-          const id = tab.getAttribute("data-target");
-          setActive(id);
-        });
-      });
-
-      // Simple search filtering on tab text + panel tags
       function applyFilter() {
         const q = (searchInput.value || "").toLowerCase();
-        let firstVisibleId = null;
         let visibleCount = 0;
 
-        tabs.forEach(tab => {
-          const targetId = tab.getAttribute("data-target");
-          const panel = document.getElementById(targetId);
-          const combined = (
-            tab.innerText + " " +
-            (panel?.getAttribute("data-tags") || "") +
-            " " +
-            (panel?.querySelector(".case-panel-domain")?.innerText || "")
-          ).toLowerCase();
-
-          const match = !q || combined.includes(q);
-          tab.parentElement.style.display = match ? "" : "none";
-
-          if (match) {
-            visibleCount++;
-            if (!firstVisibleId) {
-              firstVisibleId = targetId;
-            }
-          }
+        cards.forEach(card => {
+          const tags = (card.getAttribute("data-tags") || "").toLowerCase();
+          const text = (card.innerText || "").toLowerCase();
+          const match = !q || tags.includes(q) || text.includes(q);
+          card.style.display = match ? "flex" : "none";
+          if (match) visibleCount++;
         });
 
-        tabsEmpty.style.display = visibleCount === 0 ? "block" : "none";
-
-        // If the active panel is hidden by filter, switch to first visible
-        const activeTab = tabs.find(t => t.classList.contains("active"));
-        if (!activeTab || activeTab.parentElement.style.display === "none") {
-          if (firstVisibleId) {
-            setActive(firstVisibleId);
-          } else {
-            // Hide all panels if nothing matches
-            panels.forEach(p => p.classList.remove("active"));
-          }
-        }
+        emptyState.style.display = visibleCount === 0 ? "block" : "none";
       }
 
       searchInput.addEventListener("input", applyFilter);
-
-      // Initial state
-      setActive("case1");
       applyFilter();
     })();
   </script>
