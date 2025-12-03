@@ -9,9 +9,6 @@
 
   <style>
     :root {
-      --bg-1: #020617;
-      --bg-2: #020617;
-      --bg-3: #020617;
       --panel-bg: #020617;
       --card-bg: rgba(15,23,42,0.97);
       --card-border: rgba(148,163,184,0.28);
@@ -24,32 +21,32 @@
       --shadow-soft: 0 22px 70px rgba(15,23,42,0.95);
     }
 
-    * { box-sizing:border-box;margin:0;padding:0; }
+    * { box-sizing:border-box; margin:0; padding:0; }
 
     body {
       font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.12) 0, transparent 45%),
-        radial-gradient(circle at 100% 0%, rgba(129,140,248,0.18) 0, transparent 55%),
-        linear-gradient(135deg,#020617 0%,#020617 55%,#020617 100%);
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.14) 0, transparent 45%),
+        radial-gradient(circle at 100% 0%, rgba(129,140,248,0.2) 0, transparent 55%),
+        linear-gradient(135deg,#020617 0%,#020617 55%,#000 100%);
       color:var(--text-main);
       line-height:1.6;
-      padding:32px 16px 56px;
+      padding:24px 16px 40px;
       -webkit-font-smoothing:antialiased;
       position:relative;
       overflow-x:hidden;
     }
 
-    /* subtle grid lines */
+    /* subtle grid overlay */
     body::before {
       content:"";
       position:fixed;
       inset:0;
       background-image:
-        linear-gradient(rgba(15,23,42,0.4) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15,23,42,0.4) 1px, transparent 1px);
+        linear-gradient(rgba(15,23,42,0.45) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,23,42,0.45) 1px, transparent 1px);
       background-size:64px 64px;
-      opacity:0.25;
+      opacity:0.22;
       pointer-events:none;
       z-index:-1;
     }
@@ -149,7 +146,7 @@
     .main-area {
       display:flex;
       flex-direction:column;
-      gap:18px;
+      gap:16px;
     }
 
     .header-card {
@@ -247,14 +244,15 @@
     /* CASE CARDS */
 
     .case-card {
-      margin-top:12px;
+      margin-top:10px;
       border-radius:var(--radius-lg);
       background:radial-gradient(circle at top left,rgba(15,23,42,0.98),rgba(15,23,42,0.94));
       border:1px solid var(--card-border);
-      padding:16px 18px 14px;
+      padding:14px 16px 12px;
       box-shadow:var(--shadow-soft);
       position:relative;
       overflow:hidden;
+      transition:transform 0.18s ease,box-shadow 0.18s ease,border-color 0.18s ease;
     }
 
     .case-card::before {
@@ -262,17 +260,23 @@
       position:absolute;
       inset:-40%;
       background:radial-gradient(circle at top left,var(--accent-soft),transparent 65%);
-      opacity:0.55;
+      opacity:0.45;
       pointer-events:none;
+    }
+
+    .case-card:hover {
+      transform:translateY(-3px);
+      border-color:rgba(148,163,184,0.6);
+      box-shadow:0 26px 80px rgba(15,23,42,0.95);
     }
 
     .case-inner {
       position:relative;
       z-index:1;
       display:grid;
-      grid-template-columns:minmax(0,3fr) auto;
-      gap:18px;
-      align-items:stretch;
+      grid-template-columns:minmax(0,3.2fr) minmax(170px,0.9fr);
+      gap:14px;
+      align-items:center;
     }
 
     .case-main {display:flex;flex-direction:column;gap:6px;}
@@ -343,6 +347,11 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      box-shadow:0 0 0 1px rgba(15,23,42,1), 0 0 20px rgba(15,23,42,0.9);
+    }
+
+    .case-card:hover .action-strip {
+      box-shadow:0 0 0 1px rgba(15,23,42,1), 0 0 32px rgba(37,99,235,0.65);
     }
 
     .action-label {
@@ -399,8 +408,8 @@
       .case-actions{align-self:flex-start;}
     }
     @media(max-width:640px){
-      body{padding:24px 12px 40px;}
-      .case-card{padding:14px 12px 12px;}
+      body{padding:20px 10px 32px;}
+      .case-card{padding:12px 10px 10px;}
     }
   </style>
 </head>
@@ -495,7 +504,7 @@
                 <span class="title">Implementation</span>
                 <span>C++ source for all algorithms</span>
               </div>
-              <a class="pill-btn" href="Case1.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case1.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -530,7 +539,7 @@
                 <span class="title">Implementation</span>
                 <span>Segment &amp; Fenwick Trees</span>
               </div>
-              <a class="pill-btn" href="Case2.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case2.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -565,7 +574,7 @@
                 <span class="title">Implementation</span>
                 <span>Kruskal, Prim &amp; DSU</span>
               </div>
-              <a class="pill-btn" href="Case3.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case3.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -600,7 +609,7 @@
                 <span class="title">Implementation</span>
                 <span>Priority queues, DFS &amp; DSU</span>
               </div>
-              <a class="pill-btn" href="Case4.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case4.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -635,7 +644,7 @@
                 <span class="title">Implementation</span>
                 <span>Trie, AVL &amp; skip list</span>
               </div>
-              <a class="pill-btn" href="Case5.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case5.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -670,7 +679,7 @@
                 <span class="title">Implementation</span>
                 <span>Segment / Fenwick / Sparse</span>
               </div>
-              <a class="pill-btn" href="Case6.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case6.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -705,7 +714,7 @@
                 <span class="title">Implementation</span>
                 <span>Balanced trees &amp; skip list</span>
               </div>
-              <a class="pill-btn" href="Case7.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case7.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -740,7 +749,7 @@
                 <span class="title">Implementation</span>
                 <span>Graphs &amp; RMQ logs</span>
               </div>
-              <a class="pill-btn" href="Case8.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case8.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -775,7 +784,7 @@
                 <span class="title">Implementation</span>
                 <span>Flow tracing &amp; shortest paths</span>
               </div>
-              <a class="pill-btn" href="Case9.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case9.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
@@ -810,7 +819,7 @@
                 <span class="title">Implementation</span>
                 <span>Traffic counts &amp; corridors</span>
               </div>
-              <a class="pill-btn" href="Case10.cpp" target="_blank" rel="noopener">
+              <a class="pill-btn" href="Shashank/Case10.cpp" target="_blank" rel="noopener">
                 <span class="icon">💻</span><span>View Code</span>
               </a>
             </div>
