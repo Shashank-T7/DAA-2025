@@ -1,1 +1,305 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// -------------------- Shared Graph Structure --------------------
+// Nodes can represent map intersections or zones.
+// Edges represent roads between them.
+struct Edge {
+    int u, v;
+    int w; // travel time or distance
+};
+
+class Graph {
+public:
+    int V;
+    vector<vector<int>> adjList;                // for BFS/DFS
+    vector<vector<pair<int,int>>> adjWeighted;  // for Dijkstra
+    vector<Edge> edges;                         // for Bellman-Ford
+
+    Graph(int n) {
+        V = n;
+        adjList.assign(V, {});
+        adjWeighted.assign(V, {});
+    }
+
+    void addEdge(int u, int v) {
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);  // undirected for area reachability
+    }
+
+    void addWeightedEdge(int u, int v, int w) {
+        adjWeighted[u].push_back({v, w});
+        edges.push_back({u, v, w}); // directed edge for BF
+    }
+};
+
+// =================================================================
+// BFS: Find nearby drivers/zones level by level from a rider’s zone
+// =================================================================
+void BFS(const Graph& g, int start) {
+    vector<bool> visited(g.V, false);
+    queue<int> q; // queue used for level-order exploration
+
+    visited[start] = true;
+    q.push(start);
+
+    cout << "BFS (zones reachable from rider zone " << start << "): ";
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        cout << u << " ";
+
+        // explore all neighboring zones/roads
+        for (int v : g.adjList[u]) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+    }
+    cout << "\n";
+}
+
+/*
+BFS comments (ride-sharing context):
+- Treats zones or intersections as nodes.
+- Starting from rider zone, BFS discovers zones in increasing hop-count.
+- Can be used to quickly find all drivers within 1 hop, 2 hops, etc.
+*/
+
+// =================================================================
+// DFS: Explore connectivity (e.g., road network coverage) deeply
+// =================================================================
+void DFSUtil(const Graph& g, int u, vector<bool>& visited) {
+    visited[u] = true;
+    cout << u << " ";
+    for (int v : g.adjList[u]) {
+        if (!visited[v]) {
+            DFSUtil(g, v, visited);
+        }
+    }
+}
+
+void DFS(const Graph& g, int start) {
+    vector<bool> visited(g.V, false);
+    cout << "DFS (deep exploration from zone " << start << "): ";
+    DFSUtil(g, start, visited);
+    cout << "\n";
+}
+
+/*
+DFS comments (ride-sharing context):
+- Useful to check if all zones are connected (no isolated regions).
+- Can help validate map data or find connected components of the road graph.
+- Less about shortest path, more about structure and reachability.
+*/
+
+// =================================================================
+// Dijkstra: Fastest route (non-negative weights) from rider to all zones
+// =================================================================
+void Dijkstra(const Graph& g, int src) {
+    const int INF = 1e9;
+    vector<int> dist(g.V, INF);
+
+    // Min-heap based on current best known distance (ETA-like).
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+
+    dist[src] = 0;
+    pq.push({0, src});
+
+    while (!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+
+        if (d > dist[u]) continue; // outdated entry
+
+        for (auto [v, w] : g.adjWeighted[u]) {
+            if (dist[u] + w < dist[v]) {
+                dist[v] = dist[u] + w;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+
+    cout << "Dijkstra shortest times from rider zone " << src << ":\n";
+    for (int i = 0; i < g.V; ++i) {
+        cout << "  to zone " << i << " : " << dist[i] << "\n";
+    }
+}
+
+/*
+Dijkstra comments (ride-sharing context):
+- Models ETA or travel time from rider’s location to all zones.
+- Dispatch can pick the driver whose path cost (time) to rider is minimal.
+- Uses a min-heap to always expand the current closest zone first.
+*/
+
+// =================================================================
+// Bellman-Ford: Shortest paths even with negative edges (e.g., penalties)
+// =================================================================
+void BellmanFord(const Graph& g, int src) {
+    const int INF = 1e9;
+    vector<int> dist(g.V, INF);
+    dist[src] = 0;
+
+    // Relax all edges V-1 times.
+    for (int i = 1; i <= g.V - 1; ++i) {
+        for (const auto& e : g.edges) {
+            if (dist[e.u] < INF && dist[e.u] + e.w < dist[e.v]) {
+                dist[e.v] = dist[e.u] + e.w;
+            }
+        }
+    }
+
+    // Detect negative cycles (would mean inconsistent cost model).
+    bool hasNegCycle = false;
+    for (const auto& e : g.edges) {
+        if (dist[e.u] < INF && dist[e.u] + e.w < dist[e.v]) {
+            hasNegCycle = true;
+            break;
+        }
+    }
+
+    if (hasNegCycle) {
+        cout << "Bellman-Ford: Negative cycle detected in cost model\n";
+    } else {
+        cout << "Bellman-Ford costs from rider zone " << src << ":\n";
+        for (int i = 0; i < g.V; ++i) {
+            cout << "  to zone " << i << " : " << dist[i] << "\n";
+        }
+    }
+}
+
+/*
+Bellman-Ford comments (ride-sharing context):
+- Can include penalties/discounts as negative edges (e.g., toll refunds, surge adjustments).
+- Works even when some edges have negative weights (Dijkstra cannot).
+- Negative cycle detection helps validate pricing or cost rules in the network.
+*/
+
+// =================================================================
+// Queue: Ride request buffer (FIFO)
+// =================================================================
+void demoRequestQueue() {
+    queue<int> rideRequests; // holds request IDs in arrival order
+
+    // Simulate three incoming ride requests
+    rideRequests.push(1001);
+    rideRequests.push(1002);
+    rideRequests.push(1003);
+
+    cout << "Serving ride requests (FIFO): ";
+    while (!rideRequests.empty()) {
+        int reqId = rideRequests.front();
+        rideRequests.pop();
+        cout << reqId << " ";
+        // Here dispatch logic would pick a driver for reqId.
+    }
+    cout << "\n";
+}
+
+/*
+Queue comments (ride-sharing context):
+- New ride requests are enqueued as they arrive.
+- Dispatcher serves them in arrival order when fairness is required.
+- Simple model for buffering requests during peak traffic.
+*/
+
+// =================================================================
+// Hashing: Fast driver lookup (unordered_map)
+// =================================================================
+void demoHashing() {
+    // driverID -> status/location summary
+    unordered_map<int, string> driverStatus;
+
+    driverStatus[10] = "Zone 0, available";
+    driverStatus[11] = "Zone 2, on-trip";
+    driverStatus[12] = "Zone 3, available";
+
+    cout << "Driver status using hash map:\n";
+    for (auto& p : driverStatus) {
+        cout << "  Driver " << p.first << " : " << p.second << "\n";
+    }
+
+    // Fast lookup of a given driver
+    int queryId = 12;
+    auto it = driverStatus.find(queryId);
+    if (it != driverStatus.end()) {
+        cout << "Lookup: Driver " << queryId << " -> " << it->second << "\n";
+    } else {
+        cout << "Lookup: Driver " << queryId << " not found\n";
+    }
+}
+
+/*
+Hashing comments (ride-sharing context):
+- unordered_map gives average O(1) lookup for driver or rider records.
+- Used to quickly find a driver’s current status/location by ID.
+- Crucial when managing thousands of drivers in real time.
+*/
+
+// =================================================================
+// Min-heap (priority_queue): choose closest / fastest driver by ETA
+// =================================================================
+void demoMinHeapForDrivers() {
+    // (ETA_to_rider, driverID) min-heap
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> minHeap;
+
+    // Simulated ETA values for three drivers: lower ETA is better.
+    minHeap.push({7, 10});  // driver 10, ETA 7 minutes
+    minHeap.push({3, 11});  // driver 11, ETA 3 minutes
+    minHeap.push({5, 12});  // driver 12, ETA 5 minutes
+
+    cout << "Choosing drivers by smallest ETA:\n";
+    while (!minHeap.empty()) {
+        auto [eta, driverId] = minHeap.top();
+        minHeap.pop();
+        cout << "  Assign driver " << driverId << " (ETA " << eta << " min)\n";
+    }
+}
+
+/*
+Min-heap comments (ride-sharing context):
+- Stores candidate drivers keyed by their ETA to the rider.
+- Dispatcher repeatedly pops the driver with minimum ETA for assignment.
+- Priority-based matching improves user wait time compared to random or FIFO.
+*/
+
+// =================================================================
+// Main: tie everything to a small example
+// =================================================================
+int main() {
+    // Build a small map of 5 zones (0..4)
+    Graph g(5);
+
+    // Unweighted edges (connectivity for BFS/DFS)
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 3);
+    g.addEdge(2, 4);
+    g.addEdge(3, 4);
+
+    // Weighted edges (approx travel times for Dijkstra/Bellman-Ford)
+    g.addWeightedEdge(0, 1, 4);
+    g.addWeightedEdge(0, 2, 2);
+    g.addWeightedEdge(1, 3, 5);
+    g.addWeightedEdge(2, 3, 8);
+    g.addWeightedEdge(2, 4, 10);
+    g.addWeightedEdge(3, 4, 2);
+
+    int riderZone = 0; // rider located at zone 0
+
+    // Graph algorithms in the ride-sharing context
+    BFS(g, riderZone);
+    DFS(g, riderZone);
+    Dijkstra(g, riderZone);
+    BellmanFord(g, riderZone);
+
+    // Data-structure demos for dispatch logic
+    demoRequestQueue();
+    demoHashing();
+    demoMinHeapForDrivers();
+
+    return 0;
+}
 
