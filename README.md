@@ -3,33 +3,31 @@
 
 ✅ 1. Urban Commerce & Consumer Services
 
-This domain includes all businesses that directly serve residents with food, retail, lifestyle, and essential services.
+This domain includes all data‑driven, algorithmic systems that support smart‑city services across commerce, governance, mobility, and public infrastructure.
 
 Covers:
 
-Cloud kitchens & food delivery
+1)Smart Cloud Kitchen & Rider Dispatch
 
-Modern restaurants & specialty cafés
+2)Dynamic E commerce pricing Engine
 
-Grocery delivery & convenience stores
+3)Automated Billing Code Matching & Fraud Detection
 
-Premium retail outlets (fashion, electronics, books)
+4)Supplier–Buyer Allocation Platform (B2B Matching)
 
-Supermarkets & hyperlocal stores
+5)Urban Event Ticketing & Crowd Flow Optimizer
 
-Boutique salons & wellness spas
+6)Government Document Authentication
 
-Home cleaning & water purification services
+7)Government Complaint Routing
 
-Pet care & veterinary clinics
+8)Smart Agriculture — Efficient Water / Irrigation Network Planning
 
-Sports academies & fitness studios
+9)Citywide Job & Skill Matching Portal
 
-Hotels, hospitality, tourism
+10)Dynamic Public Transport Timetable & Transfer Optimizer
 
-Artisanal crafts & handmade goods
-
-👉 Reason: These businesses revolve around daily consumption, lifestyle, hospitality, and routine household needs.
+👉 Reason: These ten systems together showcase how algorithms can power end‑to‑end smart‑city operations across commerce, governance, agriculture, mobility, and digital services—improving efficiency, security, and quality of life for residents.
 
 ✅ 2. Mobility, Infrastructure & Industrial Operations
 
