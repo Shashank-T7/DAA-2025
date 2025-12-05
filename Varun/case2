@@ -1,0 +1,237 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Edge {
+    int u, v;
+    double w;
+    Edge(int _u, int _v, double _w): u(_u), v(_v), w(_w) {}
+};
+
+struct NodeDist {
+    int node;
+    double dist;
+    NodeDist(int n, double d): node(n), dist(d) {}
+    bool operator<(const NodeDist &o) const { return dist > o.dist; }
+};
+
+class DSU {
+public:
+    vector<int> p, r;
+    DSU(int n) {
+        p.resize(n);
+        r.assign(n,0);
+        for(int i=0;i<n;i++) p[i]=i;
+    }
+    int findSet(int x) {
+        while(p[x]!=x) {
+            p[x]=p[p[x]];
+            x=p[x];
+        }
+        return x;
+    }
+    bool unite(int a,int b) {
+        int ra=findSet(a), rb=findSet(b);
+        if(ra==rb) return false;
+        if(r[ra]<r[rb]) p[ra]=rb;
+        else if(r[rb]<r[ra]) p[rb]=ra;
+        else { p[rb]=ra; r[ra]++; }
+        return true;
+    }
+};
+
+class Graph {
+public:
+    int n;
+    vector<vector<pair<int,double>>> adj;
+    vector<Edge> edges;
+
+    Graph(int _n) {
+        n=_n;
+        adj.assign(n,{});
+    }
+    void addEdge(int u,int v,double w) {
+        adj[u].push_back({v,w});
+        adj[v].push_back({u,w});
+        edges.emplace_back(u,v,w);
+    }
+
+    double kruskalMST() {
+        DSU d(n);
+        vector<Edge> e=edges;
+        sort(e.begin(),e.end(),[](Edge &a, Edge &b){ return a.w<b.w; });
+        double cost=0;
+        int used=0;
+        for(auto &x:e) {
+            if(d.unite(x.u,x.v)) {
+                cost+=x.w;
+                used++;
+                if(used==n-1) break;
+            }
+        }
+        return cost;
+    }
+
+    vector<double> dijkstra(int src) {
+        vector<double> dist(n,1e18);
+        priority_queue<NodeDist> pq;
+        dist[src]=0;
+        pq.push(NodeDist(src,0));
+        while(!pq.empty()) {
+            NodeDist cur=pq.top(); pq.pop();
+            if(cur.dist!=dist[cur.node]) continue;
+            for(auto &nx:adj[cur.node]) {
+                int v=nx.first;
+                double w=nx.second;
+                if(dist[cur.node]+w<dist[v]) {
+                    dist[v]=dist[cur.node]+w;
+                    pq.push(NodeDist(v,dist[v]));
+                }
+            }
+        }
+        return dist;
+    }
+
+    vector<int> bfs(int src) {
+        vector<int> d(n,-1);
+        queue<int> q;
+        d[src]=0;
+        q.push(src);
+        while(!q.empty()) {
+            int u=q.front(); q.pop();
+            for(auto &nx:adj[u]) {
+                int v=nx.first;
+                if(d[v]==-1) {
+                    d[v]=d[u]+1;
+                    q.push(v);
+                }
+            }
+        }
+        return d;
+    }
+
+    void dfsUtil(int u, vector<int>&vis) {
+        vis[u]=1;
+        for(auto &nx:adj[u]) {
+            int v=nx.first;
+            if(!vis[v]) dfsUtil(v,vis);
+        }
+    }
+
+    int countComponents() {
+        vector<int> vis(n,0);
+        int c=0;
+        for(int i=0;i<n;i++) {
+            if(!vis[i]) {
+                c++;
+                dfsUtil(i,vis);
+            }
+        }
+        return c;
+    }
+};
+
+class EVNetwork {
+public:
+    Graph g;
+    vector<int> stations;
+    EVNetwork(int n): g(n) {}
+
+    void addRoad(int u,int v,double w) {
+        g.addEdge(u,v,w);
+    }
+
+    void setStations(const vector<int>&s) {
+        stations=s;
+    }
+
+    double installationCost() {
+        return g.kruskalMST();
+    }
+
+    double averageAccessCost() {
+        double sum=0;
+        int cnt=0;
+        for(int i=0;i<g.n;i++) {
+            double best=1e18;
+            for(int st:stations) {
+                vector<double> d=g.dijkstra(st);
+                best=min(best,d[i]);
+            }
+            sum+=best;
+            cnt++;
+        }
+        return sum/cnt;
+    }
+
+    vector<int> nearestStationForAll() {
+        vector<int> res(g.n,-1);
+        for(int i=0;i<g.n;i++) {
+            double best=1e18;
+            int bestSt=-1;
+            for(int st:stations) {
+                vector<double> d=g.dijkstra(st);
+                if(d[i]<best) {
+                    best=d[i];
+                    bestSt=st;
+                }
+            }
+            res[i]=bestSt;
+        }
+        return res;
+    }
+
+    double resilienceScore() {
+        int comp=g.countComponents();
+        return 1.0/comp;
+    }
+
+    int bestStationToAdd() {
+        double bestVal=1e18;
+        int best=-1;
+        for(int i=0;i<g.n;i++) {
+            if(find(stations.begin(),stations.end(),i)!=stations.end()) continue;
+            stations.push_back(i);
+            double c=averageAccessCost();
+            if(c<bestVal) {
+                bestVal=c;
+                best=i;
+            }
+            stations.pop_back();
+        }
+        return best;
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n,m;
+    cin>>n>>m;
+    EVNetwork ev(n);
+    for(int i=0;i<m;i++) {
+        int u,v;
+        double w;
+        cin>>u>>v>>w;
+        ev.addRoad(u,v,w);
+    }
+
+    int k;
+    cin>>k;
+    vector<int> st(k);
+    for(int i=0;i<k;i++) cin>>st[i];
+    ev.setStations(st);
+
+    double install=ev.installationCost();
+    double avg=ev.averageAccessCost();
+    double resilience=ev.resilienceScore();
+    int bestNew=ev.bestStationToAdd();
+
+    cout.setf(std::ios::fixed);
+    cout<<setprecision(6)<<install<<"\n";
+    cout<<avg<<"\n";
+    cout<<resilience<<"\n";
+    cout<<bestNew<<"\n";
+
+    return 0;
+}
