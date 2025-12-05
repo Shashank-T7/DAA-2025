@@ -1,367 +1,368 @@
 #include <bits/stdc++.h>
 using namespace std;
-using ll = long long;
 using db = double;
-const db INF = 1e18;
+using ll = long long;
 
-struct SegTree {
+struct Fenwick {
     int n;
-    vector<db> mn;
-    vector<db> mx;
-    void init(int sz){
-        n=1; while(n<sz) n<<=1;
-        mn.assign(2*n, INF);
-        mx.assign(2*n, -INF);
+    vector<db> f;
+    Fenwick(int n_=0){init(n_);}
+    void init(int n_){
+        n=n_;
+        f.assign(n+1,0);
     }
-    void build_from(const vector<db>&a){
+    void update(int i, db v){
+        for(; i<=n; i+=i&-i) f[i]+=v;
+    }
+    db query(int i){
+        db s=0;
+        for(; i>0; i-=i&-i) s+=f[i];
+        return s;
+    }
+    db range(int l,int r){
+        if(l>r) return 0;
+        return query(r)-query(l-1);
+    }
+};
+
+struct Seg {
+    int n;
+    vector<db> mn, mx;
+    void init(int sz){
+        n=1;
+        while(n<sz) n<<=1;
+        mn.assign(2*n, 1e18);
+        mx.assign(2*n, -1e18);
+    }
+    void build(const vector<db>&a){
         int sz=a.size();
         init(sz);
-        for(int i=0;i<sz;i++){ mn[n+i]=a[i]; mx[n+i]=a[i]; }
-        for(int i=n-1;i>0;i--){ mn[i]=min(mn[i<<1], mn[i<<1|1]); mx[i]=max(mx[i<<1], mx[i<<1|1]); }
-    }
-    void point_update(int idx, db val){
-        idx += n;
-        mn[idx]=mx[idx]=val;
-        for(idx>>=1; idx; idx>>=1){
-            mn[idx]=min(mn[idx<<1], mn[idx<<1|1]);
-            mx[idx]=max(mx[idx<<1], mx[idx<<1|1]);
+        for(int i=0;i<sz;i++){
+            mn[n+i]=a[i];
+            mx[n+i]=a[i];
+        }
+        for(int i=n-1;i>0;i--){
+            mn[i]=min(mn[i<<1],mn[i<<1|1]);
+            mx[i]=max(mx[i<<1],mx[i<<1|1]);
         }
     }
-    pair<db,db> range_query(int l,int r){
-        if(l>r) return {INF,-INF};
+    void update(int idx, db v){
+        idx+=n;
+        mn[idx]=v; mx[idx]=v;
+        for(idx>>=1; idx; idx>>=1){
+            mn[idx]=min(mn[idx<<1],mn[idx<<1|1]);
+            mx[idx]=max(mx[idx<<1],mx[idx<<1|1]);
+        }
+    }
+    pair<db,db> query(int l,int r){
+        db amn=1e18, amx=-1e18;
         l+=n; r+=n;
-        db amn=INF, amx=-INF;
         while(l<=r){
-            if(l&1){ amn=min(amn,mn[l]); amx=max(amx,mx[l]); l++; }
-            if(!(r&1)){ amn=min(amn,mn[r]); amx=max(amx,mx[r]); r--; }
+            if(l&1){
+                amn=min(amn,mn[l]);
+                amx=max(amx,mx[l]);
+                l++;
+            }
+            if(!(r&1)){
+                amn=min(amn,mn[r]);
+                amx=max(amx,mx[r]);
+                r--;
+            }
             l>>=1; r>>=1;
         }
         return {amn,amx};
     }
 };
 
-struct SparseTable {
-    int n;
-    vector<int> lg;
-    vector<vector<db>> stmin;
-    vector<vector<db>> stmax;
-    void build(const vector<db>&a){
-        n=a.size();
-        lg.assign(n+1,0);
-        for(int i=2;i<=n;i++) lg[i]=lg[i>>1]+1;
-        int K = lg[n]+1;
-        stmin.assign(K, vector<db>(n, INF));
-        stmax.assign(K, vector<db>(n, -INF));
-        for(int i=0;i<n;i++){ stmin[0][i]=a[i]; stmax[0][i]=a[i]; }
-        for(int k=1;k<K;k++){
-            for(int i=0;i + (1<<k) <= n; i++){
-                stmin[k][i] = min(stmin[k-1][i], stmin[k-1][i + (1<<(k-1))]);
-                stmax[k][i] = max(stmax[k-1][i], stmax[k-1][i + (1<<(k-1))]);
-            }
-        }
-    }
-    db query_min(int l,int r){
-        if(l>r) return INF;
-        int k = lg[r-l+1];
-        return min(stmin[k][l], stmin[k][r-(1<<k)+1]);
-    }
-    db query_max(int l,int r){
-        if(l>r) return -INF;
-        int k = lg[r-l+1];
-        return max(stmax[k][l], stmax[k][r-(1<<k)+1]);
-    }
+struct Plot {
+    db x,y;
+    db moisture;
+    db growth;
+    db yieldv;
 };
 
-vector<int> build_lps(const string &p){
-    int m=p.size();
-    vector<int> lps(m,0);
-    for(int i=1,len=0;i<m;){
-        if(p[i]==p[len]) lps[i++]=++len;
-        else if(len) len = lps[len-1];
-        else lps[i++]=0;
-    }
-    return lps;
+db dist_e(db x1,db y1,db x2,db y2){
+    db dx=x1-x2;
+    db dy=y1-y2;
+    return sqrt(dx*dx+dy*dy);
 }
 
-bool kmp_search(const string &s, const string &p){
-    if(p.empty()) return true;
-    auto lps = build_lps(p);
-    int i=0,j=0;
-    int n=s.size(), m=p.size();
-    while(i<n){
-        if(s[i]==p[j]){ i++; j++; if(j==m) return true; }
-        else if(j) j = lps[j-1];
-        else i++;
+vector<int> assign_kmeans(const vector<Plot>&p,const vector<pair<db,db>>&C){
+    int n=p.size(), k=C.size();
+    vector<int>a(n);
+    for(int i=0;i<n;i++){
+        db bd=1e18; int bc=0;
+        for(int j=0;j<k;j++){
+            db d=dist_e(p[i].x,p[i].y,C[j].first,C[j].second);
+            if(d<bd){ bd=d; bc=j; }
+        }
+        a[i]=bc;
     }
-    return false;
+    return a;
 }
 
-db mean_vec(const vector<db>&v){
-    if(v.empty()) return 0.0;
+vector<pair<db,db>> update_centers(const vector<Plot>&p,const vector<int>&a,int k){
+    vector<pair<db,db>>C(k,{0,0});
+    vector<int>cnt(k,0);
+    for(int i=0;i<p.size();i++){
+        C[a[i]].first+=p[i].x;
+        C[a[i]].second+=p[i].y;
+        cnt[a[i]]++;
+    }
+    for(int j=0;j<k;j++){
+        if(cnt[j]==0){
+            C[j]={p[0].x,p[0].y};
+        } else{
+            C[j].first/=cnt[j];
+            C[j].second/=cnt[j];
+        }
+    }
+    return C;
+}
+
+vector<vector<int>> cluster_plots(const vector<Plot>&p,int k){
+    int n=p.size();
+    vector<pair<db,db>>C(k);
+    for(int i=0;i<k;i++){
+        C[i]={p[i].x,p[i].y};
+    }
+    vector<int>a(n);
+    for(int it=0;it<20;it++){
+        a = assign_kmeans(p,C);
+        C = update_centers(p,a,k);
+    }
+    vector<vector<int>>out(k);
+    for(int i=0;i<n;i++) out[a[i]].push_back(i);
+    return out;
+}
+
+db sum_vec(const vector<db>&v){
     db s=0;
     for(db x:v) s+=x;
-    return s / v.size();
-}
-db stddev_vec(const vector<db>&v, db mu){
-    if(v.empty()) return 0.0;
-    db s=0;
-    for(db x:v){ db d=x-mu; s += d*d; }
-    return sqrt(s / v.size());
-}
-
-db median_vec(vector<db> v){
-    int n=v.size();
-    if(n==0) return 0.0;
-    nth_element(v.begin(), v.begin()+n/2, v.end());
-    db med = v[n/2];
-    if(n%2==0){
-        nth_element(v.begin(), v.begin()+n/2-1, v.end());
-        med = 0.5*(med + v[n/2-1]);
-    }
-    return med;
-}
-
-db iqr_vec(vector<db> v){
-    int n=v.size();
-    if(n<4) return 0.0;
-    sort(v.begin(), v.end());
-    int q1i = n/4;
-    int q3i = (3*n)/4;
-    db q1 = v[q1i];
-    db q3 = v[q3i];
-    return q3 - q1;
-}
-
-struct SlidingStats {
-    deque<db> window;
-    int capacity;
-    SlidingStats(int cap=50):capacity(cap){}
-    void push(db x){
-        window.push_back(x);
-        if((int)window.size()>capacity) window.pop_front();
-    }
-    db mean(){ vector<db> tmp(window.begin(), window.end()); return mean_vec(tmp); }
-    db stddev(){ vector<db> tmp(window.begin(), window.end()); return stddev_vec(tmp, mean_vec(tmp)); }
-    db median(){ vector<db> tmp(window.begin(), window.end()); return median_vec(tmp); }
-    db iqr(){ vector<db> tmp(window.begin(), window.end()); return iqr_vec(tmp); }
-};
-
-struct TimeSeriesStore {
-    vector<db> data;
-    TimeSeriesStore(){}
-    void append(db x){ data.push_back(x); }
-    int size() const { return (int)data.size(); }
-    vector<db> tail(int k) const {
-        vector<db> out;
-        int n=data.size();
-        if(k<=0) return out;
-        for(int i=max(0,n-k); i<n; ++i) out.push_back(data[i]);
-        return out;
-    }
-    db rolling_mean(int l,int r){
-        if(l>r) return 0.0;
-        db s=0; int c=0;
-        for(int i=l;i<=r;i++){ s+=data[i]; c++; }
-        return c? s/c : 0.0;
-    }
-};
-
-struct Alert {
-    int t;
-    string type;
-    db value;
-    Alert():t(0),type(""),value(0){} 
-    Alert(int tt,const string &ty, db v):t(tt),type(ty),value(v){}
-};
-
-vector<Alert> detect_anomalies_zscore(const vector<db>&stream, int window, db zthreshold){
-    vector<Alert> out;
-    SlidingStats s(window);
-    for(int t=0;t<(int)stream.size(); ++t){
-        db val=stream[t];
-        s.push(val);
-        if((int)s.window.size() < window) continue;
-        db mu = s.mean();
-        db sd = s.stddev();
-        if(sd < 1e-9) sd = 1e-9;
-        if(fabs(val - mu) > zthreshold * sd) out.emplace_back(t, "Z", val);
-    }
-    return out;
-}
-
-vector<Alert> detect_anomalies_iqr(const vector<db>&stream, int window, db factor){
-    vector<Alert> out;
-    SlidingStats s(window);
-    for(int t=0;t<(int)stream.size(); ++t){
-        db val=stream[t];
-        s.push(val);
-        if((int)s.window.size() < window) continue;
-        db med = s.median();
-        db iqr = s.iqr();
-        if(iqr < 1e-9) iqr = 1e-9;
-        if(fabs(val - med) > factor * iqr) out.emplace_back(t, "IQR", val);
-    }
-    return out;
-}
-
-vector<db> moving_average(const vector<db>&stream,int k){
-    int n=stream.size();
-    vector<db> res(n,0.0);
-    db s=0;
-    for(int i=0;i<n;i++){
-        s += stream[i];
-        if(i>=k) s -= stream[i-k];
-        if(i>=k-1) res[i] = s / k;
-        else res[i] = s / (i+1);
-    }
-    return res;
-}
-
-vector<pair<int,db>> top_k_spikes(const vector<db>&stream, int k){
-    int n=stream.size();
-    vector<pair<int,db>> arr;
-    for(int i=0;i<n;i++) arr.emplace_back(i, stream[i]);
-    sort(arr.begin(), arr.end(), [](const pair<int,db>&a,const pair<int,db>&b){ return a.second > b.second; });
-    if(k > (int)arr.size()) k=arr.size();
-    vector<pair<int,db>> out(arr.begin(), arr.begin()+k);
-    return out;
-}
-
-struct StreamProcessor {
-    TimeSeriesStore store;
-    SegTree seg;
-    SparseTable sp;
-    int built_sp;
-    StreamProcessor():built_sp(0){}
-    void ingest(db x){
-        store.append(x);
-        int sz = store.size();
-        if(sz==1){
-            seg.build_from(vector<db>{x});
-            vector<db> tmp = store.tail(sz);
-            sp.build(tmp);
-            built_sp = sz;
-        } else {
-            vector<db> tmp = store.tail(sz);
-            seg.build_from(tmp);
-            sp.build(tmp);
-            built_sp = sz;
-        }
-    }
-    pair<db,db> query_range(int l,int r){
-        int sz = store.size();
-        if(l<0) l=0;
-        if(r>=sz) r=sz-1;
-        return seg.range_query(l,r);
-    }
-    db sparse_min(int l,int r){
-        int sz = store.size();
-        if(l<0) l=0; if(r>=sz) r=sz-1;
-        if(built_sp==0) return 0.0;
-        return sp.query_min(l,r);
-    }
-    db sparse_max(int l,int r){
-        int sz = store.size();
-        if(l<0) l=0; if(r>=sz) r=sz-1;
-        if(built_sp==0) return 0.0;
-        return sp.query_max(l,r);
-    }
-};
-
-vector<Alert> windowed_detector(const vector<db>&stream, int window){
-    vector<Alert> out1 = detect_anomalies_zscore(stream, window, 3.0);
-    vector<Alert> out2 = detect_anomalies_iqr(stream, window, 2.0);
-    vector<Alert> merged = out1;
-    for(auto &a: out2) merged.push_back(a);
-    sort(merged.begin(), merged.end(), [](const Alert&a,const Alert&b){ if(a.t!=b.t) return a.t<b.t; return a.type<b.type; });
-    merged.erase(unique(merged.begin(), merged.end(), [](const Alert&a,const Alert&b){ return a.t==b.t && a.type==b.type; }), merged.end());
-    return merged;
-}
-
-vector<db> generate_demo_signal(int n){
-    vector<db> s; s.reserve(n);
-    for(int i=0;i<n;i++){
-        db v = 25.0 + 3.0 * sin(i/10.0) + ((i%7)==0 ? 10.0 : 0.0) + ( (i%23)==0 ? -8.0 : 0.0 );
-        s.push_back(v);
-    }
     return s;
+}
+
+db avg_vec(const vector<db>&v){
+    if(v.empty()) return 0;
+    return sum_vec(v)/v.size();
+}
+
+db stdv(const vector<db>&v){
+    if(v.empty()) return 0;
+    db m=avg_vec(v);
+    db s=0;
+    for(db x:v){ db d=x-m; s+=d*d; }
+    return sqrt(s/v.size());
+}
+
+vector<db> moving_avg(const vector<db>&v,int w){
+    int n=v.size();
+    vector<db>out(n,0);
+    db s=0;
+    for(int i=0;i<n;i++){
+        s+=v[i];
+        if(i>=w) s-=v[i-w];
+        if(i>=w-1) out[i]=s/w;
+        else out[i]=s/(i+1);
+    }
+    return out;
+}
+
+vector<int> rank_yield(const vector<Plot>&p){
+    int n=p.size();
+    vector<pair<db,int>>v;
+    for(int i=0;i<n;i++) v.push_back({p[i].yieldv,i});
+    sort(v.begin(),v.end(),[&](auto&a,auto&b){return a.first>b.first;});
+    vector<int>out;
+    for(auto &x:v) out.push_back(x.second);
+    return out;
+}
+
+vector<int> water_priority(const vector<Plot>&p){
+    vector<pair<db,int>> v;
+    for(int i=0;i<p.size();i++){
+        db score = (1.0/(p[i].moisture+1)) + p[i].growth*0.5;
+        v.push_back({score,i});
+    }
+    sort(v.begin(),v.end(),[&](auto&a,auto&b){return a.first>b.first;});
+    vector<int>out;
+    for(auto&s:v) out.push_back(s.second);
+    return out;
+}
+
+vector<db> moisture_series(int steps,db base){
+    vector<db>v(steps);
+    mt19937_64 rng(1);
+    uniform_real_distribution<db>ud(-0.5,0.5);
+    db cur=base;
+    for(int i=0;i<steps;i++){
+        cur += ud(rng);
+        if(cur<0) cur=0;
+        v[i]=cur;
+    }
+    return v;
+}
+
+vector<db> growth_series(int steps,db base){
+    vector<db>v(steps);
+    mt19937_64 rng(2);
+    uniform_real_distribution<db>ud(-0.2,0.2);
+    db cur=base;
+    for(int i=0;i<steps;i++){
+        cur += ud(rng);
+        v[i]=cur;
+    }
+    return v;
+}
+
+pair<db,db> stress_window(const vector<db>&g,int l,int r){
+    db mn=1e18, mx=-1e18;
+    for(int i=l;i<=r;i++){
+        mn=min(mn,g[i]);
+        mx=max(mx,g[i]);
+    }
+    return {mn,mx};
+}
+
+vector<int> detect_stress(const vector<db>&growth, db th_lo, db th_hi){
+    vector<int>out;
+    for(int i=0;i<growth.size();i++){
+        if(growth[i]<th_lo || growth[i]>th_hi) out.push_back(i);
+    }
+    return out;
+}
+
+struct ZonePlan {
+    vector<int> zone_plots;
+    db avg_moist;
+    db avg_growth;
+    vector<int>priority;
+};
+
+ZonePlan build_zone(
+    const vector<Plot>&p,
+    const vector<int>&ids,
+    const vector<db>&moist,
+    const vector<db>&growth
+){
+    vector<db> mv, gv;
+    for(int i:ids){
+        mv.push_back(moist[i]);
+        gv.push_back(growth[i]);
+    }
+    db am = avg_vec(mv);
+    db ag = avg_vec(gv);
+    vector<pair<db,int>>score;
+    for(int i:ids){
+        db s = (1.0/(p[i].moisture+1)) + p[i].growth*0.7;
+        score.push_back({s,i});
+    }
+    sort(score.begin(),score.end(),[&](auto&a,auto&b){return a.first>b.first;});
+    vector<int>pri;
+    for(auto &x:score) pri.push_back(x.second);
+    ZonePlan Z;
+    Z.zone_plots = ids;
+    Z.avg_moist = am;
+    Z.avg_growth = ag;
+    Z.priority = pri;
+    return Z;
 }
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
     int mode;
     if(!(cin>>mode)) return 0;
+
     if(mode==0){
-        int n=600;
-        auto signal = generate_demo_signal(n);
-        auto ma = moving_average(signal, 5);
-        auto spikes = top_k_spikes(signal, 10);
-        auto alerts = windowed_detector(signal, 50);
-        StreamProcessor proc;
-        for(auto v: signal) proc.ingest(v);
-        auto qr = proc.query_range(10, 30);
-        cout.setf(std::ios::fixed);
-        cout<<setprecision(6);
-        cout<<"MA_LAST "<<ma.back()<<"\n";
-        cout<<"SEG_RANGE_10_30 "<<qr.first<<" "<<qr.second<<"\n";
-        cout<<"SP_MIN_10_30 "<<proc.sparse_min(10,30)<<"\n";
-        cout<<"SP_MAX_10_30 "<<proc.sparse_max(10,30)<<"\n";
-        cout<<"TOP_SPIKES ";
-        for(auto &p: spikes) cout<<p.first<<":"<<p.second<<" ";
-        cout<<"\n";
-        cout<<"ALERT_COUNT "<<alerts.size()<<"\n";
-        for(auto &a: alerts) cout<<a.t<<" "<<a.type<<" "<<a.value<<"\n";
-        string doc = "pump malfunction contamination detected valve closed urgent contamination downstream";
-        vector<string> patterns = {"contamination","malfunction","leak","urgent"};
-        for(auto &pat: patterns) cout<<pat<<":"<<(kmp_search(doc, pat) ? "1":"0")<<" ";
-        cout<<"\n";
+        int n=120;
+        vector<Plot>p(n);
+        mt19937_64 rng(7);
+        uniform_real_distribution<db>ux(0,100), uy(0,100), um(10,40), ug(1,10), uyv(5,20);
+
+        for(int i=0;i<n;i++){
+            p[i].x=ux(rng);
+            p[i].y=uy(rng);
+            p[i].moisture=um(rng);
+            p[i].growth=ug(rng);
+            p[i].yieldv=uyv(rng);
+        }
+
+        auto clusters = cluster_plots(p,6);
+
+        vector<db> moisture;
+        vector<db> growth;
+
+        for(int i=0;i<n;i++){
+            auto ms = moisture_series(1, p[i].moisture);
+            auto gs = growth_series(1, p[i].growth);
+            moisture.push_back(ms[0]);
+            growth.push_back(gs[0]);
+        }
+
+        Fenwick fw(n);
+        fw.init(n);
+        for(int i=1;i<=n;i++) fw.update(i, moisture[i-1]);
+
+        Seg sg;
+        sg.build(growth);
+
+        vector<ZonePlan> Z;
+        for(auto &ids: clusters){
+            ZonePlan z = build_zone(p, ids, moisture, growth);
+            Z.push_back(z);
+        }
+
+        auto ranked = rank_yield(p);
+        auto wp = water_priority(p);
+
+        int L=10,R=40;
+        db sm = fw.range(L+1, R+1);
+        auto qr = sg.query(L,R);
+
+        cout<<fixed<<setprecision(6);
+        cout<<"SUM_MOIST "<<sm<<"\n";
+        cout<<"GROW_RANGE "<<qr.first<<" "<<qr.second<<"\n";
+        cout<<"TOP_YIELD "<<ranked[0]<<" "<<ranked[1]<<" "<<ranked[2]<<"\n";
+        cout<<"WATER_FIRST "<<wp[0]<<" "<<wp[1]<<" "<<wp[2]<<"\n";
+
+        for(int i=0;i<Z.size();i++){
+            cout<<"ZONE "<<i<<" "<<Z[i].avg_moist<<" "<<Z[i].avg_growth<<" "<<Z[i].priority[0]<<"\n";
+        }
+
         return 0;
     }
+
     if(mode==1){
         int n;
         cin>>n;
-        vector<db> a(n);
+        vector<db>a(n),b(n);
         for(int i=0;i<n;i++) cin>>a[i];
-        StreamProcessor proc;
-        for(int i=0;i<n;i++) proc.ingest(a[i]);
+        for(int i=0;i<n;i++) cin>>b[i];
+        Fenwick fw(n);
+        fw.init(n);
+        for(int i=1;i<=n;i++) fw.update(i,a[i-1]);
+        Seg sg;
+        sg.build(b);
         int q;
         cin>>q;
-        cout.setf(std::ios::fixed);
-        cout<<setprecision(6);
         while(q--){
-            int l,r; string type;
-            cin>>type;
-            if(type=="range"){
+            string t;
+            cin>>t;
+            if(t=="sum"){
+                int l,r;
                 cin>>l>>r;
-                auto p = proc.query_range(l,r);
-                cout<<p.first<<" "<<p.second<<"\n";
-            } else if(type=="sparse"){
+                cout<<fw.range(l+1,r+1)<<"\n";
+            } else if(t=="range"){
+                int l,r;
                 cin>>l>>r;
-                cout<<proc.sparse_min(l,r)<<" "<<proc.sparse_max(l,r)<<"\n";
-            } else if(type=="kmp"){
-                string text,pat;
-                getline(cin, text);
-                getline(cin, text);
-                getline(cin, pat);
-                cout<<(kmp_search(text, pat) ? "1":"0")<<"\n";
-            } else if(type=="detect"){
-                cin>>l;
-                auto alerts = windowed_detector(a, l);
-                cout<<alerts.size()<<"\n";
-                for(auto &at: alerts) cout<<at.t<<" "<<at.type<<" "<<at.value<<"\n";
+                auto qr = sg.query(l,r);
+                cout<<qr.first<<" "<<qr.second<<"\n";
             }
         }
         return 0;
     }
-    if(mode==2){
-        int n; cin>>n;
-        vector<db> a(n);
-        for(int i=0;i<n;i++) cin>>a[i];
-        auto alerts = detect_anomalies_zscore(a, 30, 3.0);
-        cout<<alerts.size()<<"\n";
-        for(auto &al: alerts) cout<<al.t<<" "<<al.type<<" "<<al.value<<"\n";
-        return 0;
-    }
+
     return 0;
 }
