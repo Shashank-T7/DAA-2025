@@ -1,237 +1,376 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-struct Edge {
-    int u, v;
-    double w;
-    Edge(int _u, int _v, double _w): u(_u), v(_v), w(_w) {}
-};
-
-struct NodeDist {
-    int node;
-    double dist;
-    NodeDist(int n, double d): node(n), dist(d) {}
-    bool operator<(const NodeDist &o) const { return dist > o.dist; }
-};
-
-class DSU {
-public:
-    vector<int> p, r;
-    DSU(int n) {
-        p.resize(n);
-        r.assign(n,0);
-        for(int i=0;i<n;i++) p[i]=i;
-    }
-    int findSet(int x) {
-        while(p[x]!=x) {
-            p[x]=p[p[x]];
-            x=p[x];
-        }
-        return x;
-    }
-    bool unite(int a,int b) {
-        int ra=findSet(a), rb=findSet(b);
-        if(ra==rb) return false;
-        if(r[ra]<r[rb]) p[ra]=rb;
-        else if(r[rb]<r[ra]) p[rb]=ra;
-        else { p[rb]=ra; r[ra]++; }
-        return true;
-    }
-};
-
-class Graph {
-public:
+using ll = long long;
+using dbl = double;
+const dbl INF = 1e18;
+struct Edge{int u,v; dbl w; Edge(){} Edge(int a,int b,dbl c):u(a),v(b),w(c){}};
+struct Graph{
     int n;
-    vector<vector<pair<int,double>>> adj;
+    vector<vector<pair<int,dbl>>> adj;
     vector<Edge> edges;
-
-    Graph(int _n) {
-        n=_n;
-        adj.assign(n,{});
-    }
-    void addEdge(int u,int v,double w) {
-        adj[u].push_back({v,w});
-        adj[v].push_back({u,w});
-        edges.emplace_back(u,v,w);
-    }
-
-    double kruskalMST() {
-        DSU d(n);
-        vector<Edge> e=edges;
-        sort(e.begin(),e.end(),[](Edge &a, Edge &b){ return a.w<b.w; });
-        double cost=0;
-        int used=0;
-        for(auto &x:e) {
-            if(d.unite(x.u,x.v)) {
-                cost+=x.w;
-                used++;
-                if(used==n-1) break;
-            }
-        }
-        return cost;
-    }
-
-    vector<double> dijkstra(int src) {
-        vector<double> dist(n,1e18);
-        priority_queue<NodeDist> pq;
-        dist[src]=0;
-        pq.push(NodeDist(src,0));
-        while(!pq.empty()) {
-            NodeDist cur=pq.top(); pq.pop();
-            if(cur.dist!=dist[cur.node]) continue;
-            for(auto &nx:adj[cur.node]) {
-                int v=nx.first;
-                double w=nx.second;
-                if(dist[cur.node]+w<dist[v]) {
-                    dist[v]=dist[cur.node]+w;
-                    pq.push(NodeDist(v,dist[v]));
-                }
-            }
-        }
-        return dist;
-    }
-
-    vector<int> bfs(int src) {
-        vector<int> d(n,-1);
-        queue<int> q;
-        d[src]=0;
-        q.push(src);
-        while(!q.empty()) {
-            int u=q.front(); q.pop();
-            for(auto &nx:adj[u]) {
-                int v=nx.first;
-                if(d[v]==-1) {
-                    d[v]=d[u]+1;
-                    q.push(v);
-                }
-            }
-        }
-        return d;
-    }
-
-    void dfsUtil(int u, vector<int>&vis) {
-        vis[u]=1;
-        for(auto &nx:adj[u]) {
-            int v=nx.first;
-            if(!vis[v]) dfsUtil(v,vis);
-        }
-    }
-
-    int countComponents() {
-        vector<int> vis(n,0);
-        int c=0;
-        for(int i=0;i<n;i++) {
-            if(!vis[i]) {
-                c++;
-                dfsUtil(i,vis);
-            }
-        }
-        return c;
-    }
+    Graph(int n_=0){ init(n_); }
+    void init(int N){ n=N; adj.assign(n,{}); edges.clear(); }
+    void addEdge(int u,int v,dbl w){ if(u<0||v<0||u>=n||v>=n) return; adj[u].push_back({v,w}); adj[v].push_back({u,w}); edges.emplace_back(u,v,w); }
+    int size() const { return n; }
 };
-
-class EVNetwork {
-public:
-    Graph g;
-    vector<int> stations;
-    EVNetwork(int n): g(n) {}
-
-    void addRoad(int u,int v,double w) {
-        g.addEdge(u,v,w);
-    }
-
-    void setStations(const vector<int>&s) {
-        stations=s;
-    }
-
-    double installationCost() {
-        return g.kruskalMST();
-    }
-
-    double averageAccessCost() {
-        double sum=0;
-        int cnt=0;
-        for(int i=0;i<g.n;i++) {
-            double best=1e18;
-            for(int st:stations) {
-                vector<double> d=g.dijkstra(st);
-                best=min(best,d[i]);
-            }
-            sum+=best;
-            cnt++;
+vector<dbl> dijkstra(const Graph &g,int src){
+    int n=g.n;
+    vector<dbl> dist(n, INF);
+    priority_queue<pair<dbl,int>, vector<pair<dbl,int>>, greater<pair<dbl,int>>> pq;
+    dist[src]=0; pq.push({0,src});
+    while(!pq.empty()){
+        auto cur=pq.top(); pq.pop();
+        dbl d=cur.first; int u=cur.second;
+        if(d!=dist[u]) continue;
+        for(auto &pr: g.adj[u]){
+            int v=pr.first; dbl w=pr.second;
+            if(dist[u]+w < dist[v]){ dist[v]=dist[u]+w; pq.push({dist[v], v}); }
         }
-        return sum/cnt;
     }
-
-    vector<int> nearestStationForAll() {
-        vector<int> res(g.n,-1);
-        for(int i=0;i<g.n;i++) {
-            double best=1e18;
-            int bestSt=-1;
-            for(int st:stations) {
-                vector<double> d=g.dijkstra(st);
-                if(d[i]<best) {
-                    best=d[i];
-                    bestSt=st;
-                }
-            }
-            res[i]=bestSt;
+    return dist;
+}
+vector<dbl> multi_source_dijkstra(const Graph &g, const vector<int>& sources){
+    int n=g.n;
+    vector<dbl> dist(n, INF);
+    priority_queue<pair<dbl,int>, vector<pair<dbl,int>>, greater<pair<dbl,int>>> pq;
+    for(int s: sources) if(s>=0 && s<n){ dist[s]=0; pq.push({0,s}); }
+    while(!pq.empty()){
+        auto cur=pq.top(); pq.pop();
+        dbl d=cur.first; int u=cur.second;
+        if(d!=dist[u]) continue;
+        for(auto &pr: g.adj[u]){
+            int v=pr.first; dbl w=pr.second;
+            if(dist[u]+w < dist[v]){ dist[v]=dist[u]+w; pq.push({dist[v], v}); }
         }
-        return res;
     }
-
-    double resilienceScore() {
-        int comp=g.countComponents();
-        return 1.0/comp;
-    }
-
-    int bestStationToAdd() {
-        double bestVal=1e18;
-        int best=-1;
-        for(int i=0;i<g.n;i++) {
-            if(find(stations.begin(),stations.end(),i)!=stations.end()) continue;
-            stations.push_back(i);
-            double c=averageAccessCost();
-            if(c<bestVal) {
-                bestVal=c;
-                best=i;
-            }
-            stations.pop_back();
+    return dist;
+}
+struct DSU{ int n; vector<int> p; DSU(int n_=0){ init(n_); } void init(int n_){ n=n_; p.resize(n); iota(p.begin(), p.end(), 0);} int find(int x){ return p[x]==x?x:p[x]=find(p[x]); } bool unite(int a,int b){ a=find(a); b=find(b); if(a==b) return false; p[b]=a; return true; } };
+dbl kruskal_mst(const Graph &g){
+    int n=g.n;
+    auto es=g.edges;
+    sort(es.begin(), es.end(), [](const Edge&a,const Edge&b){ return a.w < b.w; });
+    DSU d(n);
+    dbl total=0; int used=0;
+    for(auto &e: es){ if(d.unite(e.u, e.v)){ total += e.w; if(++used==n-1) break; } }
+    if(used==n-1) return total;
+    return -1;
+}
+dbl prim_mst(const Graph &g,int start=0){
+    int n=g.n;
+    if(n==0) return 0;
+    vector<char> used(n,0);
+    vector<dbl> best(n, INF);
+    priority_queue<pair<dbl,int>, vector<pair<dbl,int>>, greater<pair<dbl,int>>> pq;
+    best[start]=0; pq.push({0,start});
+    dbl total=0; int cnt=0;
+    while(!pq.empty()){
+        auto cur=pq.top(); pq.pop();
+        dbl w=cur.first; int u=cur.second;
+        if(used[u]) continue;
+        used[u]=1; total += w; if(++cnt==n) break;
+        for(auto &pr: g.adj[u]){
+            int v=pr.first; dbl ww=pr.second;
+            if(!used[v] && ww < best[v]){ best[v]=ww; pq.push({best[v], v}); }
         }
-        return best;
     }
+    if(cnt==n) return total;
+    return -1;
+}
+vector<int> rank_stations_by_access(const Graph &g, const vector<int>& stations){
+    auto dist = multi_source_dijkstra(g, stations);
+    vector<pair<dbl,int>> score;
+    for(int i=0;i<g.n;i++){
+        dbl d = dist[i];
+        if(d>=INF) d = 1e12;
+        score.push_back({d,i});
+    }
+    sort(score.begin(), score.end());
+    vector<int> order;
+    for(auto &p: score) order.push_back(p.second);
+    return order;
+}
+dbl average_access_distance(const Graph &g, const vector<int>& stations){
+    auto dist = multi_source_dijkstra(g, stations);
+    dbl s=0; int c=0;
+    for(dbl x: dist) if(x<INF){ s+=x; ++c; }
+    if(c==0) return 1e18;
+    return s/c;
+}
+vector<int> greedy_facility_location(const Graph &g, int k, const vector<int>& candidates){
+    vector<int> chosen;
+    if(k<=0) return chosen;
+    if((int)candidates.size()<=k){
+        chosen = candidates;
+        return chosen;
+    }
+    chosen.reserve(k);
+    chosen.push_back(candidates[0]);
+    while((int)chosen.size()<k){
+        int bestc=-1; dbl bestscore=INF;
+        for(int c: candidates){
+            if(find(chosen.begin(), chosen.end(), c) != chosen.end()) continue;
+            vector<int> trial = chosen; trial.push_back(c);
+            dbl sc = average_access_distance(g, trial);
+            if(sc < bestscore){ bestscore = sc; bestc = c; }
+        }
+        if(bestc==-1) break;
+        chosen.push_back(bestc);
+    }
+    bool improved=true;
+    int iters=0;
+    while(improved && iters<20){
+        improved=false; ++iters;
+        for(int i=0;i<(int)chosen.size(); ++i){
+            for(int c: candidates){
+                if(find(chosen.begin(), chosen.end(), c) != chosen.end()) continue;
+                vector<int> trial = chosen; trial[i]=c;
+                dbl sc = average_access_distance(g, trial);
+                if(sc + 1e-9 < average_access_distance(g, chosen)){ chosen = trial; improved=true; break; }
+            }
+            if(improved) break;
+        }
+    }
+    return chosen;
+}
+struct Dispatch {
+    int vehicle_id;
+    int from;
+    int to;
+    dbl distance;
+    Dispatch(): vehicle_id(-1), from(-1), to(-1), distance(0) {}
+    Dispatch(int v,int f,int t,dbl d):vehicle_id(v),from(f),to(t),distance(d){}
 };
-
-int main() {
+vector<Dispatch> nearest_station_dispatch(const Graph &g, const vector<int>& vehicles, const vector<int>& demands){
+    vector<Dispatch> res;
+    for(int v: vehicles){
+        auto d = dijkstra(g, v);
+        int best=-1; dbl bd=INF;
+        for(int t: demands){
+            if(d[t] < bd){ bd=d[t]; best=t; }
+        }
+        if(best!=-1) res.emplace_back(v, v, best, bd);
+    }
+    return res;
+}
+vector<int> station_loads(const Graph &g, const vector<int>& stations, const vector<int>& demands){
+    vector<int> load(stations.size(), 0);
+    auto dist = multi_source_dijkstra(g, stations);
+    for(int dnode: demands){
+        int idx=0; dbl bd=INF; int choose=-1;
+        for(size_t i=0;i<stations.size(); ++i){
+            if(dist[dnode] < bd){ bd = dist[dnode]; choose = i; }
+        }
+        if(choose!=-1) ++load[choose];
+    }
+    return load;
+}
+Graph build_random_graph(int n,int m,int seed){
+    Graph g(n);
+    mt19937_64 rng(seed);
+    uniform_int_distribution<int> ui(0,n-1);
+    uniform_real_distribution<dbl> uw(1.0,100.0);
+    set<pair<int,int>> used;
+    while((int)g.edges.size()<m){
+        int a=ui(rng), b=ui(rng); if(a==b) continue;
+        if(a>b) swap(a,b);
+        if(used.insert({a,b}).second){ dbl w = uw(rng); g.addEdge(a,b,w); }
+    }
+    return g;
+}
+vector<int> top_k_nodes_by_centrality(const Graph &g, int k){
+    int n=g.n;
+    vector<pair<dbl,int>> score;
+    for(int i=0;i<n;i++){
+        auto d = dijkstra(g,i);
+        dbl s=0; int c=0;
+        for(dbl x: d) if(x<INF){ s+=x; ++c; }
+        dbl avg = (c? s/c : 1e12);
+        score.push_back({avg, i});
+    }
+    sort(score.begin(), score.end());
+    vector<int> res;
+    for(int i=0;i<min(k,(int)score.size()); ++i) res.push_back(score[i].second);
+    return res;
+}
+pair<vector<int>, dbl> k_center_greedy(const Graph &g, int k){
+    int n=g.n;
+    vector<int> centers;
+    centers.reserve(k);
+    centers.push_back(0);
+    vector<dbl> dist(n, INF);
+    while((int)centers.size()<k){
+        auto d = multi_source_dijkstra(g, centers);
+        int far=-1; dbl bd=-1;
+        for(int i=0;i<n;i++){
+            if(d[i] > bd){ bd = d[i]; far = i; }
+        }
+        if(far==-1) break;
+        centers.push_back(far);
+    }
+    auto d = multi_source_dijkstra(g, centers);
+    dbl maxd=0;
+    for(dbl x: d) if(x<INF && x>maxd) maxd=x;
+    return {centers, maxd};
+}
+vector<int> fallback_station_assignment(const Graph &g, const vector<int>& stations, const vector<int>& demands){
+    vector<int> assign(demands.size(), -1);
+    for(size_t i=0;i<demands.size(); ++i){
+        auto d = dijkstra(g, demands[i]);
+        dbl bd=INF; int choose=-1;
+        for(size_t j=0;j<stations.size(); ++j){
+            if(d[stations[j]] < bd){ bd = d[stations[j]]; choose = j; }
+        }
+        assign[i]=choose;
+    }
+    return assign;
+}
+vector<int> bfs_order(const Graph &g,int start){
+    int n=g.n;
+    vector<int> order; order.reserve(n);
+    vector<char> vis(n,0);
+    deque<int> dq; dq.push_back(start); vis[start]=1;
+    while(!dq.empty()){
+        int u=dq.front(); dq.pop_front(); order.push_back(u);
+        for(auto &pr: g.adj[u]) if(!vis[pr.first]){ vis[pr.first]=1; dq.push_back(pr.first); }
+    }
+    return order;
+}
+vector<pair<int,int>> simulate_station_failures_and_recovery(const Graph &g,const vector<int>& stations,int trials){
+    int n=g.n;
+    vector<pair<int,int>> results;
+    for(int t=0;t<trials;t++){
+        vector<int> active;
+        for(int s: stations) if((s+t)%3!=0) active.push_back(s);
+        auto order = rank_stations_by_access(g, active);
+        int top = order.empty() ? -1 : order[0];
+        results.push_back({t, top});
+    }
+    return results;
+}
+vector<int> balance_stations_greedy(const Graph &g, vector<int> stations, const vector<int>& demands, int capacity_per_station){
+    int S = stations.size();
+    vector<int> load(S,0);
+    vector<int> assign(demands.size(), -1);
+    auto dist = multi_source_dijkstra(g, stations);
+    for(size_t i=0;i<demands.size(); ++i){
+        int dnode = demands[i];
+        int best = -1; dbl bd = INF;
+        for(int j=0;j<S;j++){
+            dbl dd = dist[dnode];
+            if(dd < bd && load[j] < capacity_per_station){ bd = dd; best = j; }
+        }
+        if(best!=-1){ assign[i] = best; ++load[best]; }
+    }
+    return assign;
+}
+vector<pair<int,dbl>> approximate_betweenness(const Graph &g,int samples){
+    int n=g.n;
+    vector<dbl> score(n,0);
+    mt19937 rng(12345);
+    uniform_int_distribution<int> ui(0,n-1);
+    for(int s=0;s<samples;s++){
+        int src = ui(rng), dst = ui(rng);
+        auto d = dijkstra(g, src);
+        if(d[dst]>=INF) continue;
+        vector<int> path;
+        int cur = dst;
+        while(cur!=src){
+            int pred=-1; dbl best=INF;
+            for(auto &pr: g.adj[cur]){
+                int v=pr.first; dbl w=pr.second;
+                if(d[v] + w == d[cur]){ pred=v; break; }
+            }
+            if(pred==-1) break;
+            score[cur] += 1.0;
+            cur = pred;
+        }
+    }
+    vector<pair<int,dbl>> res;
+    for(int i=0;i<n;i++) res.push_back({i, score[i]});
+    sort(res.begin(), res.end(), [](const pair<int,dbl>&a,const pair<int,dbl>&b){ return a.second > b.second; });
+    return res;
+}
+pair<vector<int>, dbl> dynamic_recompute_centers(const Graph &g,int k){
+    int n=g.n;
+    vector<int> centers;
+    centers.push_back(0);
+    while((int)centers.size()<k){
+        auto d = multi_source_dijkstra(g, centers);
+        int far = -1; dbl farv = -1;
+        for(int i=0;i<n;i++) if(d[i] > farv){ farv = d[i]; far = i; }
+        if(far==-1) break;
+        centers.push_back(far);
+    }
+    dbl maxd=0;
+    auto d = multi_source_dijkstra(g, centers);
+    for(dbl x: d) if(x<INF && x>maxd) maxd=x;
+    return {centers, maxd};
+}
+vector<int> priority_dispatch(const Graph &g, const vector<int>& vehicles, const vector<int>& demands, const vector<dbl>& priority){
+    int V = vehicles.size();
+    int D = demands.size();
+    vector<int> assignment(V, -1);
+    vector<char> taken(D, 0);
+    vector<int> order(V);
+    iota(order.begin(), order.end(), 0);
+    sort(order.begin(), order.end(), [&](int a,int b){ return priority[a] > priority[b]; });
+    for(int idx: order){
+        int veh = vehicles[idx];
+        auto d = dijkstra(g, veh);
+        int best = -1; dbl bd = INF;
+        for(int j=0;j<D;j++){
+            if(taken[j]) continue;
+            if(d[demands[j]] < bd){ bd = d[demands[j]]; best = j; }
+        }
+        if(best!=-1){ assignment[idx] = best; taken[best] = 1; }
+    }
+    return assignment;
+}
+int count_reachable(const Graph &g,int src){
+    vector<char> vis(g.n,0);
+    deque<int> dq; dq.push_back(src); vis[src]=1;
+    int cnt=0;
+    while(!dq.empty()){
+        int u=dq.front(); dq.pop_front(); ++cnt;
+        for(auto &pr: g.adj[u]) if(!vis[pr.first]){ vis[pr.first]=1; dq.push_back(pr.first); }
+    }
+    return cnt;
+}
+int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    int n,m;
-    cin>>n>>m;
-    EVNetwork ev(n);
-    for(int i=0;i<m;i++) {
-        int u,v;
-        double w;
-        cin>>u>>v>>w;
-        ev.addRoad(u,v,w);
+    int mode=-1;
+    if(!(cin>>mode)) return 0;
+    if(mode==0){
+        Graph g = build_random_graph(120, 360, 2025);
+        vector<int> candidates = top_k_nodes_by_centrality(g, 30);
+        auto centers = greedy_facility_location(g, 8, candidates);
+        dbl avg = average_access_distance(g, centers);
+        cout.setf(std::ios::fixed); cout<<setprecision(6);
+        cout<<"AVG_ACCESS "<<avg<<"\n";
+        for(int c: centers) cout<<c<<" ";
+        cout<<"\n";
+        return 0;
+    } else if(mode==1){
+        int n,m; cin>>n>>m;
+        Graph g(n);
+        for(int i=0;i<m;i++){ int u,v; dbl w; cin>>u>>v>>w; g.addEdge(u,v,w); }
+        int k; cin>>k;
+        vector<int> candidates(k);
+        for(int i=0;i<k;i++) cin>>candidates[i];
+        int pick; cin>>pick;
+        auto centers = greedy_facility_location(g, pick, candidates);
+        for(int c: centers) cout<<c<<" ";
+        cout<<"\n";
+        return 0;
+    } else if(mode==2){
+        Graph g = build_random_graph(80, 240, 42);
+        vector<int> vehicles; for(int i=0;i<10;i++) vehicles.push_back(i);
+        vector<int> demands; for(int i=30;i<60;i++) demands.push_back(i);
+        auto dispatch = nearest_station_dispatch(g, vehicles, demands);
+        for(auto &d: dispatch) cout<<d.vehicle_id<<" "<<d.to<<" "<<fixed<<setprecision(6)<<d.distance<<"\n";
+        return 0;
     }
-
-    int k;
-    cin>>k;
-    vector<int> st(k);
-    for(int i=0;i<k;i++) cin>>st[i];
-    ev.setStations(st);
-
-    double install=ev.installationCost();
-    double avg=ev.averageAccessCost();
-    double resilience=ev.resilienceScore();
-    int bestNew=ev.bestStationToAdd();
-
-    cout.setf(std::ios::fixed);
-    cout<<setprecision(6)<<install<<"\n";
-    cout<<avg<<"\n";
-    cout<<resilience<<"\n";
-    cout<<bestNew<<"\n";
-
     return 0;
 }
