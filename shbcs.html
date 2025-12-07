@@ -154,14 +154,117 @@
     .cta-btn:hover{ transform:translateY(-2px); box-shadow: 0 16px 42px rgba(13,18,28,0.85); }
     .cta-icon{ width:18px;height:18px;border-radius:50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.15) 8%), linear-gradient(135deg,#dff6ff 0%, #38bdf8 50%, #8b5cf6 100%); flex:0 0 18px; box-shadow:0 6px 18px rgba(56,189,248,0.18); }
 
+    /* ---------------------------
+       NEW: List view styling (layout similar to Image 1)
+       --------------------------- */
     .listview{ display:flex; flex-direction:column; gap:12px; }
-    .list-item{ display:flex; gap:14px; padding:14px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008)); border:1px solid rgba(255,255,255,0.02); }
-    .list-left{ display:flex; gap:12px; align-items:center; }
-    .case-num{ width:54px; height:54px; border-radius:12px; background: linear-gradient(135deg,#22c55e,#38bdf8); display:flex; align-items:center; justify-content:center; font-weight:800; color:#021617; }
-    .list-body h4{ margin:0 }
-    .list-body p{ color:var(--muted); margin-top:8px }
+    .list-item{
+      display:flex;
+      gap:18px;
+      padding:18px;
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
+      border:1px solid rgba(255,255,255,0.02);
+      box-shadow: 0 8px 26px rgba(2,6,12,0.55);
+      align-items:flex-start;
+      transition: transform .15s ease, box-shadow .15s ease;
+      min-height:120px;
+    }
+    .list-item:hover{ transform: translateY(-6px); box-shadow: var(--shadow-lg); }
 
-    /* modal */
+    /* left column - slim vertical pill & number badge */
+    .list-left{ display:flex; gap:14px; align-items:flex-start; width:100%; }
+    .left-pill{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      flex:0 0 64px;
+    }
+    .vertical-accent{
+      width:12px;
+      border-radius:8px;
+      background: linear-gradient(180deg, rgba(56,189,248,0.9), rgba(139,92,246,0.9));
+      height:56px;
+      box-shadow: 0 6px 18px rgba(56,189,248,0.06);
+    }
+    .case-num{
+      min-width:44px;
+      height:44px;
+      border-radius:10px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800; color:var(--accent-b); font-size:1.05rem;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    /* body - title, meta, and full summary */
+    .list-body{
+      flex:1 1 auto;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:0; /* allow truncation for flex children when needed */
+    }
+    .list-body .meta{ font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; }
+    .list-body h4{ margin:0; font-size:1.05rem; color:#eaf6ff; line-height:1.12; font-weight:700; }
+    .list-body p{
+      margin:0;
+      color:var(--muted);
+      font-size:0.95rem;
+      line-height:1.55;
+      /* allow full content (no truncation) */
+      max-height: none;
+      overflow: visible;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .list-body .tags-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+    /* right column - circular CTA and small meta */
+    .list-right{
+      flex:0 0 148px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+    .list-cta{
+      width:88px;
+      height:88px;
+      border-radius:50%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:8px;
+      border:0;
+      cursor:pointer;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      box-shadow: 0 8px 30px rgba(2,6,12,0.5);
+      transition: transform .15s ease, box-shadow .15s ease;
+      border:1px solid rgba(255,255,255,0.03);
+      font-weight:700;
+      color:var(--muted);
+    }
+    .list-cta .inner-dot{
+      width:40px;height:40px;border-radius:50%;
+      background: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.9), rgba(255,255,255,0.12) 8%), linear-gradient(135deg,#dff6ff 0%, #38bdf8 50%, #8b5cf6 100%);
+      box-shadow: 0 8px 20px rgba(13,18,28,0.5);
+    }
+    .list-cta small{ display:block; font-size:0.72rem; margin-top:6px; color:var(--muted); }
+
+    /* responsive: collapse right CTA under body for small screens */
+    @media (max-width:820px){
+      .list-item{ flex-direction:column; gap:12px; align-items:stretch; }
+      .left-pill{ flex-direction:row; gap:12px; align-items:center; flex:0 0 auto; }
+      .list-right{ flex-direction:row; justify-content:space-between; width:100%; }
+      .list-right .list-cta{ width:60px; height:60px; }
+      .list-cta small{ display:none; }
+    }
+
+    /* modal & rest unchanged */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(2,6,23,0.8); display:none; align-items:center; justify-content:center; z-index:80; padding:24px; }
     .modal{ width:min(1080px,98%); max-height:86vh; border-radius:12px; background:linear-gradient(180deg, rgba(8,16,28,0.98), rgba(5,10,18,0.98)); box-shadow:0 30px 80px rgba(3,8,20,0.9); border:1px solid rgba(148,163,184,0.04); display:flex; flex-direction:column; overflow:hidden; font-family:var(--mono); }
     .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.02); }
@@ -274,13 +377,14 @@
             <thead>
               <tr>
                 <th class="col-algo">Data Structure / Algorithm</th>
-                <th class="col-used">Used?</th>
-                <th class="col-where">Where Used?</th>
+                <th class="col-used">Used</th>
+                <th class="col-where">Where Used</th>
                 <th class="col-space">Space Efficiency</th>
                 <th class="col-time">Time Efficiency</th>
               </tr>
             </thead>
             <tbody>
+              <!-- rows unchanged from your original table -->
               <tr><td class="col-algo">Arrays</td><td class="col-used">Yes</td><td class="col-where">Cases 2,4,5,6,8,9</td><td class="col-space">O(n)</td><td class="col-time">O(1)</td></tr>
               <tr><td class="col-algo">Structures</td><td class="col-used">Yes</td><td class="col-where">Cases 1–10</td><td class="col-space">O(1)</td><td class="col-time">O(1)</td></tr>
               <tr><td class="col-algo">List</td><td class="col-used">Yes</td><td class="col-where">Case 3</td><td class="col-space">O(n)</td><td class="col-time">O(1) append</td></tr>
@@ -445,24 +549,30 @@
       listViewEl.innerHTML='';
       list.forEach(c=>{
         const li = el('div','list-item');
+        // left pill (vertical) + body + right CTA
         li.innerHTML = `
           <div class="list-left">
-            <div class="case-num">${c.id}</div>
+            <div class="left-pill" aria-hidden="true">
+              <div class="vertical-accent" aria-hidden="true"></div>
+              <div class="case-num">${c.id}</div>
+            </div>
+
             <div class="list-body">
+              <div class="meta">${esc(c.kicker)}</div>
               <h4>${esc(c.title)}</h4>
               <p>${esc(c.summary)}</p>
-              <div style="margin-top:8px">${c.tags.map(t=>`<span class="tag-pill" style="margin-right:6px">${esc(t)}</span>`).join('')}</div>
+              <div class="tags-row">${c.tags.map(t=>`<span class="tag-pill">${esc(t)}</span>`).join('')}</div>
             </div>
           </div>
         `;
-        const rightCol = el('div');
-        rightCol.style.cssText = "display:flex;flex-direction:column;align-items:flex-end;gap:10px";
 
-        const btn = el('button','cta-btn');
-        btn.setAttribute('data-link', esc(c.implLink));
-        btn.setAttribute('data-title', esc(c.title));
-        btn.innerHTML = `<span class="cta-icon" aria-hidden="true"></span><span>View C++ Code</span>`;
-        rightCol.appendChild(btn);
+        const rightCol = el('div','list-right');
+
+        const ctaWrap = el('button','list-cta');
+        ctaWrap.setAttribute('data-link', esc(c.implLink));
+        ctaWrap.setAttribute('data-title', esc(c.title));
+        ctaWrap.innerHTML = `<div class="inner-dot" aria-hidden="true"></div><small>View C++</small>`;
+        rightCol.appendChild(ctaWrap);
 
         li.appendChild(rightCol);
         listViewEl.appendChild(li);
@@ -471,6 +581,7 @@
     }
 
     function attachModalTriggers(){
+      // attach for both CTA types
       document.querySelectorAll('button[data-link]').forEach(b=>{
         b.removeEventListener('click', codeClickHandler);
         b.addEventListener('click', codeClickHandler);
@@ -493,6 +604,7 @@
       if (gutter) gutter.textContent = '';
       codeArea.textContent = 'Loading preview...';
 
+      // try fetch (will fail locally if file not hosted)
       fetch(link).then(r=>{
         if(!r.ok) throw new Error('Could not fetch file (CORS / not hosted).');
         return r.text();
