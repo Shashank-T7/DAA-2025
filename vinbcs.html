@@ -81,8 +81,27 @@
     text-align:right;
     font-size:0.86rem;
     color:var(--muted);
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    align-items:flex-end;
   }
   .hero-right code{color:#e5e7eb}
+
+  .hero-git-btn{
+    margin-top:4px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid rgba(148,163,184,0.6);
+    background:#020617;
+    color:#e5e7eb;
+    font-size:0.78rem;
+    text-decoration:none;
+    font-weight:600;
+  }
 
   /* summary strip */
   .summary-strip{
@@ -242,6 +261,7 @@
     height:160px;
     border-radius:10px;
     border:1px solid rgba(148,163,184,0.6);
+    cursor:pointer;
   }
 
   .actions{
@@ -300,6 +320,9 @@
       <div>Author: <strong>Vinay Hosur</strong></div>
       <div>Roll: <strong>265</strong></div>
       <div style="margin-top:4px;">All code in de>Vinay/</code></div>
+      <a class="hero-git-btn" href="https://github.com/atharva-in-bits/DAA-2025" target="_blank">
+        Open GitHub Repository
+      </a>
     </div>
   </section>
 
@@ -362,7 +385,9 @@ Orders → Hash & Heap → Dispatch Queue
 City Graph → Dijkstra → Rider Path
       </div>
       <div class="figure-strip">
-        <img src="case1.png" alt="Diagram for Smart Cloud Kitchen and Rider Dispatch">
+        <a href="case1.png" target="_blank">
+          <img src="case1.png" alt="Diagram for Smart Cloud Kitchen and Rider Dispatch">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/cloud-kitchen-dispatch(case-1).cpp" target="_blank">View Code</a>
@@ -385,7 +410,9 @@ SKUs → Arrays / Hash → Dynamic Price
 Demand → Heap → Top-k Products
       </div>
       <div class="figure-strip">
-        <img src="case2.png" alt="Diagram for Supermarket Dynamic Pricing Engine">
+        <a href="case2.png" target="_blank">
+          <img src="case2.png" alt="Diagram for Supermarket Dynamic Pricing Engine">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/supermarket-dynamic-pricing(case-2).cpp" target="_blank">View Code</a>
@@ -408,7 +435,9 @@ Bill Lines → Trie / Hash → Code Check
 Text → KMP → Fraud / Anomaly Flags
       </div>
       <div class="figure-strip">
-        <img src="case3.png" alt="Diagram for Automated Billing and Fraud Detection">
+        <a href="case3.png" target="_blank">
+          <img src="case3.png" alt="Diagram for Automated Billing and Fraud Detection">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/billing-fraud-detection(case-3).cpp" target="_blank">View Code</a>
@@ -431,7 +460,9 @@ Suppliers × Buyers → Score Matrix
 Scores → Max-Heap → Greedy Match Allocation
       </div>
       <div class="figure-strip">
-        <img src="case4.png" alt="Diagram for Supplier–Buyer Allocation Platform">
+        <a href="case4.png" target="_blank">
+          <img src="case4.png" alt="Diagram for Supplier–Buyer Allocation Platform">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/b2b-supplier-buyer-matching(case-4).cpp" target="_blank">View Code</a>
@@ -456,7 +487,9 @@ Stadium Grid → BFS → Nearest Gate Path
 Road Graph → Dijkstra → Optimal Entry Route
       </div>
       <div class="figure-strip">
-        <img src="case5.png" alt="Diagram for Urban Event Ticketing and Crowd Flow Optimizer">
+        <a href="case5.png" target="_blank">
+          <img src="case5.png" alt="Diagram for Urban Event Ticketing and Crowd Flow Optimizer">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/event-ticketing-crowd-flow(case-5).cpp" target="_blank">View Code</a>
@@ -480,7 +513,9 @@ Leaves → Merkle Build → Root
 ID → Bloom → Maybe → Verify Proof vs Root
       </div>
       <div class="figure-strip">
-        <img src="case6.png" alt="Diagram for Government Document Authentication with Merkle tree and Bloom filter">
+        <a href="case6.png" target="_blank">
+          <img src="case6.png" alt="Diagram for Government Document Authentication with Merkle tree and Bloom filter">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/merkle-doc-auth(case-6).cpp" target="_blank">View Code</a>
@@ -504,7 +539,9 @@ Ward Graph → Dijkstra → Nearest Team Base
 Team → Priority Heap → Service Queue
       </div>
       <div class="figure-strip">
-        <img src="case7.png" alt="Diagram for Government Complaint Routing">
+        <a href="case7.png" target="_blank">
+          <img src="case7.png" alt="Diagram for Government Complaint Routing">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/complaint-routing-dijkstra(case-7).cpp" target="_blank">View Code</a>
@@ -527,7 +564,9 @@ Farm Coordinates → Dist & Terrain → Edge Costs
 Edges → Sort + DSU → Irrigation MST
       </div>
       <div class="figure-strip">
-        <img src="case8.png" alt="Diagram for Smart Agriculture Irrigation Network Planning">
+        <a href="case8.png" target="_blank">
+          <img src="case8.png" alt="Diagram for Smart Agriculture Irrigation Network Planning">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/irrigation-mst-kruskal(case-8).cpp" target="_blank">View Code</a>
@@ -552,7 +591,9 @@ Candidate Text → Boyer–Moore → Skill Match
 Job → Heap → Top-Ranked Candidates
       </div>
       <div class="figure-strip">
-        <img src="case9.png" alt="Diagram for Citywide Job and Skill Matching Portal">
+        <a href="case9.png" target="_blank">
+          <img src="case9.png" alt="Diagram for Citywide Job and Skill Matching Portal">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/job-skill-matching-boyer-moore(case-9).cpp" target="_blank">View Code</a>
@@ -575,7 +616,9 @@ Matrix → Floyd–Warshall → dist[i][j]
 departures[u][v] → lower_bound → Next Departure → Trip Plan (≤1 transfer)
       </div>
       <div class="figure-strip">
-        <img src="case10.png" alt="Diagram for Dynamic Public Transport Timetable and Transfer Optimizer">
+        <a href="case10.png" target="_blank">
+          <img src="case10.png" alt="Diagram for Dynamic Public Transport Timetable and Transfer Optimizer">
+        </a>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/public-transport-floyd(case-10).cpp" target="_blank">View Code</a>
@@ -894,4 +937,3 @@ departures[u][v] → lower_bound → Next Departure → Trip Plan (≤1 transfer
 
 </body>
 </html>
-```
