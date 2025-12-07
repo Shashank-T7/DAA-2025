@@ -7,12 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#050816;                    /* page background (very dark) */
-      --panel:#07101a;                 /* page panel base */
-      --muted:#b7c4d0;                 /* muted text */
-      --accent-a:#22c55e;              /* green */
-      --accent-b:#38bdf8;              /* cyan */
-      --accent-c:#8b5cf6;              /* purple */
+      --bg:#050816;
+      --panel:#07101a;
+      --muted:#b7c4d0;
+      --accent-a:#22c55e;
+      --accent-b:#38bdf8;
+      --accent-c:#8b5cf6;
       --card-border-strong: rgba(56,189,248,0.22);
       --card-border-soft: rgba(56,189,248,0.10);
       --card-bg: linear-gradient(180deg, rgba(6,12,20,0.96), rgba(8,14,22,0.88));
@@ -87,7 +87,7 @@
       border:1px solid var(--card-border-strong);
     }
 
-    /* Grid: 2 columns by default; 1 on small */
+    /* Grid: 2 columns by default; responsive */
     .board{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
@@ -118,7 +118,6 @@
       transition: transform .2s cubic-bezier(.2,.9,.3,1), box-shadow .2s;
       overflow:hidden;
     }
-    /* vibrant rim using pseudo-element */
     .case::before{
       content:'';
       position:absolute;
@@ -174,7 +173,6 @@
 
     footer{ margin-top:14px; color:var(--muted); font-size:0.85rem; text-align:right; }
 
-    /* responsive tweaks */
     @media (max-width:1100px){
       .header-card{ flex-direction:column; align-items:flex-start; padding:20px; }
       .header-right{ width:100%; justify-content:space-between; margin-top:12px; }
@@ -247,7 +245,7 @@
   </div>
 
   <script>
-    // --- data (unchanged)
+    // --- data (implText kept in data but not displayed)
     const cases = [
       { id:1, tag:'Ride-Sharing', title:'Ride-Sharing & Dynamic Dispatch System', kicker:'Case 1 · Ride-Sharing',
         summary:`A ride-sharing and dynamic dispatch system is designed for real-time driver–rider matching and route optimization. It rapidly locates nearby available drivers using geospatial methods, ranks them (often by estimated time of arrival or distance), and optimally assigns ride requests. Route optimization ensures the chosen driver uses the shortest or fastest path to the pickup and drop-off points, often utilizing algorithms like Dijkstra or Bellman-Ford. Data structures like heaps (priority queues) prioritize drivers, regular queues buffer ride requests, and hashing supports fast lookups of drivers and users in a large, live system.`,
@@ -308,7 +306,7 @@
     function el(tag, cls='', inner=''){ const e=document.createElement(tag); if(cls) e.className=cls; if(inner!==undefined) e.innerHTML=inner; return e; }
     function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-    // renderers
+    // --- renderers (implText removed from UI)
     function renderGrid(list){
       board.innerHTML='';
       list.forEach(c=>{
@@ -323,12 +321,14 @@
           </div>
         `;
         const impl = el('div','impl');
-        impl.innerHTML = `<div class="impl-note">${esc(c.implText)}</div>`;
+
+        // impl-note removed on purpose (no side text)
         const btn = el('button','cta-btn');
         btn.setAttribute('data-link', esc(c.implLink));
         btn.setAttribute('data-title', esc(c.title));
         btn.innerHTML = `<span class="cta-icon" aria-hidden="true"></span><span>View C++ Code</span>`;
         impl.appendChild(btn);
+
         card.appendChild(impl);
         board.appendChild(card);
       });
@@ -351,12 +351,14 @@
         `;
         const rightCol = el('div');
         rightCol.style.cssText = "display:flex;flex-direction:column;align-items:flex-end;gap:10px";
-        rightCol.innerHTML = `<div class="muted">${esc(c.implText)}</div>`;
+
+        // impl-text removed; only button remains
         const btn = el('button','cta-btn');
         btn.setAttribute('data-link', esc(c.implLink));
         btn.setAttribute('data-title', esc(c.title));
         btn.innerHTML = `<span class="cta-icon" aria-hidden="true"></span><span>View C++ Code</span>`;
         rightCol.appendChild(btn);
+
         li.appendChild(rightCol);
         listViewEl.appendChild(li);
       });
