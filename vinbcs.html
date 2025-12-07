@@ -253,7 +253,8 @@
   .figure-strip{
     margin-top:8px;
     display:flex;
-    gap:8px;
+    flex-direction:column;
+    gap:4px;
     overflow-x:auto;
     padding-bottom:4px;
   }
@@ -262,6 +263,10 @@
     border-radius:10px;
     border:1px solid rgba(148,163,184,0.6);
     cursor:pointer;
+  }
+  .figure-caption{
+    font-size:0.75rem;
+    color:#9ca3af;
   }
 
   .actions{
@@ -298,6 +303,46 @@
 
   .fadein{opacity:0;transform:translateY(16px)}
   .visible{opacity:1;transform:translateY(0);transition:all 420ms cubic-bezier(.2,.9,.3,1)}
+
+  /* Lightbox */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+  }
+  .lightbox.open{
+    display:flex;
+  }
+  .lightbox-inner{
+    max-width:90%;
+    max-height:90%;
+    position:relative;
+  }
+  .lightbox-inner img{
+    max-width:100%;
+    max-height:100%;
+    border-radius:14px;
+    border:1px solid rgba(148,163,184,0.8);
+    box-shadow:0 20px 60px rgba(0,0,0,0.8);
+  }
+  .lightbox-close{
+    position:absolute;
+    top:-14px;
+    right:-14px;
+    width:32px;
+    height:32px;
+    border-radius:999px;
+    border:none;
+    background:rgba(15,23,42,0.95);
+    color:#e5e7eb;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.6);
+  }
 </style>
 </head>
 
@@ -385,9 +430,8 @@ Orders → Hash & Heap → Dispatch Queue
 City Graph → Dijkstra → Rider Path
       </div>
       <div class="figure-strip">
-        <a href="case1.png" target="_blank">
-          <img src="case1.png" alt="Diagram for Smart Cloud Kitchen and Rider Dispatch">
-        </a>
+        <img src="case1.png" alt="Diagram for Smart Cloud Kitchen and Rider Dispatch" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/cloud-kitchen-dispatch(case-1).cpp" target="_blank">View Code</a>
@@ -410,9 +454,8 @@ SKUs → Arrays / Hash → Dynamic Price
 Demand → Heap → Top-k Products
       </div>
       <div class="figure-strip">
-        <a href="case2.png" target="_blank">
-          <img src="case2.png" alt="Diagram for Supermarket Dynamic Pricing Engine">
-        </a>
+        <img src="case2.png" alt="Diagram for Supermarket Dynamic Pricing Engine" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/supermarket-dynamic-pricing(case-2).cpp" target="_blank">View Code</a>
@@ -435,9 +478,8 @@ Bill Lines → Trie / Hash → Code Check
 Text → KMP → Fraud / Anomaly Flags
       </div>
       <div class="figure-strip">
-        <a href="case3.png" target="_blank">
-          <img src="case3.png" alt="Diagram for Automated Billing and Fraud Detection">
-        </a>
+        <img src="case3.png" alt="Diagram for Automated Billing and Fraud Detection" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/billing-fraud-detection(case-3).cpp" target="_blank">View Code</a>
@@ -460,9 +502,8 @@ Suppliers × Buyers → Score Matrix
 Scores → Max-Heap → Greedy Match Allocation
       </div>
       <div class="figure-strip">
-        <a href="case4.png" target="_blank">
-          <img src="case4.png" alt="Diagram for Supplier–Buyer Allocation Platform">
-        </a>
+        <img src="case4.png" alt="Diagram for Supplier–Buyer Allocation Platform" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/b2b-supplier-buyer-matching(case-4).cpp" target="_blank">View Code</a>
@@ -487,9 +528,8 @@ Stadium Grid → BFS → Nearest Gate Path
 Road Graph → Dijkstra → Optimal Entry Route
       </div>
       <div class="figure-strip">
-        <a href="case5.png" target="_blank">
-          <img src="case5.png" alt="Diagram for Urban Event Ticketing and Crowd Flow Optimizer">
-        </a>
+        <img src="case5.png" alt="Diagram for Urban Event Ticketing and Crowd Flow Optimizer" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/event-ticketing-crowd-flow(case-5).cpp" target="_blank">View Code</a>
@@ -513,9 +553,8 @@ Leaves → Merkle Build → Root
 ID → Bloom → Maybe → Verify Proof vs Root
       </div>
       <div class="figure-strip">
-        <a href="case6.png" target="_blank">
-          <img src="case6.png" alt="Diagram for Government Document Authentication with Merkle tree and Bloom filter">
-        </a>
+        <img src="case6.png" alt="Diagram for Government Document Authentication with Merkle tree and Bloom filter" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/merkle-doc-auth(case-6).cpp" target="_blank">View Code</a>
@@ -539,9 +578,8 @@ Ward Graph → Dijkstra → Nearest Team Base
 Team → Priority Heap → Service Queue
       </div>
       <div class="figure-strip">
-        <a href="case7.png" target="_blank">
-          <img src="case7.png" alt="Diagram for Government Complaint Routing">
-        </a>
+        <img src="case7.png" alt="Diagram for Government Complaint Routing" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/complaint-routing-dijkstra(case-7).cpp" target="_blank">View Code</a>
@@ -564,9 +602,8 @@ Farm Coordinates → Dist & Terrain → Edge Costs
 Edges → Sort + DSU → Irrigation MST
       </div>
       <div class="figure-strip">
-        <a href="case8.png" target="_blank">
-          <img src="case8.png" alt="Diagram for Smart Agriculture Irrigation Network Planning">
-        </a>
+        <img src="case8.png" alt="Diagram for Smart Agriculture Irrigation Network Planning" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/irrigation-mst-kruskal(case-8).cpp" target="_blank">View Code</a>
@@ -591,9 +628,8 @@ Candidate Text → Boyer–Moore → Skill Match
 Job → Heap → Top-Ranked Candidates
       </div>
       <div class="figure-strip">
-        <a href="case9.png" target="_blank">
-          <img src="case9.png" alt="Diagram for Citywide Job and Skill Matching Portal">
-        </a>
+        <img src="case9.png" alt="Diagram for Citywide Job and Skill Matching Portal" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/job-skill-matching-boyer-moore(case-9).cpp" target="_blank">View Code</a>
@@ -616,9 +652,8 @@ Matrix → Floyd–Warshall → dist[i][j]
 departures[u][v] → lower_bound → Next Departure → Trip Plan (≤1 transfer)
       </div>
       <div class="figure-strip">
-        <a href="case10.png" target="_blank">
-          <img src="case10.png" alt="Diagram for Dynamic Public Transport Timetable and Transfer Optimizer">
-        </a>
+        <img src="case10.png" alt="Diagram for Dynamic Public Transport Timetable and Transfer Optimizer" class="zoomable">
+        <div class="figure-caption">Click to enlarge</div>
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/public-transport-floyd(case-10).cpp" target="_blank">View Code</a>
@@ -927,10 +962,49 @@ departures[u][v] → lower_bound → Next Departure → Trip Plan (≤1 transfer
 
 </div>
 
+<!-- Lightbox overlay -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+</div>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.fadein').forEach((el, i) => {
       setTimeout(() => el.classList.add('visible'), 70 * i);
+    });
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    document.querySelectorAll('img.zoomable').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('open');
+      });
+    });
+
+    lightboxClose.addEventListener('click', () => {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove('open');
+        lightboxImg.src = '';
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+        lightbox.classList.remove('open');
+        lightboxImg.src = '';
+      }
     });
   });
 </script>
