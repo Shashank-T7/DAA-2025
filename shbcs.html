@@ -7,20 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#050816;
-      --panel:#07101a;
-      --muted:#b7c4d0;
-      --accent-a:#22c55e;
-      --accent-b:#38bdf8;
-      --accent-c:#8b5cf6;
-      --card-border-strong: rgba(56,189,248,0.22);
-      --card-border-soft: rgba(56,189,248,0.10);
-      --card-bg: linear-gradient(180deg, rgba(6,12,20,0.96), rgba(8,14,22,0.88));
-      --card-inner: linear-gradient(180deg, rgba(13,20,30,0.9), rgba(10,14,20,0.85));
+      --bg:#020618;
+      --muted:#aeb8c6;
+      --button-grad: linear-gradient(90deg, #22c55e 0%, #38bdf8 45%, #8b5cf6 100%);
+      --card-border: rgba(255,255,255,0.04);
+      --card-radius:14px;
+      --max-width:1240px;
       --shadow-lg: 0 30px 80px rgba(3,6,12,0.8);
       --mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
-      --title-size: 2.0rem;
-      --max-width:1240px;
     }
 
     *{box-sizing:border-box}
@@ -35,21 +29,19 @@
       display:flex;
       justify-content:center;
       background:
-        radial-gradient(800px at 8% 6%, rgba(56,189,248,0.06), transparent 30%),
-        radial-gradient(700px at 92% 8%, rgba(139,92,246,0.04), transparent 30%),
-        linear-gradient(180deg,var(--bg) 0%, #02030a 60%);
+        radial-gradient(900px at 0% 0%, rgba(56,189,248,0.06), transparent 45%),
+        radial-gradient(900px at 100% 0%, rgba(139,92,246,0.04), transparent 45%),
+        linear-gradient(180deg,var(--bg) 0%, #000 70%);
       overflow-x:hidden;
       position:relative;
     }
 
     .wrap{
-      position:relative;
       width:100%;
       max-width:var(--max-width);
       display:grid;
-      grid-template-columns: 1fr;
+      grid-template-columns:1fr;
       gap:22px;
-      align-items:start;
       z-index:2;
     }
 
@@ -67,9 +59,10 @@
       gap:18px;
       backdrop-filter: blur(6px);
     }
+
     .header-left{ flex:1 1 auto; min-width:420px; }
-    .breadcrumb{ color:var(--accent-b); font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700; margin-bottom:10px; opacity:0.98; }
-    .header-title{ margin:0; font-size:var(--title-size); font-weight:800; color:#f6fbff; line-height:1.02; }
+    .breadcrumb{ color:#38bdf8; font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700; margin-bottom:10px; opacity:0.98; }
+    .header-title{ margin:0; font-size:2rem; font-weight:800; color:#f6fbff; line-height:1.02; }
     .header-sub{ margin:10px 0 0 0; color:var(--muted); font-size:0.98rem; max-width:920px; }
 
     .header-right{ display:flex; align-items:center; gap:12px; flex-shrink:0; margin-left:12px; }
@@ -82,76 +75,80 @@
     }
     .view-btn.active{
       background:linear-gradient(90deg, rgba(56,189,248,0.06), rgba(139,92,246,0.04));
-      color:var(--accent-b);
+      color:#38bdf8;
       box-shadow:0 8px 20px rgba(2,6,12,0.6);
-      border:1px solid var(--card-border-strong);
+      border:1px solid rgba(56,189,248,0.18);
     }
 
-    /* Grid: 2 columns by default; responsive */
+    /* board: exactly 2 columns on desktop */
     .board{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
       gap:20px;
       align-items:start;
     }
-    @media (max-width:920px){
-      .board{grid-template-columns: repeat(2, 1fr);}
+    @media (max-width:900px){
+      .board{ grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width:700px){
-      .board{grid-template-columns: 1fr;}
+      .board{ grid-template-columns: 1fr; }
     }
 
-    /* Card: stronger, vibrant border and inner contrast */
+    /* case card base */
     .case{
       position:relative;
-      border-radius:14px;
+      border-radius:var(--card-radius);
       padding:22px;
       min-height:180px;
       display:flex;
       flex-direction:column;
       gap:12px;
-      background: var(--card-inner);
-      border: 1px solid var(--card-border-soft);
-      box-shadow:
-        0 10px 30px rgba(2,6,12,0.6),
-        inset 0 1px 0 rgba(255,255,255,0.02);
-      transition: transform .2s cubic-bezier(.2,.9,.3,1), box-shadow .2s;
+      color:#f3fbff;
+      border:1px solid rgba(0,0,0,0.12);
+      box-shadow: 0 10px 30px rgba(2,6,12,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      transition: transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s;
       overflow:hidden;
     }
-    .case::before{
+    .case:hover{ transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+
+    /* vibrant gradients per case (unique) */
+    .case-1{ background: linear-gradient(135deg,#1e3a8a 0%, #7c3aed 100%); border:1px solid rgba(124,58,237,0.28); }
+    .case-2{ background: linear-gradient(135deg,#0f766e 0%, #06b6d4 100%); border:1px solid rgba(6,182,212,0.24); }
+    .case-3{ background: linear-gradient(135deg,#7e22ce 0%, #c084fc 100%); border:1px solid rgba(192,132,252,0.24); }
+    .case-4{ background: linear-gradient(135deg,#ea580c 0%, #ef4444 100%); border:1px solid rgba(239,68,68,0.22); }
+    .case-5{ background: linear-gradient(135deg,#059669 0%, #06b6d4 100%); border:1px solid rgba(5,150,105,0.24); }
+    .case-6{ background: linear-gradient(135deg,#b45309 0%, #f59e0b 100%); border:1px solid rgba(180,83,9,0.22); }
+    .case-7{ background: linear-gradient(135deg,#db2777 0%, #8b5cf6 100%); border:1px solid rgba(219,39,119,0.22); }
+    .case-8{ background: linear-gradient(135deg,#0369a1 0%, #06b6d4 100%); border:1px solid rgba(3,105,161,0.22); }
+    .case-9{ background: linear-gradient(135deg,#0891b2 0%, #0ea5e9 100%); border:1px solid rgba(14,165,233,0.22); }
+    .case-10{ background: linear-gradient(135deg,#65a30d 0%, #22c55e 100%); border:1px solid rgba(34,197,94,0.22); }
+
+    /* overlay to slightly darken and keep text readable */
+    .case::after{
       content:'';
       position:absolute;
-      inset:-1px;
-      z-index:0;
-      border-radius:15px;
-      padding:1px;
-      background: linear-gradient(90deg, rgba(56,189,248,0.20), rgba(139,92,246,0.16));
-      -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.28));
+      border-radius:inherit;
       pointer-events:none;
-      opacity:0.98;
+      mix-blend-mode: normal;
     }
     .case > *{ position:relative; z-index:1; }
 
-    .case:hover{ transform:translateY(-6px); box-shadow: var(--shadow-lg); }
-
-    .case .meta{ font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; }
-    .case h3{ margin:0; font-size:1.05rem; color:#eaf6ff; line-height:1.1; }
-    .case p{ margin:6px 0 0 0; color:var(--muted); font-size:0.95rem; line-height:1.48; max-height:7.2em; overflow:hidden; text-wrap:balance; }
+    .meta{ font-size:0.78rem; color:rgba(255,255,255,0.88); text-transform:uppercase; letter-spacing:0.12em; opacity:0.95; }
+    .case h3{ margin:0; font-size:1.04rem; font-weight:700; color:#f8fbff; }
+    .case p{ margin:6px 0 0 0; color: rgba(235,245,255,0.92); font-size:0.95rem; line-height:1.45; max-height:7.2em; overflow:hidden; }
     .taglist{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
-    .tag-pill{ background: rgba(0,0,0,0.18); padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.02); color:var(--muted); font-size:0.82rem; }
+    .tag-pill{ background: rgba(0,0,0,0.18); padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.04); color:#f0f8ff; font-size:0.82rem; }
 
     .impl{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
-    .impl .impl-note{ color:var(--muted); font-size:0.86rem; text-align:right; max-width:200px; }
 
     .cta-btn{
       display:inline-flex; align-items:center; gap:10px; padding:10px 18px; border-radius:999px; border:0; cursor:pointer;
-      font-weight:700; color:#041225; background: linear-gradient(90deg, #22c55e 0%, #38bdf8 45%, #8b5cf6 100%);
-      box-shadow: 0 8px 30px rgba(13,18,28,0.7);
+      font-weight:700; color:#041225; background: var(--button-grad); box-shadow: 0 8px 30px rgba(8,12,24,0.7);
       transition: transform .12s ease, box-shadow .12s ease;
     }
-    .cta-btn:hover{ transform:translateY(-2px); box-shadow: 0 16px 42px rgba(13,18,28,0.85); }
+    .cta-btn:hover{ transform:translateY(-2px); box-shadow: 0 16px 36px rgba(8,12,24,0.85); }
     .cta-icon{ width:18px;height:18px;border-radius:50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.15) 8%), linear-gradient(135deg,#dff6ff 0%, #38bdf8 50%, #8b5cf6 100%); flex:0 0 18px; box-shadow:0 6px 18px rgba(56,189,248,0.18); }
 
     .listview{ display:flex; flex-direction:column; gap:12px; }
@@ -161,9 +158,28 @@
     .list-body h4{ margin:0 }
     .list-body p{ color:var(--muted); margin-top:8px }
 
+    /* flow / graph box (monospace lines with arrows) */
+    .flow-box{
+      margin-top:12px;
+      border-radius:10px;
+      padding:18px;
+      background: rgba(0,0,0,0.12);
+      border:2px dashed rgba(58,189,248,0.12);
+      min-height:78px;
+    }
+    .flow-pre{
+      margin:0;
+      font-family:var(--mono);
+      font-size:13px;
+      color:#9fe7ff;
+      white-space:pre-wrap;
+      line-height:1.9;
+      letter-spacing:0.2px;
+    }
+
     /* modal */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(2,6,23,0.8); display:none; align-items:center; justify-content:center; z-index:80; padding:24px; }
-    .modal{ width:min(1080px,98%); max-height:86vh; border-radius:12px; background:linear-gradient(180deg, rgba(8,16,28,0.98), rgba(5,10,18,0.98)); box-shadow:0 30px 80px rgba(3,8,20,0.9); border:1px solid rgba(148,163,184,0.04); display:flex; flex-direction:column; overflow:hidden; font-family:var(--mono); }
+    .modal{ width:min(1080px,98%); max-height:86vh; border-radius:12px; background:linear-gradient(180deg, rgba(8,16,28,0.98), rgba(5,10,18,0.98)); box-shadow:0 30px 80px rgba(3,8,20,0.9); border:1px solid rgba(255,255,255,0.02); display:flex; flex-direction:column; overflow:hidden; font-family:var(--mono); }
     .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.02); }
     .modal-title{ font-weight:700; color:#e6f6ff; display:flex; gap:12px; align-items:center; }
     .modal-actions .btn{ background:transparent; border:1px solid rgba(255,255,255,0.04); padding:8px 11px; border-radius:8px; color:var(--muted); cursor:pointer; }
@@ -245,46 +261,55 @@
   </div>
 
   <script>
-    // --- data (implText kept in data but not displayed)
     const cases = [
       { id:1, tag:'Ride-Sharing', title:'Ride-Sharing & Dynamic Dispatch System', kicker:'Case 1 · Ride-Sharing',
         summary:`A ride-sharing and dynamic dispatch system is designed for real-time driver–rider matching and route optimization. It rapidly locates nearby available drivers using geospatial methods, ranks them (often by estimated time of arrival or distance), and optimally assigns ride requests. Route optimization ensures the chosen driver uses the shortest or fastest path to the pickup and drop-off points, often utilizing algorithms like Dijkstra or Bellman-Ford. Data structures like heaps (priority queues) prioritize drivers, regular queues buffer ride requests, and hashing supports fast lookups of drivers and users in a large, live system.`,
-        implText:'C++ source for all algorithms', implLink:'Shashank/Case1.cpp', tags:['Real-time Matching','Shortest Paths','Heaps','Queues','Hashing'] },
+        implText:'C++ source for all algorithms', implLink:'Shashank/Case1.cpp',
+        tags:['Real-time Matching','Shortest Paths','Heaps','Queues','Hashing'],
+        /* new flow lines to render a small graph block for case 1 */
+        flowLines:[
+          "BFS/DFS → explore nearby drivers",
+          "Dijkstra / Bellman-Ford → shortest path routing",
+          "Heap → prioritize closest / fastest drivers",
+          "Queue → ride request buffer",
+          "Hashing → fast driver / rider lookup"
+        ]
+      },
 
       { id:2, tag:'EV Charging', title:'EV Charging Network – Slot Scheduling', kicker:'Case 2 · EV Charging',
-        summary:`An EV charging network slot-scheduling system helps a user find the nearest suitable charger and reserve a time slot while keeping charger availability and station load up to date in real time. Efficient data structures like segment trees or Fenwick trees track which time slots are free or occupied, heaps prioritize the next-free or closest chargers, hash maps support fast reservation lookups, and arrays/structs store base station and charger data. This combination allows quick updates when a reservation is created or canceled, and fast queries when users ask for an available slot at a certain time.`,
+        summary:`An EV charging network slot-scheduling system helps a user find the nearest suitable charger and reserve a time slot while keeping charger availability and station load up to date in real time. Efficient data structures like segment trees or Fenwick trees track which time slots are free or occupied, heaps prioritize the next-free or closest chargers, hash maps support fast reservation lookups, and arrays/structs store base station and charger data.`,
         implText:'Segment & Fenwick Trees', implLink:'Shashank/Case2.cpp', tags:['Scheduling','Segment Tree','Fenwick','Heaps'] },
 
       { id:3, tag:'Logistics', title:'Warehouse & Distribution Routing', kicker:'Case 3 · Logistics',
-        summary:`A warehouse and distribution routing system connects depots and customers with low-cost transport links and forms efficient delivery batches for orders. It can use minimum spanning tree (MST) algorithms like Kruskal or Prim to design a cheap backbone network between depots, trucks, or hubs, while sorting and lists help order and store delivery sequences inside each batch. Union-Find (Disjoint Set Union) tracks which depots or regions are already connected during MST construction so redundant or cyclic edges are avoided, leading to a cost-efficient distribution graph.`,
+        summary:`A warehouse and distribution routing system connects depots and customers with low-cost transport links and forms efficient delivery batches for orders.`,
         implText:'Kruskal, Prim & DSU', implLink:'Shashank/Case3.cpp', tags:['MST','DSU','Routing','Batching'] },
 
       { id:4, tag:'Recycling', title:'Waste Processing & Recycling Operations', kicker:'Case 4 · Recycling',
-        summary:`A waste processing and recycling system must quickly sort mixed waste, prioritize urgent/perishable loads, and keep conveyor and truck flows smooth. Heaps can prioritize loads that must be processed first, queues buffer waste on conveyors or waiting trucks, basic sorting algorithms help classify and order waste items, Union-Find groups recyclable materials into compatible classes, DFS on a process graph can reveal bottlenecks, and arrays/structures store batch-level data such as weight, type, and destination.`,
+        summary:`A waste processing and recycling system must quickly sort mixed waste, prioritize urgent/perishable loads, and keep conveyor and truck flows smooth.`,
         implText:'Priority queues, DFS & DSU', implLink:'Shashank/Case4.cpp', tags:['Queues','Heaps','DSU','DFS'] },
 
       { id:5, tag:'Tolling', title:'Smart Toll Collection & Vehicle Lookup', kicker:'Case 5 · Tolling',
-        summary:`A smart toll collection and vehicle lookup system reads a license plate (via camera/OCR or RFID tag), finds the corresponding vehicle record, checks its balance, selects the correct toll slab based on ordered rules (like vehicle class and time), and then deducts the toll automatically. Tries support fast plate prefix lookup, hash maps store balances and metadata, balanced trees or skip lists maintain ordered toll slabs, and arrays/structures hold core vehicle and toll data used across these operations.`,
+        summary:`A smart toll collection and vehicle lookup system reads a license plate (via camera/OCR or RFID tag), finds the corresponding vehicle record, checks its balance, selects the correct toll slab based on ordered rules, and then deducts the toll automatically.`,
         implText:'Trie, AVL & Skip List', implLink:'Shashank/Case5.cpp', tags:['Trie','AVL','Skip List','HashMap'] },
 
       { id:6, tag:'Reliability', title:'Predictive Maintenance & Alerting', kicker:'Case 6 · Reliability',
-        summary:`Predictive maintenance and alerting systems continuously analyze sensor streams from machines to detect abnormal behavior early and trigger prioritized alerts. Segment trees, Fenwick trees, and sparse tables support fast range statistics on sensor readings, heaps rank alerts by severity or risk, queues buffer maintenance jobs, hash maps link assets to their sensors, and arrays/structures store machine metadata and configuration.`,
+        summary:`Predictive maintenance and alerting systems continuously analyze sensor streams from machines to detect abnormal behavior early and trigger prioritized alerts.`,
         implText:'Segment / Fenwick / Sparse', implLink:'Shashank/Case6.cpp', tags:['Sensor Analytics','Segment Tree','Sparse Table'] },
 
       { id:7, tag:'Parking', title:'Smart Parking – Slot Allocation System', kicker:'Case 7 · Parking',
-        summary:`A smart parking slot allocation system keeps slots ordered and searchable, supports fast updates when cars enter/exit, and instantly maps vehicles to their reserved or occupied slots. Ordered trees or skip lists maintain free/occupied slots by number or distance, hash maps link each vehicle to its current slot, and simple structs store slot metadata like level, type, and status.`,
+        summary:`A smart parking slot allocation system keeps slots ordered and searchable, supports fast updates when cars enter/exit, and instantly maps vehicles to their reserved or occupied slots.`,
         implText:'Balanced trees & Skip List', implLink:'Shashank/Case7.cpp', tags:['AVL','Skip List','HashMap'] },
 
       { id:8, tag:'Streetlight', title:'Smart Streetlight Monitoring', kicker:'Case 8 · Smart City',
-        summary:`A smart streetlight monitoring system continuously checks poles and circuits to detect faults, group nearby failures, and compute efficient repair routes for maintenance crews. Graph algorithms (BFS/DFS, Dijkstra, Union-Find) work on the streetlight/circuit network, while sparse tables and basic structures manage brightness logs and pole metadata, with queues and heaps often added on top in full systems.`,
+        summary:`A smart streetlight monitoring system continuously checks poles and circuits to detect faults, group nearby failures, and compute efficient repair routes for maintenance crews.`,
         implText:'Graphs & RMQ logs', implLink:'Shashank/Case8.cpp', tags:['Graphs','BFS','Dijkstra','RMQ'] },
 
       { id:9, tag:'Water', title:'Water Treatment & Pipeline Optimization', kicker:'Case 9 · Water',
-        summary:`A water treatment and pipeline optimization system models plants and pipe networks as graphs to trace flow, find low-loss pressure paths, isolate faulty zones, and quickly answer flow/pressure queries. BFS/DFS follow water paths and detect reachable areas, Dijkstra/Bellman-Ford compute minimum pressure-loss routes, Union-Find manages zone/group isolation, segment trees or sparse tables answer range queries on sensor lines, queues schedule pump operations, and arrays store pipeline and node metadata.`,
+        summary:`A water treatment and pipeline optimization system models plants and pipe networks as graphs to trace flow, find low-loss pressure paths, isolate faulty zones, and quickly answer flow/pressure queries.`,
         implText:'Flow tracing & Shortest Paths', implLink:'Shashank/Case9.cpp', tags:['Graph','Dijkstra','Bellman-Ford'] },
 
       { id:10, tag:'Traffic', title:'Traffic Signal Optimization', kicker:'Case 10 · Mobility',
-        summary:`Traffic signal optimization systems use live detector counts and historical patterns to adapt green times, coordinate corridors, and prioritize the most congested junctions. Segment/Fenwick trees track traffic counts over time, sparse tables answer historical “peak” queries, heaps rank overloaded intersections, queues represent per-approach vehicle lines, hash maps index intersections, and BFS/DFS group connected junctions into coordinated corridors.`,
+        summary:`Traffic signal optimization systems use live detector counts and historical patterns to adapt green times, coordinate corridors, and prioritize the most congested junctions.`,
         implText:'Traffic counts & Corridors', implLink:'Shashank/Case10.cpp', tags:['Fenwick','Segment','Corridors','Queues'] }
     ];
 
@@ -302,15 +327,15 @@
     const gridBtn = document.getElementById('gridViewBtn');
     const downloadBtn = document.getElementById('downloadBtn');
 
-    // helper
+    // helpers
     function el(tag, cls='', inner=''){ const e=document.createElement(tag); if(cls) e.className=cls; if(inner!==undefined) e.innerHTML=inner; return e; }
     function esc(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-    // --- renderers (implText removed from UI)
+    // render grid (assign case-N class for colors)
     function renderGrid(list){
       board.innerHTML='';
       list.forEach(c=>{
-        const card = el('article','case');
+        const card = el('article','case case-' + (c.id));
         card.id = 'case'+c.id;
         card.innerHTML = `
           <div>
@@ -320,9 +345,15 @@
             <div class="taglist">${c.tags.map(t=>`<span class="tag-pill">${esc(t)}</span>`).join('')}</div>
           </div>
         `;
-        const impl = el('div','impl');
+        // If case has a flowLines array, render the flow box (for case 1)
+        if (Array.isArray(c.flowLines) && c.flowLines.length){
+          const flow = el('div','flow-box');
+          const pre = el('pre','flow-pre', esc(c.flowLines.join('\n')));
+          flow.appendChild(pre);
+          card.appendChild(flow);
+        }
 
-        // impl-note removed on purpose (no side text)
+        const impl = el('div','impl');
         const btn = el('button','cta-btn');
         btn.setAttribute('data-link', esc(c.implLink));
         btn.setAttribute('data-title', esc(c.title));
@@ -335,6 +366,7 @@
       attachModalTriggers();
     }
 
+    // render list (neutral)
     function renderList(list){
       listViewEl.innerHTML='';
       list.forEach(c=>{
@@ -351,14 +383,11 @@
         `;
         const rightCol = el('div');
         rightCol.style.cssText = "display:flex;flex-direction:column;align-items:flex-end;gap:10px";
-
-        // impl-text removed; only button remains
         const btn = el('button','cta-btn');
         btn.setAttribute('data-link', esc(c.implLink));
         btn.setAttribute('data-title', esc(c.title));
         btn.innerHTML = `<span class="cta-icon" aria-hidden="true"></span><span>View C++ Code</span>`;
         rightCol.appendChild(btn);
-
         li.appendChild(rightCol);
         listViewEl.appendChild(li);
       });
@@ -380,6 +409,7 @@
       openModal(title, link);
     }
 
+    // modal open logic
     function openModal(title, link){
       modalTitle.textContent = title + ' — Code preview';
       modalSub.textContent = link;
@@ -466,7 +496,7 @@
     }
     filterInput.addEventListener('input', applyFilter);
 
-    // init
+    // initial render
     renderGrid(cases);
     renderList(cases);
     showView('grid');
