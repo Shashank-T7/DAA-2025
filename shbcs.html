@@ -117,7 +117,8 @@
     }
 
     /* content */
-    .board{display:grid;grid-template-columns: repeat(3, 1fr);gap:18px;align-items:start}
+    /* Default grid: 2 columns (user requested). On very wide screens we'll expand to 3. */
+    .board{display:grid;grid-template-columns: repeat(2, 1fr);gap:18px;align-items:start}
     .case{ background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008)); border-radius:12px;padding:18px;border:1px solid var(--card-border); box-shadow:0 10px 30px rgba(2,6,23,0.45); transition:transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s; display:flex;flex-direction:column;gap:10px;min-height:150px; }
     .case:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
     .case .meta{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.14em}
@@ -185,6 +186,11 @@
 
     footer{margin-top:14px;color:var(--muted);font-size:0.85rem;text-align:right}
 
+    @media (min-width:1300px){
+      /* on very wide screens use 3 columns */
+      .board{grid-template-columns: repeat(3, 1fr);}
+    }
+
     @media (max-width:1100px){
       .wrap{grid-template-columns: 1fr; padding-bottom:40px}
       .board{grid-template-columns: repeat(2, 1fr)}
@@ -223,9 +229,9 @@
             </div>
 
             <div class="controls-inline" role="tablist" aria-label="View selectors">
-              <button id="listViewBtn" class="view-btn" aria-pressed="true" title="List view (1)">List</button>
+              <button id="listViewBtn" class="view-btn" aria-pressed="false" title="List view (1)">List</button>
               <button id="tableViewBtn" class="view-btn" aria-pressed="false" title="Table view (2)">Table</button>
-              <button id="gridViewBtn" class="view-btn" aria-pressed="false" title="Grid view (3)">Grid</button>
+              <button id="gridViewBtn" class="view-btn" aria-pressed="true" title="Grid view (3)">Grid</button>
               <button id="downloadBtn" class="view-btn" title="Download">Download</button>
             </div>
           </div>
@@ -233,7 +239,7 @@
       </div>
 
       <!-- Views -->
-      <section id="board" class="board" aria-live="polite" style="display:none"></section>
+      <section id="board" class="board" aria-live="polite"></section>
 
       <section id="listView" class="listview" aria-live="polite"></section>
 
@@ -528,11 +534,11 @@
     }
     filterInput.addEventListener('input', applyFilter);
 
-    // initial render and default view (List)
+    // initial render and default view (Grid by request)
     renderGrid(cases);
     renderList(cases);
     renderTable(cases);
-    showView('list');
+    showView('grid');
 
     // accessibility preference
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
