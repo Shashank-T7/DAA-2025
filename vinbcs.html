@@ -1,3 +1,7 @@
+Here is your full code with images added neatly under each case card.  
+Since browsers cannot use `C:\...` paths, the `src` values assume the images are in the same folder as this HTML (just save them there as `case1.png`, `case2.png`, …). You can change the paths if needed.
+
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -230,6 +234,20 @@
     border:1px dashed rgba(37,99,235,0.7);
   }
 
+  /* figure strip for images */
+  .figure-strip{
+    margin-top:8px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:4px;
+  }
+  .figure-strip img{
+    height:160px;
+    border-radius:10px;
+    border:1px solid rgba(148,163,184,0.6);
+  }
+
   .actions{
     display:flex;
     gap:8px;
@@ -347,6 +365,9 @@
 Orders → Hash & Heap → Dispatch Queue
 City Graph → Dijkstra → Rider Path
       </div>
+      <div class="figure-strip">
+        <img src="case1.png" alt="Diagram for Smart Cloud Kitchen and Rider Dispatch">
+      </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/cloud-kitchen-dispatch(case-1).cpp" target="_blank">View Code</a>
       </div>
@@ -366,6 +387,9 @@ City Graph → Dijkstra → Rider Path
       <div class="diagram">
 SKUs → Arrays / Hash → Dynamic Price
 Demand → Heap → Top-k Products
+      </div>
+      <div class="figure-strip">
+        <img src="case2.png" alt="Diagram for Supermarket Dynamic Pricing Engine">
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/supermarket-dynamic-pricing(case-2).cpp" target="_blank">View Code</a>
@@ -387,6 +411,9 @@ Demand → Heap → Top-k Products
 Bill Lines → Trie / Hash → Code Check
 Text → KMP → Fraud / Anomaly Flags
       </div>
+      <div class="figure-strip">
+        <img src="case3.png" alt="Diagram for Automated Billing and Fraud Detection">
+      </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/billing-fraud-detection(case-3).cpp" target="_blank">View Code</a>
       </div>
@@ -406,6 +433,9 @@ Text → KMP → Fraud / Anomaly Flags
       <div class="diagram">
 Suppliers × Buyers → Score Matrix
 Scores → Max-Heap → Greedy Match Allocation
+      </div>
+      <div class="figure-strip">
+        <img src="case4.png" alt="Diagram for Supplier–Buyer Allocation Platform">
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/b2b-supplier-buyer-matching(case-4).cpp" target="_blank">View Code</a>
@@ -429,6 +459,9 @@ Ticket ID → Hash Tables → Valid / Duplicate
 Stadium Grid → BFS → Nearest Gate Path
 Road Graph → Dijkstra → Optimal Entry Route
       </div>
+      <div class="figure-strip">
+        <img src="case5.png" alt="Diagram for Urban Event Ticketing and Crowd Flow Optimizer">
+      </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/event-ticketing-crowd-flow(case-5).cpp" target="_blank">View Code</a>
       </div>
@@ -444,11 +477,14 @@ Road Graph → Dijkstra → Optimal Entry Route
       <p class="desc">
         Government departments issue thousands of digital certificates such as caste, income and residence, and citizens or agencies must be able to verify authenticity without contacting the server each time. Each document’s ID and content are hashed and the ID is inserted into a Bloom filter so that verifiers can quickly do a “may exist / definitely not” check before any heavier work. All document hashes are organised into a Merkle tree, and only the Merkle root is periodically published; a presented certificate carries its own hash and Merkle path, and verification recomputes the path to recover the root and compare it with the trusted value. This design gives compact proofs, logarithmic verification time and strong tamper evidence.
       </p>
-      <div class="ds-list"><strong>Data Structures:</strong> de>vector&lt;Document&gt;</code>, <e>BloomFilter</code>, de>MerkleTree</code> — <strong>Algorithms:</strong> de>string hashing</code>, de>Bloom filter membership</code>, de>Merkle proof verification</code></div>
+      <div class="ds-list"><strong>Data Structures:</strong> de>vector&lt;Document&gt;</code>, de>BloomFilter</code>, <e>MerkleTree</code> — <strong>Algorithms:</strong> de>string hashing</code>, de>Bloom filter membership</code>, de>Merkle proof verification</code></div>
       <div class="diagram">
 Doc(ID, Content) → Hash → Leaf
 Leaves → Merkle Build → Root
 ID → Bloom → Maybe → Verify Proof vs Root
+      </div>
+      <div class="figure-strip">
+        <img src="case6.png" alt="Diagram for Government Document Authentication with Merkle tree and Bloom filter">
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/merkle-doc-auth(case-6).cpp" target="_blank">View Code</a>
@@ -471,6 +507,9 @@ Complaint Text → Trie → TypeTag
 Ward Graph → Dijkstra → Nearest Team Base
 Team → Priority Heap → Service Queue
       </div>
+      <div class="figure-strip">
+        <img src="case7.png" alt="Diagram for Government Complaint Routing">
+      </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/complaint-routing-dijkstra(case-7).cpp" target="_blank">View Code</a>
       </div>
@@ -490,6 +529,9 @@ Team → Priority Heap → Service Queue
       <div class="diagram">
 Farm Coordinates → Dist & Terrain → Edge Costs
 Edges → Sort + DSU → Irrigation MST
+      </div>
+      <div class="figure-strip">
+        <img src="case8.png" alt="Diagram for Smart Agriculture Irrigation Network Planning">
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/irrigation-mst-kruskal(case-8).cpp" target="_blank">View Code</a>
@@ -513,6 +555,9 @@ Skill Dict → Trie → Prefix Suggestions
 Candidate Text → Boyer–Moore → Skill Match
 Job → Heap → Top-Ranked Candidates
       </div>
+      <div class="figure-strip">
+        <img src="case9.png" alt="Diagram for Citywide Job and Skill Matching Portal">
+      </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/job-skill-matching-boyer-moore(case-9).cpp" target="_blank">View Code</a>
       </div>
@@ -532,6 +577,9 @@ Job → Heap → Top-Ranked Candidates
       <div class="diagram">
 Matrix → Floyd–Warshall → dist[i][j]
 departures[u][v] → lower_bound → Next Departure → Trip Plan (≤1 transfer)
+      </div>
+      <div class="figure-strip">
+        <img src="case10.png" alt="Diagram for Dynamic Public Transport Timetable and Transfer Optimizer">
       </div>
       <div class="actions">
         <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Vinay/public-transport-floyd(case-10).cpp" target="_blank">View Code</a>
@@ -835,7 +883,7 @@ departures[u][v] → lower_bound → Next Departure → Trip Plan (≤1 transfer
   </section>
 
   <footer>
-    © 2025 Arohanagara — Vinay Hosur (ROLL 265) · All modules located in de>Vinay/</code>
+    © 2025 Arohanagara — Vinay Hosur (ROLL 265) · All modules located in <e>Vinay/</code>
   </footer>
 
 </div>
@@ -850,3 +898,4 @@ departures[u][v] → lower_bound → Next Departure → Trip Plan (≤1 transfer
 
 </body>
 </html>
+```
