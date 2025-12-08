@@ -351,7 +351,6 @@
             <div class="controls-inline" role="tablist" aria-label="View selectors">
               <button id="listViewBtn" class="view-btn" aria-pressed="false" title="List view (1)">List</button>
               <button id="gridViewBtn" class="view-btn active" aria-pressed="true" title="Grid view (2)">Grid</button>
-              <button id="downloadBtn" class="view-btn" title="Download">Download</button>
             </div>
           </div>
         </div>
@@ -377,14 +376,14 @@
             <thead>
               <tr>
                 <th class="col-algo">Data Structure / Algorithm</th>
-                <th class="col-used">Used</th>
-                <th class="col-where">Where Used</th>
+                <th class="col-used">Used?</th>
+                <th class="col-where">Where Used?</th>
                 <th class="col-space">Space Efficiency</th>
                 <th class="col-time">Time Efficiency</th>
               </tr>
             </thead>
             <tbody>
-              <!-- rows unchanged from your original table -->
+              <!-- rows unchanged -->
               <tr><td class="col-algo">Arrays</td><td class="col-used">Yes</td><td class="col-where">Cases 2,4,5,6,8,9</td><td class="col-space">O(n)</td><td class="col-time">O(1)</td></tr>
               <tr><td class="col-algo">Structures</td><td class="col-used">Yes</td><td class="col-where">Cases 1–10</td><td class="col-space">O(1)</td><td class="col-time">O(1)</td></tr>
               <tr><td class="col-algo">List</td><td class="col-used">Yes</td><td class="col-where">Case 3</td><td class="col-space">O(n)</td><td class="col-time">O(1) append</td></tr>
@@ -511,7 +510,6 @@
 
     const listBtn = document.getElementById('listViewBtn');
     const gridBtn = document.getElementById('gridViewBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
 
     // helper
     function el(tag, cls='', inner=''){ const e=document.createElement(tag); if(cls) e.className=cls; if(inner!==undefined) e.innerHTML=inner; return e; }
@@ -661,7 +659,6 @@
 
     listBtn.addEventListener('click', ()=> showView('list'));
     gridBtn.addEventListener('click', ()=> showView('grid'));
-    downloadBtn.addEventListener('click', ()=> { alert('Download: in this demo, files must be hosted to download.'); });
 
     // keyboard shortcuts: 1=List, 2=Grid
     document.addEventListener('keydown', (e)=>{
