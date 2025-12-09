@@ -88,8 +88,10 @@
   .ds-list{background:rgba(255,255,255,0.01);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);margin-bottom:8px}
   .ds-list code{color:#9fe8ff;font-weight:700}
 
-  .eff-table{width:100%;border-collapse:collapse;margin-top:8px}
-  .eff-table td,.eff-table th{padding:6px;border-bottom:1px dashed rgba(255,255,255,0.03);font-size:0.88rem}
+  .eff-table{width:100%;border-collapse:collapse;margin-top:8px; margin-bottom: 12px;}
+  .eff-table td,.eff-table th{padding:6px;border-bottom:1px dashed rgba(255,255,255,0.03);font-size:0.82rem; text-align: left;}
+  .eff-table th{color: var(--muted); font-weight: 600;}
+  .eff-table td{color: #e6f2ff;}
   .diagram{background:#011025;padding:10px;border-radius:8px;font-family:ui-monospace,monospace;color:#9fe8ff;font-size:0.85rem;overflow:auto}
 
   .actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
@@ -108,7 +110,6 @@
 
 <div class="wrap">
 
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
       <div class="logo">AN</div>
@@ -121,7 +122,7 @@
     <div class="summary">
       <div class="kv"><div class="k">Author</div><div class="v">Atharva · ROLL 264</div></div>
       <div class="kv"><div class="k">Project</div><div class="v">DAA-2025</div></div>
-  
+   
     </div>
 
     <a class="repo" href="https://github.com/atharva-in-bits/DAA-2025" target="_blank">Open GitHub Repository</a>
@@ -133,7 +134,6 @@
     </div>
   </aside>
 
-  <!-- Main Content -->
   <main class="main">
 
     <section class="hero">
@@ -146,10 +146,8 @@
       </div>
     </section>
 
-    <!-- CASE GRID -->
     <section class="grid">
 
-      <!-- ===== CASE 1 ===== -->
       <article class="card fadein" id="case1">
         <div class="case-title">1 • Real-Time Weather Signature Detection</div>
         <div class="meta">
@@ -167,8 +165,14 @@
 
         <div class="diagram"><pre>
 Sensor Stream → Boyer–Moore → Alerts
-                  ↘ fallback → KMP
+                ↘ fallback → KMP
 </pre></div>
+
+        <table class="eff-table">
+            <tr><th>Metric</th><th>Boyer–Moore</th><th>KMP</th></tr>
+            <tr><td>Time Complexity</td><td>O(N/M) best, O(NM) worst</td><td>O(N) worst-case</td></tr>
+            <tr><td>Space Complexity</td><td>O(Σ) (Alphabet size)</td><td>O(M) (Pattern length)</td></tr>
+        </table>
 
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/boyer-moore(case-1).cpp">View Code</a>
@@ -176,7 +180,6 @@ Sensor Stream → Boyer–Moore → Alerts
         </div>
       </article>
 
-      <!-- ===== CASE 2 ===== -->
       <article class="card fadein" id="case2">
         <div class="case-title">2 • Skill & Seed Directory (Autocomplete)</div>
         <div class="meta">
@@ -194,13 +197,18 @@ Input → Trie → Suggestions
              → Hash Table → Metadata
 </pre></div>
 
+        <table class="eff-table">
+            <tr><th>Component</th><th>Time Complexity</th><th>Space Complexity</th></tr>
+            <tr><td>Trie Search</td><td>O(K) (Key length)</td><td>O(N × K)</td></tr>
+            <tr><td>Hash Lookup</td><td>O(1) Average</td><td>O(N)</td></tr>
+        </table>
+
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/trie-skill-matcher(case-2).cpp">View Code</a>
           <a class="btn secondary" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/trie-skill-matcher(case-2).csv">Dataset</a>
         </div>
       </article>
 
-      <!-- ===== CASE 3 ===== -->
       <article class="card fadein" id="case3">
         <div class="case-title">3 • IT Asset Lifecycle & E-Waste Routing</div>
         <div class="meta">
@@ -218,13 +226,18 @@ Devices → Treap (ordered)
          → Heap (next expiry) → Schedule
 </pre></div>
 
+        <table class="eff-table">
+            <tr><th>Operation</th><th>Treap</th><th>Min-Heap</th></tr>
+            <tr><td>Insertion</td><td>O(log N) (Expected)</td><td>O(log N)</td></tr>
+            <tr><td>Find Min</td><td>O(log N)</td><td>O(1)</td></tr>
+        </table>
+
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/bst-asset-lifecycle(case-3).cpp">View Code</a>
           <a class="btn secondary" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/bst-asset-lifecycle(case-3).csv">Dataset</a>
         </div>
       </article>
 
-      <!-- ===== CASE 4 ===== -->
       <article class="card fadein" id="case4">
         <div class="case-title">4 • Traffic Classification (Drone Streams)</div>
         <div class="meta">
@@ -239,8 +252,14 @@ Devices → Treap (ordered)
 
         <div class="diagram"><pre>
 Traffic Data → QuickSort → Tiers
-                 ↘ Fenwick → Trends
+                ↘ Fenwick → Trends
 </pre></div>
+
+        <table class="eff-table">
+            <tr><th>Algorithm</th><th>Time Complexity</th><th>Space Complexity</th></tr>
+            <tr><td>QuickSort</td><td>O(N log N) Avg</td><td>O(log N) Stack</td></tr>
+            <tr><td>Fenwick Tree</td><td>O(log N) Query/Upd</td><td>O(N)</td></tr>
+        </table>
 
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/quicksort-traffic-classifier(case-4).cpp">View Code</a>
@@ -248,7 +267,6 @@ Traffic Data → QuickSort → Tiers
         </div>
       </article>
 
-      <!-- ===== CASE 5 ===== -->
       <article class="card fadein" id="case5">
         <div class="case-title">5 • Market Price Analytics & Volatility</div>
         <div class="meta">
@@ -263,8 +281,14 @@ Traffic Data → QuickSort → Tiers
 
         <div class="diagram"><pre>
 Prices → Fenwick → Avg
-          Segment → Min/Max → Alerts
+         Segment → Min/Max → Alerts
 </pre></div>
+
+        <table class="eff-table">
+            <tr><th>Structure</th><th>Update Time</th><th>Range Query</th></tr>
+            <tr><td>Fenwick Tree</td><td>O(log N)</td><td>O(log N)</td></tr>
+            <tr><td>Segment Tree</td><td>O(log N)</td><td>O(log N)</td></tr>
+        </table>
 
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/fenwick-market(case-5).cpp">View Code</a>
@@ -272,7 +296,6 @@ Prices → Fenwick → Avg
         </div>
       </article>
 
-      <!-- ===== CASE 6 ===== -->
       <article class="card fadein" id="case6">
         <div class="case-title">6 • Warehouse Placement (Kruskal Backbone)</div>
         <div class="meta">
@@ -289,13 +312,18 @@ Prices → Fenwick → Avg
 Edges → Sort → Kruskal + Union-Find → MST
 </pre></div>
 
+        <table class="eff-table">
+            <tr><th>Component</th><th>Time Complexity</th><th>Space Complexity</th></tr>
+            <tr><td>Kruskal MST</td><td>O(E log E)</td><td>O(V + E)</td></tr>
+            <tr><td>Union-Find</td><td>O(α(N)) Amortized</td><td>O(N)</td></tr>
+        </table>
+
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/kruskal-warehouse(case-6).cpp">View Code</a>
           <a class="btn secondary" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/kruskal-warehouse(case-6).csv">Dataset</a>
         </div>
       </article>
 
-      <!-- ===== CASE 7 ===== -->
       <article class="card fadein" id="case7">
         <div class="case-title">7 • Product → Warehouse Mapping</div>
         <div class="meta">
@@ -309,8 +337,14 @@ Edges → Sort → Kruskal + Union-Find → MST
 
         <div class="diagram"><pre>
 Product ID → Hash → Warehouse
-                 → Skip List (sorted)
+                → Skip List (sorted)
 </pre></div>
+
+        <table class="eff-table">
+            <tr><th>Structure</th><th>Lookup Time</th><th>Space Complexity</th></tr>
+            <tr><td>Hash Table</td><td>O(1) Average</td><td>O(N)</td></tr>
+            <tr><td>Skip List</td><td>O(log N) Expected</td><td>O(N)</td></tr>
+        </table>
 
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/hash-skiplist-inventory(case-7).cpp">View Code</a>
@@ -318,7 +352,6 @@ Product ID → Hash → Warehouse
         </div>
       </article>
 
-      <!-- ===== CASE 8 ===== -->
       <article class="card fadein" id="case8">
         <div class="case-title">8 • All-Pairs Distribution (Floyd–Warshall)</div>
         <div class="meta">
@@ -336,13 +369,18 @@ Matrix → Floyd-Warshall → Distance Matrix
            ↘ BFS
 </pre></div>
 
+        <table class="eff-table">
+            <tr><th>Algorithm</th><th>Time Complexity</th><th>Space Complexity</th></tr>
+            <tr><td>Floyd-Warshall</td><td>O(V³)</td><td>O(V²) (Matrix)</td></tr>
+            <tr><td>BFS</td><td>O(V + E)</td><td>O(V)</td></tr>
+        </table>
+
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/floyd-distribution-extended(case-8).cpp">View Code</a>
           <a class="btn secondary" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/floyd-distribution(case-8).csv">Dataset</a>
         </div>
       </article>
 
-      <!-- ===== CASE 9 ===== -->
       <article class="card fadein" id="case9">
         <div class="case-title">9 • Inspector Route Planning</div>
         <div class="meta">
@@ -359,13 +397,18 @@ Matrix → Floyd-Warshall → Distance Matrix
 Road Graph → Dijkstra(Heap) → Shortest Path
 </pre></div>
 
+        <table class="eff-table">
+            <tr><th>Algorithm</th><th>Time Complexity</th><th>Space Complexity</th></tr>
+            <tr><td>Dijkstra (Heap)</td><td>O((V+E) log V)</td><td>O(V + E)</td></tr>
+            <tr><td>Min-Heap Ops</td><td>O(log V)</td><td>O(V)</td></tr>
+        </table>
+
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/dijkstra-inspection(case-9).cpp">View Code</a>
           <a class="btn secondary" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/dijkstra-inspection(case-9).csv">Dataset</a>
         </div>
       </article>
 
-      <!-- ===== CASE 10 ===== -->
       <article class="card fadein" id="case10">
         <div class="case-title">10 • Faulty Batch Recall & Fraud Detection</div>
         <div class="meta">
@@ -382,6 +425,12 @@ Road Graph → Dijkstra(Heap) → Shortest Path
 Codes → Rabin-Karp → Suspects → Verify → Recall
 </pre></div>
 
+        <table class="eff-table">
+            <tr><th>Algorithm</th><th>Time Complexity</th><th>Space Complexity</th></tr>
+            <tr><td>Rabin-Karp</td><td>O(N + M) Average</td><td>O(1) Auxiliary</td></tr>
+            <tr><td>Pattern Verify</td><td>O(M) per match</td><td>-</td></tr>
+        </table>
+
         <div class="actions">
           <a class="btn" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/rabin-karp-recall-extended(case-10).cpp">View Code</a>
           <a class="btn secondary" href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Atharva/rabin-karp-recall(case-10).csv">Dataset</a>
@@ -389,8 +438,7 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
       </article>
 
     </section>
-    <!-- IMPLEMENTATION ANALYSIS TABLE -->
-<section style="margin-top:30px">
+    <section style="margin-top:30px">
 
   <h2 style="
     font-size:1.35rem;
@@ -429,7 +477,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
 
       <tbody style="font-size:0.9rem;color:#dff8ff">
 
-        <!-- Arrays -->
         <tr>
           <td style="padding:10px">Arrays</td>
           <td style="padding:10px">Yes</td>
@@ -438,7 +485,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(1) access</td>
         </tr>
 
-        <!-- Structures -->
         <tr>
           <td style="padding:10px">Structures</td>
           <td style="padding:10px">Yes</td>
@@ -447,7 +493,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(1) field access</td>
         </tr>
 
-        <!-- List -->
         <tr>
           <td style="padding:10px">List</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -456,7 +501,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Stack -->
         <tr>
           <td style="padding:10px">Stack</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -465,7 +509,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Queue -->
         <tr>
           <td style="padding:10px">Queue</td>
           <td style="padding:10px">Yes</td>
@@ -474,7 +517,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(1) enqueue/dequeue</td>
         </tr>
 
-        <!-- Binary Tree -->
         <tr>
           <td style="padding:10px">Binary Tree</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -483,7 +525,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- BST -->
         <tr>
           <td style="padding:10px">Binary Search Tree</td>
           <td style="padding:10px">Yes</td>
@@ -492,7 +533,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(log n) avg ops</td>
         </tr>
 
-        <!-- AVL -->
         <tr>
           <td style="padding:10px">AVL Tree</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -501,7 +541,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- 2-3 Tree -->
         <tr>
           <td style="padding:10px">2–3 Tree</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -510,7 +549,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Red-Black Tree -->
         <tr>
           <td style="padding:10px">Red-Black Tree</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -519,7 +557,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Trie -->
         <tr>
           <td style="padding:10px">Trie</td>
           <td style="padding:10px">Yes</td>
@@ -528,7 +565,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(k) search</td>
         </tr>
 
-        <!-- Heap -->
         <tr>
           <td style="padding:10px">Heap (Min-Heap)</td>
           <td style="padding:10px">Yes</td>
@@ -537,7 +573,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(log n) ops</td>
         </tr>
 
-        <!-- Lookup Table -->
         <tr>
           <td style="padding:10px">Lookup Table</td>
           <td style="padding:10px">Yes</td>
@@ -546,7 +581,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(1) lookup</td>
         </tr>
 
-        <!-- Sparse Table -->
         <tr>
           <td style="padding:10px">Sparse Table</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -555,7 +589,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Fenwick -->
         <tr>
           <td style="padding:10px">Fenwick Tree</td>
           <td style="padding:10px">Yes</td>
@@ -564,7 +597,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(log n) ops</td>
         </tr>
 
-        <!-- Segment Tree -->
         <tr>
           <td style="padding:10px">Segment Tree</td>
           <td style="padding:10px">Yes</td>
@@ -573,7 +605,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(log n) ops</td>
         </tr>
 
-        <!-- Skip List -->
         <tr>
           <td style="padding:10px">Skip List</td>
           <td style="padding:10px">Yes</td>
@@ -582,7 +613,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(log n) expected</td>
         </tr>
 
-        <!-- Union-Find -->
         <tr>
           <td style="padding:10px">Union-Find</td>
           <td style="padding:10px">Yes</td>
@@ -591,7 +621,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(α(n)) merges</td>
         </tr>
 
-        <!-- Hashing -->
         <tr>
           <td style="padding:10px">Hashing</td>
           <td style="padding:10px">Yes</td>
@@ -600,7 +629,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(1) avg lookup</td>
         </tr>
 
-        <!-- DFS -->
         <tr>
           <td style="padding:10px">DFS</td>
           <td style="padding:10px">Yes</td>
@@ -609,7 +637,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(V + E)</td>
         </tr>
 
-        <!-- BFS -->
         <tr>
           <td style="padding:10px">BFS</td>
           <td style="padding:10px">Yes</td>
@@ -618,7 +645,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(V + E)</td>
         </tr>
 
-        <!-- Bubble Sort -->
         <tr>
           <td style="padding:10px">Bubble Sort</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -627,7 +653,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Selection Sort -->
         <tr>
           <td style="padding:10px">Selection Sort</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -636,7 +661,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Insertion Sort -->
         <tr>
           <td style="padding:10px">Insertion Sort</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -645,7 +669,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Quick Sort -->
         <tr>
           <td style="padding:10px">Quick Sort</td>
           <td style="padding:10px">Yes</td>
@@ -654,7 +677,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(n log n) avg</td>
         </tr>
 
-        <!-- Merge Sort -->
         <tr>
           <td style="padding:10px">Merge Sort</td>
           <td style="padding:10px">Yes</td>
@@ -663,7 +685,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(n log n)</td>
         </tr>
 
-        <!-- Brute Force -->
         <tr>
           <td style="padding:10px">Brute-Force Pattern Search</td>
           <td style="padding:10px">Yes</td>
@@ -672,7 +693,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(nm) worst</td>
         </tr>
 
-        <!-- Rabin-Karp -->
         <tr>
           <td style="padding:10px">Rabin-Karp</td>
           <td style="padding:10px">Yes</td>
@@ -681,7 +701,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(n + m)</td>
         </tr>
 
-        <!-- Boyer-Moore -->
         <tr>
           <td style="padding:10px">Boyer–Moore</td>
           <td style="padding:10px">Yes</td>
@@ -690,7 +709,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">Sublinear avg</td>
         </tr>
 
-        <!-- KMP -->
         <tr>
           <td style="padding:10px">Knuth-Morris-Pratt</td>
           <td style="padding:10px">Yes</td>
@@ -699,7 +717,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(n + m)</td>
         </tr>
 
-        <!-- Heap Sort -->
         <tr>
           <td style="padding:10px">Heap Sort</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -708,7 +725,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Kruskal -->
         <tr>
           <td style="padding:10px">Kruskal</td>
           <td style="padding:10px">Yes</td>
@@ -717,7 +733,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(E log E)</td>
         </tr>
 
-        <!-- Prim -->
         <tr>
           <td style="padding:10px">Prim</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -726,7 +741,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">—</td>
         </tr>
 
-        <!-- Dijkstra -->
         <tr>
           <td style="padding:10px">Dijkstra</td>
           <td style="padding:10px">Yes</td>
@@ -735,7 +749,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(E log V)</td>
         </tr>
 
-        <!-- Floyd Warshall -->
         <tr>
           <td style="padding:10px">Floyd–Warshall</td>
           <td style="padding:10px">Yes</td>
@@ -744,7 +757,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
           <td style="padding:10px">O(n³)</td>
         </tr>
 
-        <!-- Bellman Ford -->
         <tr>
           <td style="padding:10px">Bellman–Ford</td>
           <td style="padding:10px">No – Not part of system requirements</td>
@@ -760,7 +772,6 @@ Codes → Rabin-Karp → Suspects → Verify → Recall
 </section>
 
 
-    <!-- FOOTER -->
     <footer>
       © 2025 Aroha Nagar — Atharva (ROLL 264) · All modules located in <code>Atharva/</code>
     </footer>
