@@ -459,6 +459,10 @@ City Graph → Dijkstra → Rider Path
       </div>
       <p class="desc">
         A large supermarket in Arohanagara wants prices that react to demand, competitor moves and stock levels instead of staying static for the whole day. Product master data and historical demand are stored in arrays and hash tables so each SKU can be updated in constant time by its ID, while periodic pricing runs recompute a combined “urgency score” from these signals. Candidate items are pushed into a max-heap to quickly surface products that most urgently need repricing, and the final catalogue is ordered with an \(O(n \log n)\) sort so high-urgency, high-margin items float to the top. This pipeline gives predictable performance even when the supermarket scales to thousands of SKUs.
+     <br><br>
+<span style="color:#cbd5f5;">
+  <strong>Aligned SDGs:</strong> SDG 12 – Responsible Consumption and Production, SDG 2 – Zero Hunger
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>vector</code>, de>unordered_map</code>, <e>priority_queue</code> — <strong>Algorithms:</strong> de>std::sort</code></div>
       <div class="diagram">
@@ -484,6 +488,10 @@ Demand → Heap → Top-k Products
       </div>
       <p class="desc">
         Retailers often generate long bills where manual verification of every line item is error‑prone and can hide fraud. The system loads the authorised SKU registry into both a Trie (for fast prefix and code validation) and a hash table keyed by SKU so that each bill line can be checked in O(1) or O(k) time. As descriptions and notes are streamed, a Knuth–Morris–Pratt matcher scans the text for blacklisted phrases and suspicious patterns without backtracking over characters. Together, these structures enforce that every billed code matches a known product and that risky textual patterns trigger alerts while still keeping per‑bill processing nearly linear in total characters.
+      <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 16 – Peace, Justice and Strong Institutions, SDG 9 – Industry, Innovation and Infrastructure
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>Trie</code>, de>unordered_map</code>, <e>vector</code> — <strong>Algorithms:</strong> de>KMP string matching</code></div>
       <div class="diagram">
@@ -509,7 +517,11 @@ Text → KMP → Fraud / Anomaly Flags
       </div>
       <p class="desc">
         Small manufacturers and retailers in Arohanagara need a fair way to form supply contracts where both sides have constraints on price, capacity and quality. Supplier and buyer profiles are stored in hash tables keyed by ID, while vectors of structs capture bids and offers with ratings and price ranges. For each buyer, compatible suppliers are ranked using de>std::sort</code> and a custom Merge Sort to handle different sorting keys, and a max‑heap over “match score” supports greedily popping the best remaining pair. This greedy but explainable allocation runs in \(O(n \log n)\) and produces high‑quality one‑to‑one matches for the current batch.
-      </p>
+    <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 8 – Decent Work and Economic Growth, SDG 9 – Industry, Innovation and Infrastructure
+</span> 
+    </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>unordered_map</code>, de>priority_queue</code>, <e>vector&lt;Supplier&gt;</code> — <strong>Algorithms:</strong> de>std::sort</code>, de>Merge Sort</code>, de>greedy matching</code></div>
       <div class="diagram">
 Suppliers × Buyers → Score Matrix
@@ -535,6 +547,10 @@ Scores → Max-Heap → Greedy Match Allocation
       </div>
       <p class="desc">
         During big stadium events, organisers must block duplicate tickets and ensure crowds move safely to the nearest exit without creating jams. Ticket IDs and their status are stored in hash maps and hash sets so that every scanned ticket can be validated or rejected in expected O(1) time. Inside the stadium, seating and corridors are modelled as a 2D grid where BFS finds the shortest safe path from a seat block to an exit gate; outside, a weighted road graph represents different routes and Dijkstra’s algorithm computes least‑cost paths from parking or metro points to the venue. This integration of hashing, BFS and Dijkstra supports both security and smooth crowd movement.
+      <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 3 – Good Health and Well-being, SDG 11 – Sustainable Cities and Communities
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>unordered_set</code>, de>unordered_map</code>, <e>2D char array</code>, de>adjacency list</code> — <strong>Algorithms:</strong> de>BFS</code>, de>Dijkstra</code></div>
       <div class="diagram">
@@ -561,6 +577,10 @@ Road Graph → Dijkstra → Optimal Entry Route
       </div>
       <p class="desc">
         Government departments issue thousands of digital certificates such as caste, income and residence, and citizens or agencies must be able to verify authenticity without contacting the server each time. Each document’s ID and content are hashed and the ID is inserted into a Bloom filter so that verifiers can quickly do a “may exist / definitely not” check before any heavier work. All document hashes are organised into a Merkle tree, and only the Merkle root is periodically published; a presented certificate carries its own hash and Merkle path, and verification recomputes the path to recover the root and compare it with the trusted value. This design gives compact proofs, logarithmic verification time and strong tamper evidence.
+      <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 16 – Peace, Justice and Strong Institutions, SDG 9 – Industry, Innovation and Infrastructure
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>vector&lt;Document&gt;</code>, de>BloomFilter</code>, <e>MerkleTree</code> — <strong>Algorithms:</strong> de>string hashing</code>, de>Bloom filter membership</code>, de>Merkle proof verification</code></div>
       <div class="diagram">
@@ -587,6 +607,10 @@ ID → Bloom → Maybe → Verify Proof vs Root
       </div>
       <p class="desc">
         Citizens submit complaints about garbage, streetlights or water leakage using free‑text descriptions and approximate locations, and the municipality needs to route them efficiently to the right team. A Trie built from domain keywords maps noisy text into complaint types, while hash tables store ward information, team skills and bases for quick lookup. The ward connectivity graph is weighted by travel time; Dijkstra’s algorithm from the complaint location finds the nearest capable team base, and each team maintains a max‑heap of complaints ordered by severity and waiting time. This ensures both geographically efficient routing and fair prioritisation of the most urgent issues.
+      <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 11 – Sustainable Cities and Communities, SDG 16 – Peace, Justice and Strong Institutions
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>Trie</code>, de>unordered_map</code>, <e>priority_queue</code>, de>adjacency list</code> — <strong>Algorithms:</strong> de>Dijkstra</code></div>
       <div class="diagram">
@@ -613,6 +637,10 @@ Team → Priority Heap → Service Queue
       </div>
       <p class="desc">
         Farmer clusters around Arohanagara want to share a common irrigation backbone so that water from a source can reach every field at minimum construction cost. Each farm is treated as a node with coordinates and terrain type, and potential pipe segments between farms form weighted edges whose costs depend on distance and terrain penalty. These edges are sorted by cost and fed into Kruskal’s minimum‑spanning‑tree algorithm, which uses a Union–Find structure to keep track of connected components and avoid cycles. The resulting MST selects exactly those pipe links that connect all farms while minimising total pipeline length and therefore project cost.
+      <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 11 – Sustainable Cities and Communities, SDG 16 – Peace, Justice and Strong Institutions
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>vector&lt;Farm&gt;</code>, de>vector&lt;Edge&gt;</code>, de>UnionFind</code> — <strong>Algorithms:</strong> de>Kruskal MST</code></div>
       <div class="diagram">
@@ -639,6 +667,10 @@ Edges → Sort + DSU → Irrigation MST
       </div>
       <p class="desc">
         Job‑seekers and employers in Arohanagara specify skills mostly in free text, which makes exact matching difficult. A Trie built over the skill dictionary powers prefix‑based suggestions as the user types, while candidate and job profiles are stored in hash maps and vectors. When a job specifies a required keyword, Boyer–Moore pattern matching scans candidate descriptions to detect that exact skill efficiently, and for each job a max‑heap ranks candidates by a score that combines skill matches and geographic distance. Employers thus see the best‑fit candidates at the top of the heap with good performance even for large numbers of profiles.
+      <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 8 – Decent Work and Economic Growth, SDG 10 – Reduced Inequalities
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>Trie</code>, de>unordered_map</code>, <e>priority_queue</code>, de>vector</code> — <strong>Algorithms:</strong> de>Boyer–Moore</code></div>
       <div class="diagram">
@@ -665,6 +697,10 @@ Job → Heap → Top-Ranked Candidates
       </div>
       <p class="desc">
         Arohanagara’s bus network has many hubs and routes, and passengers need fast answers for the quickest way to travel between any pair of stops at a given time. The system first builds a weighted adjacency matrix where each cell stores the in‑vehicle travel time between two hubs and runs Floyd–Warshall to precompute all‑pairs shortest travel times; later queries can then read them directly from the matrix. For each directed edge, departures across the day are stored in a sorted array, and given a desired start time, binary search finds the next feasible departure and, if needed, a single transfer that minimises arrival time. This combination of precomputation and logarithmic search yields real‑time journey planning with predictable performance.
+      <br><br>
+<span style="color:#cbd5f5%;">
+  <strong>Aligned SDGs:</strong> SDG 11 – Sustainable Cities and Communities, SDG 9 – Industry, Innovation and Infrastructure
+</span>
       </p>
       <div class="ds-list"><strong>Data Structures:</strong> de>adjacency matrix</code>, de>vector&lt;int&gt; departures</code> — <strong>Algorithms:</strong> de>Floyd–Warshall</code>, de>binary search</code></div>
       <div class="diagram">
