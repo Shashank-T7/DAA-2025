@@ -34,10 +34,24 @@
       padding:28px;
       display:flex;
       justify-content:center;
+
+      /* ---------- UPDATED BACKGROUND: subtle horizontal brand tint + existing radials ---------- */
       background:
         radial-gradient(800px at 8% 6%, rgba(56,189,248,0.06), transparent 30%),
         radial-gradient(700px at 92% 8%, rgba(139,92,246,0.04), transparent 30%),
+
+        /* gentle left→right tint matching your small gradient strip (low alpha so it's subtle) */
+        linear-gradient(90deg,
+          rgba(16,185,129,0.07),  /* green */
+          rgba(6,182,212,0.07),   /* cyan */
+          rgba(59,130,246,0.07),  /* blue */
+          rgba(139,92,246,0.07)   /* purple */
+        ),
+
+        /* base dark gradient */
         linear-gradient(180deg,var(--bg) 0%, #02030a 60%);
+      /* ------------------------------------------------------------------------------------- */
+
       overflow-x:hidden;
       position:relative;
     }
@@ -439,7 +453,7 @@
         tags:['BFS','Dijkstra','Heaps','Queues','Hashing','Structures'] },
 
       { id:2, tag:'EV Charging', title:'EV Charging Network – Slot Scheduling', kicker:'Case 2 · EV Charging',
-        summary:`An EV charging network slot-scheduling system helps a user find the nearest suitable charger and reserve a time slot while keeping charger availability and station load up to date in real time. Efficient data structures like segment trees or Fenwick trees track which time slots are free or occupied, heaps prioritize the next-free or closest chargers, hash maps support fast reservation lookups, and arrays/structs store base station and charger data. This combination allows quick updates when a reservation is created or canceled, and fast queries when users ask for an available slot at a certain time.`,
+        summary:`An EV charging network slot-scheduling system helps a user find the nearest suitable charger and reserve a time slot while keeping charger availability and station load up to date in real time. Efficient data structures like segment trees or Fenwick trees track which time slots are free or occupied, heaps prioritize the next-free or closest chargers, hash maps support fast reservation lookups, and arrays/structures store base station and charger data. This combination allows quick updates when a reservation is created or canceled, and fast queries when users ask for an available slot at a certain time.`,
         implText:'Segment & Fenwick Trees',
         implLink:'Shashank/Case2.cpp',
         dataLink:'https://github.com/atharva-in-bits/DAA-2025/blob/main/Shashank/D2.csv',
@@ -560,7 +574,7 @@
     const gridBtn = document.getElementById('gridViewBtn');
 
     function el(tag, cls='', inner=''){ const e=document.createElement(tag); if(cls) e.className=cls; if(inner!==undefined) e.innerHTML=inner; return e; }
-    function esc(s){ return String(s).replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+    function esc(s){ return String(s).replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]); }
 
     function renderGrid(list){
       board.innerHTML='';
