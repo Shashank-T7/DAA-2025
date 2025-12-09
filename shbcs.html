@@ -608,14 +608,11 @@ function onButtonClick(e){
   const dataLink = btn.getAttribute('data-datalink');
 
   if (dataLink) {
-    // View Dataset → open CSV directly on GitHub
     window.open(dataLink, '_blank', 'noopener');
   } else if (codeLink) {
-    // View C++ Code → open C++ file directly on GitHub
     window.open(codeLink, '_blank', 'noopener');
   }
-}
-
+  
     function openModal(title, link){
       modalTitle.textContent = title + ' — Code preview';
       modalSub.textContent = link;
