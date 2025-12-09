@@ -296,6 +296,22 @@
     margin-top: 4px;
   }
 
+  /* ------------ SDG badge style ------------ */
+  .case-sdgs {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, rgba(14,165,233,0.06), rgba(56,189,248,0.03));
+    border: 1px solid rgba(56,189,248,0.12);
+    box-shadow: 0 6px 18px rgba(3,7,18,0.6);
+    line-height: 1.3;
+  }
+
+  .case-sdgs strong { color: var(--accent); font-weight:600; margin-right:6px; font-size:0.86rem; }
+
   .card-footer {
     display: flex;
     justify-content: space-between;
@@ -461,6 +477,7 @@
             On top of this structure, shortest-path routing minimises energy loss and balances load
             between generators and consumers, even when failures occur.
           </p>
+          <div class="case-sdgs">SDG 7 — Affordable and Clean Energy; SDG 9 — Industry, Innovation and Infrastructure; SDG 11 — Sustainable Cities and Communities; SDG 13 — Climate Action</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Kruskal’s and Prim’s MST for minimum wiring cost</li>
@@ -498,6 +515,7 @@
             backup options. Sorted data structures and priority queues power fast station ranking and
             vehicle-to-station assignment.
           </p>
+          <div class="case-sdgs">SDG 11 — Sustainable Cities and Communities; SDG 7 — Affordable and Clean Energy; SDG 9 — Industry, Innovation and Infrastructure; SDG 13 — Climate Action</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Kruskal / Prim MST for planning backbone infrastructure</li>
@@ -536,6 +554,7 @@
             When bins overflow or roads are blocked, affected segments are recomputed using updated edge
             weights, not the entire city.
           </p>
+          <div class="case-sdgs">SDG 11 — Sustainable Cities and Communities; SDG 12 — Responsible Consumption and Production; SDG 3 — Good Health and Well-being; SDG 13 — Climate Action</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>K-means clustering to form service regions</li>
@@ -573,6 +592,7 @@
             range queries in O(1) time. Text-based incident reports are scanned using KMP pattern
             matching so critical contamination keywords are found in linear time.
           </p>
+          <div class="case-sdgs">SDG 6 — Clean Water and Sanitation; SDG 3 — Good Health and Well-being; SDG 11 — Sustainable Cities and Communities; SDG 14 — Life Below Water</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Segment tree for dynamic range min/max on sensor data</li>
@@ -609,6 +629,7 @@
             K-means clustering groups similar plots into zones with shared irrigation and nutrient plans,
             while sorting highlights high-yield and underperforming plots for targeted action.
           </p>
+          <div class="case-sdgs">SDG 2 — Zero Hunger; SDG 11 — Sustainable Cities and Communities; SDG 12 — Responsible Consumption and Production; SDG 15 — Life on Land</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Fenwick tree for rolling yield and moisture aggregation</li>
@@ -645,6 +666,7 @@
             priority. Under a city budget, a greedy benefit-to-cost strategy selects segments that
             deliver maximum ecological impact per unit cost.
           </p>
+          <div class="case-sdgs">SDG 13 — Climate Action; SDG 15 — Life on Land; SDG 11 — Sustainable Cities and Communities; SDG 14 — Life Below Water</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Kruskal’s MST for low-cost corridor backbone</li>
@@ -657,7 +679,8 @@
               Complexity focus: O(E log V) planning plus linear-time connectivity checks.
             </div>
             <div class="btn-row">
-              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case06_landscaping.cpp" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case06_landscaping.cpp" 
+                 class="btn btn-primary" target="_blank">
                 <span class="btn-icon">🧠</span> View C++ Code
               </a>
             </div>
@@ -681,6 +704,7 @@
             computes safe return paths to base or an alternate landing zone when conditions change
             mid-flight due to weather or low battery.
           </p>
+          <div class="case-sdgs">SDG 13 — Climate Action; SDG 15 — Life on Land; SDG 11 — Sustainable Cities and Communities</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Nearest neighbour TSP heuristic for baseline tours</li>
@@ -693,7 +717,8 @@
               Complexity focus: polynomial-time heuristics combining TSP and shortest paths.
             </div>
             <div class="btn-row">
-              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case07_drones.cpp" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case07_drones.cpp" 
+                 class="btn btn-primary" target="_blank">
                 <span class="btn-icon">🧠</span> View C++ Code
               </a>
             </div>
@@ -717,6 +742,7 @@
             Bellman–Ford detects negative-cost cycles in dynamic pricing, revealing arbitrage or errors.
             Greedy rules choose which battery to discharge during peak load periods.
           </p>
+          <div class="case-sdgs">SDG 7 — Affordable and Clean Energy; SDG 9 — Industry, Innovation and Infrastructure; SDG 13 — Climate Action; SDG 11 — Sustainable Cities and Communities</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Dijkstra’s shortest path for microgrid power routing</li>
@@ -726,10 +752,11 @@
           </ul>
           <div class="card-footer">
             <div class="card-meta">
-              Complexity focus: O(E log V) routing plus O(log N) time-series updates over many steps.
+              Complexity focus: O(E log V) routing + O(log N) time-series updates.
             </div>
             <div class="btn-row">
-              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case08_microgrid.cpp" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case08_microgrid.cpp" 
+                 class="btn btn-primary" target="_blank">
                 <span class="btn-icon">🧠</span> View C++ Code
               </a>
             </div>
@@ -752,6 +779,7 @@
             appended. Sliding-window statistics detect short-term anomalies. Sorting ranks locations by
             pollutant level, enabling instant hotspot visualisation and targeted interventions.
           </p>
+          <div class="case-sdgs">SDG 3 — Good Health and Well-being; SDG 11 — Sustainable Cities and Communities; SDG 13 — Climate Action</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Fenwick tree and segment tree for range aggregates</li>
@@ -763,7 +791,8 @@
               Complexity focus: logarithmic updates with fast hotspot queries across many sensors.
             </div>
             <div class="btn-row">
-              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case09_pollution.cpp" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case09_pollution.cpp" 
+                 class="btn btn-primary" target="_blank">
                 <span class="btn-icon">🧠</span> View C++ Code
               </a>
             </div>
@@ -787,6 +816,7 @@
             cost. Inside the plant, a segment tree monitors time-slot capacities so no digester is
             overloaded while daily throughput is maximised.
           </p>
+          <div class="case-sdgs">SDG 12 — Responsible Consumption and Production; SDG 7 — Affordable and Clean Energy; SDG 13 — Climate Action</div>
           <div class="case-section-title">Algorithms & Data Structures</div>
           <ul class="algo-list">
             <li>Greedy knapsack approximation using energy density</li>
@@ -796,10 +826,11 @@
           </ul>
           <div class="card-footer">
             <div class="card-meta">
-              Complexity focus: greedy batching plus O(E log V) routing and O(log N) schedule checks.
+              Complexity focus: greedy batching + O(E log V) routing + O(log N) schedule checks.
             </div>
             <div class="btn-row">
-              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case10_wte.cpp" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/atharva-in-bits/DAA-2025/blob/main/Varun/case10_wte.cpp" 
+                 class="btn btn-primary" target="_blank">
                 <span class="btn-icon">🧠</span> View C++ Code
               </a>
             </div>
