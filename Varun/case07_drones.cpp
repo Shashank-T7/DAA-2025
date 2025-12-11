@@ -1,300 +1,176 @@
 #include <bits/stdc++.h>
 using namespace std;
-using db = double;
 using ll = long long;
-const db INF = 1e18;
-
-struct Node {
-    db x,y;
-    db wind;
-    Node(){}
-    Node(db a,db b,db c):x(a),y(b),wind(c){}
-};
-
-db dist_e(db x1,db y1,db x2,db y2){
-    db dx=x1-x2, dy=y1-y2;
-    return sqrt(dx*dx+dy*dy);
-}
-
-struct Graph {
-    int n;
-    vector<vector<pair<int,db>>> adj;
-    Graph(int n_=0){init(n_);}
-    void init(int N){
-        n=N;
-        adj.assign(n,{});
-    }
-    void addEdge(int u,int v,db w){
-        adj[u].push_back({v,w});
-        adj[v].push_back({u,w});
-    }
-};
-
-vector<db> dijkstra(const Graph &g,int s){
-    int n=g.n;
-    vector<db>d(n,INF);
-    priority_queue<pair<db,int>,vector<pair<db,int>>,greater<pair<db,int>>>pq;
-    d[s]=0;pq.push({0,s});
-    while(!pq.empty()){
-        auto cur=pq.top(); pq.pop();
-        db cd=cur.first; int u=cur.second;
-        if(cd!=d[u]) continue;
-        for(auto &pr:g.adj[u]){
-            int v=pr.first; db w=pr.second;
-            if(cd+w<d[v]){d[v]=cd+w; pq.push({d[v],v});}
+struct WP { int id; double x,y; double wind; int importance; };
+double euclid(const WP &a,const WP &b){ double dx=a.x-b.x, dy=a.y-b.y; return sqrt(dx*dx+dy*dy); }
+vector<string> split_csv(const string &s){
+    vector<string> out; string cur; bool inq=false;
+    for(size_t i=0;i<s.size();++i){
+        char c=s[i];
+        if(inq){
+            if(c=='"'){ if(i+1<s.size() && s[i+1]=='"'){ cur.push_back('"'); ++i; } else inq=false; } else cur.push_back(c);
+        } else {
+            if(c==','){ out.push_back(cur); cur.clear(); }
+            else if(c=='"') inq=true;
+            else cur.push_back(c);
         }
     }
-    return d;
+    out.push_back(cur);
+    for(auto &t: out){ size_t a=0,b=t.size(); while(a<b && isspace((unsigned char)t[a])) ++a; while(b>a && isspace((unsigned char)t[b-1])) --b; t=t.substr(a,b-a); }
+    return out;
 }
+int to_int(const string &s){ if(s.empty()) return 0; try{return stoi(s);}catch(...){return 0;} }
+double to_double(const string &s){ if(s.empty()) return 0.0; try{return stod(s);}catch(...){return 0.0;} }
 
-vector<vector<db>> build_matrix(const vector<Node>&pts){
-    int n=pts.size();
-    vector<vector<db>>D(n,vector<db>(n,INF));
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(i==j){D[i][j]=0;continue;}
-            db w=dist_e(pts[i].x,pts[i].y,pts[j].x,pts[j].y);
-            w *= (1.0 + pts[j].wind*0.05);
-            D[i][j]=w;
+vector<int> nearest_neighbor(const vector<WP>&wps){
+    int n = wps.size();
+    if(n==0) return {};
+    vector<int> ids(n);
+    iota(ids.begin(), ids.end(), 0);
+    vector<char> used(n,0);
+    vector<int> tour;
+    tour.reserve(n);
+    int cur = 0;
+    used[cur]=1; tour.push_back(cur);
+    for(int step=1; step<n; ++step){
+        double best = 1e300; int bi = -1;
+        for(int j=0;j<n;++j) if(!used[j]){
+            double d = euclid(wps[cur], wps[j]) * (1.0 + wps[j].wind/30.0);
+            if(d < best){ best = d; bi = j; }
         }
+        if(bi==-1) break;
+        used[bi]=1; tour.push_back(bi); cur=bi;
     }
-    return D;
+    return tour;
 }
-
-db route_cost(const vector<int>&R,const vector<vector<db>>&D){
-    if(R.empty()) return 0;
-    db s=0;
-    for(int i=0;i+1<R.size();i++) s+=D[R[i]][R[i+1]];
+double tour_len(const vector<int>&tour,const vector<WP>&wps){
+    if(tour.empty()) return 0.0;
+    double s=0;
+    for(size_t i=0;i+1<tour.size();++i) s += euclid(wps[tour[i]], wps[tour[i+1]]) * (1.0 + wps[tour[i+1]].wind/30.0);
+    s += euclid(wps[tour.back()], wps[tour.front()]) * (1.0 + wps[tour.front()].wind/30.0);
     return s;
 }
-
-vector<int> nearest(const vector<int>&v,int start,const vector<vector<db>>&D){
-    int k=v.size();
-    vector<char>used(k,0);
-    vector<int>out;
-    used[start]=1;
-    out.push_back(v[start]);
-    int cur=start;
-    for(int i=1;i<k;i++){
-        int best=-1; db bd=INF;
-        for(int j=0;j<k;j++){
-            if(!used[j]){
-                db w=D[v[cur]][v[j]];
-                if(w<bd){bd=w;best=j;}
-            }
-        }
-        used[best]=1;
-        out.push_back(v[best]);
-        cur=best;
-    }
-    return out;
-}
-
-db two_opt(vector<int>&R,const vector<vector<db>>&D){
-    int n=R.size();
-    if(n<4) return route_cost(R,D);
-    bool ok=true;
-    while(ok){
-        ok=false;
-        for(int i=1;i<n-2;i++){
-            for(int j=i+1;j<n-1;j++){
-                db d1=D[R[i-1]][R[i]]+D[R[j]][R[j+1]];
-                db d2=D[R[i-1]][R[j]]+D[R[i]][R[j+1]];
-                if(d2<d1){
-                    reverse(R.begin()+i,R.begin()+j+1);
-                    ok=true;
-                }
+void two_opt(vector<int>&tour,const vector<WP>&wps){
+    int n=tour.size();
+    if(n<4) return;
+    bool improved=true;
+    while(improved){
+        improved=false;
+        for(int i=0;i<n-1 && !improved;++i){
+            for(int k=i+2;k<n && !improved;++k){
+                int a=tour[i], b=tour[(i+1)%n], c=tour[k% n], d=tour[(k+1)%n];
+                double before = euclid(wps[a],wps[b])*(1+wps[b].wind/30.0) + euclid(wps[c],wps[d])*(1+wps[d].wind/30.0);
+                double after  = euclid(wps[a],wps[c])*(1+wps[c].wind/30.0) + euclid(wps[b],wps[d])*(1+wps[d].wind/30.0);
+                if(after + 1e-9 < before){ reverse(tour.begin()+i+1, tour.begin()+k+1); improved=true; }
             }
         }
     }
-    return route_cost(R,D);
 }
-
-vector<vector<int>> split_battery(const vector<int>&R,const vector<vector<db>>&D,db cap){
-    vector<vector<int>>out;
-    db cur=0;
-    vector<int>t;
-    for(int u:R){
-        if(!t.empty()){
-            int pv=t.back();
-            db w=D[pv][u];
-            if(cur+w>cap){
-                out.push_back(t);
-                t.clear();
-                cur=0;
-            } else cur+=w;
-        }
-        if(t.empty()) t.push_back(u);
-        else t.push_back(u);
-    }
-    if(!t.empty()) out.push_back(t);
-    return out;
-}
-
-struct Flight {
-    vector<int>path;
-    db cost;
-};
-
-Flight best_flight(const vector<int>&pts,const vector<vector<db>>&D,db cap){
-    int n=pts.size();
-    vector<int>idx(n);
-    for(int i=0;i<n;i++) idx[i]=i;
-    vector<int>R=nearest(idx,0,D);
-    vector<int>maproute;
-    for(int x:R) maproute.push_back(pts[x]);
-    two_opt(maproute,D);
-    db cst=route_cost(maproute,D);
-    if(cst<=cap) return {maproute,cst};
-    auto sp=split_battery(maproute,D,cap);
-    if(sp.empty()) return {{},0};
-    return {sp[0], route_cost(sp[0],D)};
-}
-
-vector<vector<int>> full_mission(const vector<int>&pts,const vector<vector<db>>&D,db cap){
-    vector<int>idx(pts.size());
-    for(int i=0;i<pts.size();i++) idx[i]=i;
-    vector<int>R=nearest(idx,0,D);
-    vector<int>mapped;
-    for(auto &x:R) mapped.push_back(pts[x]);
-    two_opt(mapped,D);
-    return split_battery(mapped,D,cap);
-}
-
-vector<int> emergency_path(int src,int dst,const Graph &g){
-    auto d=dijkstra(g,src);
-    vector<int>path;
-    if(d[dst]>=INF) return path;
-    vector<int>prev(g.n,-1);
-    auto dd=d;
-    priority_queue<pair<db,int>,vector<pair<db,int>>,greater<pair<db,int>>>pq;
-    pq.push({0,src});
-    dd[src]=0;
-    while(!pq.empty()){
-        auto cur=pq.top();pq.pop();
-        db cd=cur.first; int u=cur.second;
-        if(cd!=dd[u]) continue;
-        if(u==dst) break;
-        for(auto &pr:g.adj[u]){
-            int v=pr.first; db w=pr.second;
-            if(cd+w<dd[v]){ dd[v]=cd+w; prev[v]=u; pq.push({dd[v],v}); }
-        }
-    }
-    int cur=dst;
-    while(cur!=-1){ path.push_back(cur); cur=prev[cur]; }
-    reverse(path.begin(),path.end());
-    return path;
-}
-
-Graph build_ground_graph(int n,int seed){
-    Graph g(n);
-    mt19937_64 rng(seed);
-    uniform_real_distribution<db>ud(1,10);
-    for(int i=0;i<n;i++){
-        for(int j=i+1;j<n;j++){
-            db w=ud(rng);
-            g.addEdge(i,j,w);
-        }
-    }
-    return g;
-}
-
-vector<Node> random_pts(int n,int seed){
-    vector<Node>v(n);
-    mt19937_64 rng(seed);
-    uniform_real_distribution<db>ux(0,100),uy(0,100),uw(0,5);
-    for(int i=0;i<n;i++){
-        v[i]=Node(ux(rng),uy(rng),uw(rng));
-    }
-    return v;
-}
-
-vector<int> reorder_by_wind(const vector<Node>&pts){
-    int n=pts.size();
-    vector<pair<db,int>>v;
-    for(int i=0;i<n;i++) v.push_back({pts[i].wind,i});
-    sort(v.begin(),v.end(),[&](auto&a,auto&b){return a.first<b.first;});
-    vector<int>r;
-    for(auto &x:v) r.push_back(x.second);
-    return r;
-}
-
-vector<vector<int>> mission_by_wind(const vector<Node>&pts,const vector<vector<db>>&D,db cap){
-    auto ord = reorder_by_wind(pts);
-    vector<int>mapped;
-    for(int x:ord) mapped.push_back(x);
-    two_opt(mapped,D);
-    return split_battery(mapped,D,cap);
-}
-
-struct MultiMission {
+vector<vector<int>> split_by_battery(const vector<int>&tour,const vector<WP>&wps,double max_dist){
     vector<vector<int>> missions;
-    db total;
-};
-
-MultiMission simulate_drone(const vector<Node>&pts,const vector<vector<db>>&D,db cap){
-    vector<vector<int>>ms = full_mission(pts,D,cap);
-    db s=0;
-    for(auto &m:ms) s+=route_cost(m,D);
-    return {ms,s};
+    double cur=0; vector<int> part;
+    if(tour.empty()) return missions;
+    for(size_t i=0;i<tour.size();++i){
+        int id = tour[i];
+        double leg = (i==0 ? 0 : euclid(wps[tour[i-1]], wps[id]) * (1 + wps[id].wind/30.0));
+        if(!part.empty() && cur + leg > max_dist){
+            missions.push_back(part); part.clear(); cur = 0;
+        }
+        part.push_back(id); cur += leg;
+    }
+    if(!part.empty()) missions.push_back(part);
+    return missions;
 }
-
+struct PQItem{ double d; int v; bool operator<(const PQItem&other)const{return d>other.d;} };
+vector<double> dijkstra_weighted(const vector<WP>&wps,int src){
+    int n=wps.size();
+    vector<double> dist(n, 1e300);
+    priority_queue<PQItem>pq;
+    dist[src]=0; pq.push({0,src});
+    while(!pq.empty()){
+        auto it=pq.top(); pq.pop();
+        double d=it.d; int u=it.v;
+        if(d>dist[u]+1e-12) continue;
+        for(int v=0; v<n; ++v){
+            if(v==u) continue;
+            double w = euclid(wps[u], wps[v]) * (1.0 + wps[v].wind/30.0);
+            if(dist[u] + w < dist[v]){ dist[v]=dist[u]+w; pq.push({dist[v], v}); }
+        }
+    }
+    return dist;
+}
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    int mode;
-    if(!(cin>>mode)) return 0;
-
-    if(mode==0){
-        int n=70;
-        auto pts = random_pts(n,7);
-        auto D = build_matrix(pts);
-        db cap = 200.0;
-        auto mm = simulate_drone(pts,D,cap);
-        cout.setf(std::ios::fixed);
-        cout<<setprecision(6);
-        cout<<"TOTAL "<<mm.total<<"\n";
-        cout<<"MISSIONS "<<mm.missions.size()<<"\n";
-        for(auto &m:mm.missions){
-            cout<<m.size()<<" ";
-            for(int x:m) cout<<x<<" ";
-            cout<<"\n";
+    vector<string> lines; string row;
+    while(getline(cin,row)) lines.push_back(row);
+    if(lines.empty()) return 0;
+    int first=0; while(first<(int)lines.size() && lines[first].find(',')==string::npos) first++;
+    if(first>=(int)lines.size()) return 0;
+    auto header = split_csv(lines[first]);
+    unordered_map<string,int> h;
+    for(int i=0;i<(int)header.size();++i){ string t=header[i]; for(auto &c:t) c=tolower((unsigned char)c); h[t]=i; }
+    vector<WP> wps;
+    int base_index = -1;
+    for(int i=first+1;i<(int)lines.size();++i){
+        if(lines[i].find_first_not_of(" \t\r\n")==string::npos) continue;
+        auto f = split_csv(lines[i]);
+        string cmd = "";
+        if(h.count("command")) cmd = f[h["command"]];
+        if(cmd.empty()){
+            if(h.count("node_id") && h.count("x") && h.count("y")) cmd = "WAYPOINT";
         }
-        return 0;
-    }
-
-    if(mode==1){
-        int n;
-        cin>>n;
-        vector<Node>pts(n);
-        for(int i=0;i<n;i++){
-            cin>>pts[i].x>>pts[i].y>>pts[i].wind;
+        string up = cmd; for(auto &c:up) c=toupper((unsigned char)c);
+        if(up=="BASE"){
+            WP b; b.id = to_int(f[h.count("node_id")?h["node_id"]:1]); b.x = to_double(f[h.count("x")?h["x"]:2]); b.y = to_double(f[h.count("y")?h["y"]:3]); b.wind = to_double(f[h.count("wind")?h["wind"]:4]); b.importance = to_int(f[h.count("importance")?h["importance"]:5]);
+            wps.push_back(b);
+            base_index = 0;
+        } else if(up=="WAYPOINT"){
+            WP p; p.id = to_int(f[h.count("node_id")?h["node_id"]:1]); p.x = to_double(f[h.count("x")?h["x"]:2]); p.y = to_double(f[h.count("y")?h["y"]:3]); p.wind = to_double(f[h.count("wind")?h["wind"]:4]); p.importance = to_int(f[h.count("importance")?h["importance"]:5]);
+            wps.push_back(p);
         }
-        auto D=build_matrix(pts);
-        db cap;cin>>cap;
-        auto out=full_mission(pts,D,cap);
-        cout<<out.size()<<"\n";
-        for(auto &a:out){
-            cout<<a.size()<<" ";
-            for(int x:a) cout<<x<<" ";
-            cout<<"\n";
-        }
-        return 0;
     }
-
-    if(mode==2){
-        int gsz;
-        cin>>gsz;
-        Graph g=build_ground_graph(gsz,10);
-        int s,t;
-        cin>>s>>t;
-        auto p = emergency_path(s,t,g);
-        cout<<p.size()<<"\n";
-        for(int x:p) cout<<x<<" ";
-        cout<<"\n";
-        return 0;
+    if(wps.empty()) return 0;
+    int n = wps.size();
+    cout<<"Loaded "<<n<<" waypoints (including base if present)\n";
+    vector<int> tour = nearest_neighbor(wps);
+    cout<<"Initial NN tour size "<<tour.size()<<" length "<<fixed<<setprecision(3)<<tour_len(tour,wps)<<"\n";
+    two_opt(tour,wps);
+    cout<<"After 2-opt tour length "<<fixed<<setprecision(3)<<tour_len(tour,wps)<<"\n";
+    double battery_km = 30000.0;
+    auto missions = split_by_battery(tour,wps,battery_km);
+    cout<<"Split into "<<missions.size()<<" missions by battery limit "<<battery_km<<"\n";
+    if(base_index<0) base_index = 0;
+    cout<<"Computing Dijkstra emergency paths from each waypoint back to base (this may take time)\n";
+    int src = base_index;
+    auto dists = dijkstra_weighted(wps, src);
+    cout<<"Distance from base to waypoint 0 = "<<dists[0]<<"\n";
+    cout<<"Interactive commands: RUN_TSP, SPLIT val, EMERGENCY id, DIJKSTRA src dst, QUIT\n";
+    string linecmd;
+    while(getline(cin,linecmd)){
+        if(linecmd.find_first_not_of(" \t\r\n")==string::npos) continue;
+        stringstream ss(linecmd); string cmd; ss>>cmd;
+        for(auto &c:cmd) c=toupper((unsigned char)c);
+        if(cmd=="QUIT") break;
+        else if(cmd=="RUN_TSP"){
+            tour = nearest_neighbor(wps);
+            two_opt(tour,wps);
+            cout<<"Recomputed TSP length "<<tour_len(tour,wps)<<"\n";
+        } else if(cmd=="SPLIT"){
+            double val; if(!(ss>>val)){ cout<<"Usage: SPLIT max_distance\n"; continue; }
+            missions = split_by_battery(tour,wps,val);
+            cout<<"Split into "<<missions.size()<<" missions by battery "<<val<<"\n";
+        } else if(cmd=="EMERGENCY"){
+            int id; if(!(ss>>id)){ cout<<"Usage: EMERGENCY node_id\n"; continue; }
+            if(id<0 || id>= (int)wps.size()){ cout<<"Invalid node\n"; continue; }
+            auto dist_back = dijkstra_weighted(wps, id);
+            cout<<"Emergency path length from "<<id<<" to base "<<dist_back[base_index]<<"\n";
+        } else if(cmd=="DIJKSTRA"){
+            int a,b; if(!(ss>>a>>b)){ cout<<"Usage: DIJKSTRA src dst\n"; continue; }
+            if(a<0||a>=n||b<0||b>=n){ cout<<"Invalid nodes\n"; continue; }
+            auto dd = dijkstra_weighted(wps,a);
+            cout<<"Shortest approx distance from "<<a<<" to "<<b<<" = "<<dd[b]<<"\n";
+        } else cout<<"Unknown command\n";
     }
-
     return 0;
 }
