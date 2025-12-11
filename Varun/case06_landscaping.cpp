@@ -1,361 +1,274 @@
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
-using db = double;
-const db INF = 1e18;
-
-struct Edge { int u,v; db w; db benefit; Edge(){} Edge(int a,int b,db c,db be=0):u(a),v(b),w(c),benefit(be){} };
+const ll INFLL = (ll)4e18;
+struct Edge {
+    int u;
+    int v;
+    ll cost;
+    double benefit;
+    bool active;
+    Edge(): u(-1), v(-1), cost(0), benefit(0.0), active(true) {}
+    Edge(int _u,int _v,ll _c,double _b): u(_u), v(_v), cost(_c), benefit(_b), active(true) {}
+};
 struct Graph {
     int n;
-    vector<vector<pair<int,db>>> adj;
+    vector<vector<int>> adj;
     vector<Edge> edges;
-    Graph(int n_=0){ init(n_); }
-    void init(int N){ n=N; adj.assign(n,{}); edges.clear(); }
-    void addEdge(int u,int v,db w, db benefit=0){
+    Graph(): n(0) {}
+    void init(int N) { n = N; adj.assign(n, {}); edges.clear(); }
+    void addEdge(int u,int v,ll cost,double benefit) {
         if(u<0||v<0||u>=n||v>=n) return;
-        adj[u].push_back({v,w});
-        adj[v].push_back({u,w});
-        edges.emplace_back(u,v,w,benefit);
+        edges.emplace_back(u,v,cost,benefit);
+        int id = (int)edges.size()-1;
+        adj[u].push_back(id);
+        adj[v].push_back(id);
     }
-    int size() const { return n; }
 };
-
 struct DSU {
     int n;
     vector<int> p;
-    DSU(int n_=0){ init(n_); }
-    void init(int n_){ n=n_; p.resize(n); iota(p.begin(), p.end(), 0); }
-    int find(int x){ return p[x]==x?x:p[x]=find(p[x]); }
-    bool unite(int a,int b){ a=find(a); b=find(b); if(a==b) return false; p[b]=a; return true; }
+    vector<int> r;
+    DSU(): n(0) {}
+    void init(int N) { n = N; p.resize(n=N); r.assign(n,0); iota(p.begin(), p.end(), 0); }
+    int find(int x) { return p[x]==x?x:p[x]=find(p[x]); }
+    bool unite(int a,int b) { a=find(a); b=find(b); if(a==b) return false; if(r[a]<r[b]) swap(a,b); p[b]=a; if(r[a]==r[b]) r[a]++; return true; }
 };
-
-db kruskal_mst(const Graph &g, vector<Edge>* out_edges = nullptr){
-    auto es = g.edges;
-    sort(es.begin(), es.end(), [](const Edge&a,const Edge&b){ return a.w < b.w; });
-    DSU d(g.n);
-    db total=0; int used=0;
-    for(auto &e: es){
-        if(d.unite(e.u, e.v)){
-            total += e.w;
-            if(out_edges) out_edges->push_back(e);
-            if(++used==g.n-1) break;
+vector<string> split_csv(const string &s) {
+    vector<string> out; string cur; bool inq=false;
+    for(size_t i=0;i<s.size();++i){
+        char c=s[i];
+        if(inq){
+            if(c=='"'){ if(i+1<s.size() && s[i+1]=='"'){ cur.push_back('"'); ++i; } else inq=false; }
+            else cur.push_back(c);
+        } else {
+            if(c==','){ out.push_back(cur); cur.clear(); }
+            else if(c=='"') inq=true;
+            else cur.push_back(c);
         }
     }
-    if(used==g.n-1) return total;
-    return INF;
+    out.push_back(cur);
+    for(auto &t: out){
+        size_t a=0,b=t.size();
+        while(a<b && isspace((unsigned char)t[a])) ++a;
+        while(b>a && isspace((unsigned char)t[b-1])) --b;
+        t = t.substr(a, b-a);
+    }
+    return out;
 }
-
-vector<int> bfs_component(const Graph &g, int s){
-    vector<char> vis(g.n,0);
-    deque<int> dq; dq.push_back(s); vis[s]=1;
+int to_int(const string &s){ if(s.empty()) return 0; try{return stoi(s);}catch(...){ return 0; } }
+ll to_ll(const string &s){ if(s.empty()) return 0; try{return stoll(s);}catch(...){ try{ double d=stod(s); return (ll)llround(d); }catch(...){return 0;} } }
+double to_double(const string &s){ if(s.empty()) return 0.0; try{return stod(s);}catch(...){return 0.0;} }
+void print_edge(const Edge &e){ cout<<"Edge "<<e.u<<"-"<<e.v<<" cost="<<e.cost<<" benefit="<<e.benefit<<"\n"; }
+vector<int> bfs_component(Graph &g, int start, vector<char> &vis) {
     vector<int> comp;
-    while(!dq.empty()){
-        int u=dq.front(); dq.pop_front();
+    queue<int> q;
+    q.push(start);
+    vis[start]=1;
+    while(!q.empty()){
+        int u=q.front(); q.pop();
         comp.push_back(u);
-        for(auto &pr: g.adj[u]) if(!vis[pr.first]){ vis[pr.first]=1; dq.push_back(pr.first); }
+        for(int id: g.adj[u]){
+            Edge &e = g.edges[id];
+            int v = e.u==u?e.v:e.u;
+            if(!vis[v]){ vis[v]=1; q.push(v); }
+        }
     }
     return comp;
 }
-
-vector<vector<int>> all_components(const Graph &g){
+vector<vector<int>> all_components(Graph &g) {
     vector<char> vis(g.n,0);
     vector<vector<int>> comps;
-    for(int i=0;i<g.n;i++){
+    for(int i=0;i<g.n;++i){
         if(!vis[i]){
-            deque<int> dq; dq.push_back(i); vis[i]=1;
-            vector<int> comp;
-            while(!dq.empty()){
-                int u=dq.front(); dq.pop_front();
-                comp.push_back(u);
-                for(auto &pr: g.adj[u]) if(!vis[pr.first]){ vis[pr.first]=1; dq.push_back(pr.first); }
-            }
-            comps.push_back(comp);
+            auto c = bfs_component(g, i, vis);
+            if(!c.empty()) comps.push_back(c);
         }
     }
     return comps;
 }
-
-vector<int> dfs_order(const Graph &g, int s){
-    vector<char> vis(g.n,0);
-    vector<int> order;
-    function<void(int)> dfs = [&](int u){
-        vis[u]=1;
-        order.push_back(u);
-        for(auto &pr: g.adj[u]) if(!vis[pr.first]) dfs(pr.first);
-    };
-    dfs(s);
-    return order;
-}
-
-vector<vector<int>> floyd_warshall_compact(const Graph &g){
-    int n=g.n;
-    vector<vector<db>> dist(n, vector<db>(n, INF));
-    for(int i=0;i<n;i++) dist[i][i]=0;
-    for(auto &e: g.edges){
-        if(e.w < dist[e.u][e.v]){ dist[e.u][e.v]=e.w; dist[e.v][e.u]=e.w; }
+struct Candidate { int id; double ratio; ll cost; double benefit; Candidate(int i=0,double r=0,ll c=0,double b=0):id(i),ratio(r),cost(c),benefit(b){} };
+vector<int> kruskal_mst(Graph &g, ll &total_cost_out) {
+    vector<int> chosen;
+    total_cost_out = 0;
+    int n = g.n;
+    if(n==0) return chosen;
+    vector<int> idx(g.edges.size());
+    iota(idx.begin(), idx.end(), 0);
+    sort(idx.begin(), idx.end(), [&](int a,int b){ if(g.edges[a].cost!=g.edges[b].cost) return g.edges[a].cost < g.edges[b].cost; return g.edges[a].benefit > g.edges[b].benefit; });
+    DSU d; d.init(n);
+    for(int id: idx){
+        Edge &e = g.edges[id];
+        if(d.unite(e.u, e.v)){ chosen.push_back(id); total_cost_out += e.cost; if((int)chosen.size()==n-1) break; }
     }
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            if(dist[i][k]==INF) continue;
-            for(int j=0;j<n;j++){
-                if(dist[k][j]==INF) continue;
-                db nd = dist[i][k] + dist[k][j];
-                if(nd < dist[i][j]) dist[i][j]=nd;
-            }
-        }
-    }
-    vector<vector<int>> mat(n, vector<int>(n, -1));
-    for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(dist[i][j]<INF) mat[i][j]=1;
-    return mat;
+    if((int)chosen.size() != n-1) { total_cost_out = INFLL; }
+    return chosen;
 }
-
-struct CandidateEdge {
-    Edge e;
-    db score;
-    CandidateEdge(){}
-    CandidateEdge(const Edge&ee, db sc):e(ee),score(sc){}
-};
-
-vector<CandidateEdge> evaluate_edges(const Graph &g, const vector<int>&priority_nodes){
-    vector<CandidateEdge> res;
-    int N = g.n;
-    vector<db> centrality(N,0.0);
-    for(int p: priority_nodes) centrality[p]+=1.0;
-    for(const auto &e: g.edges){
-        db score = e.benefit / max<db>(1.0, e.w);
-        score += (centrality[e.u] + centrality[e.v]) * 0.5;
-        res.emplace_back(e, score);
-    }
-    return res;
-}
-
-vector<Edge> greedy_select_by_benefit_cost(const Graph &g, db budget){
-    auto cand = evaluate_edges(g, vector<int>());
-    sort(cand.begin(), cand.end(), [](const CandidateEdge&a,const CandidateEdge&b){ return a.score > b.score; });
-    vector<Edge> chosen;
-    db spent=0;
-    DSU d(g.n);
-    for(auto &c: cand){
-        if(spent + c.e.w > budget) continue;
-        if(d.find(c.e.u) == d.find(c.e.v)) continue;
-        d.unite(c.e.u, c.e.v);
-        chosen.push_back(c.e);
-        spent += c.e.w;
+vector<int> kruskal_mst_subset(Graph &g, const vector<int>&edge_ids, ll &total_cost_out) {
+    vector<int> chosen;
+    total_cost_out = 0;
+    int n = g.n;
+    vector<int> idx = edge_ids;
+    sort(idx.begin(), idx.end(), [&](int a,int b){ if(g.edges[a].cost!=g.edges[b].cost) return g.edges[a].cost < g.edges[b].cost; return g.edges[a].benefit > g.edges[b].benefit; });
+    DSU d; d.init(n);
+    for(int id: idx){
+        Edge &e = g.edges[id];
+        if(d.unite(e.u, e.v)){ chosen.push_back(id); total_cost_out += e.cost; }
     }
     return chosen;
 }
-
-vector<Edge> knapsack_like_select(const vector<Edge>&edges, db budget){
-    int m=edges.size();
-    vector<pair<db,int>> arr;
-    for(int i=0;i<m;i++){
-        db val = edges[i].benefit;
-        db wt = edges[i].w;
-        arr.push_back({val / max<db>(1e-9, wt), i});
+vector<int> greedy_select_by_ratio(Graph &g, ll budget) {
+    vector<Candidate> cand;
+    for(int i=0;i<(int)g.edges.size();++i){
+        Edge &e = g.edges[i];
+        if(e.cost <= 0) continue;
+        double r = e.benefit / (double)e.cost;
+        cand.emplace_back(i, r, e.cost, e.benefit);
     }
-    sort(arr.begin(), arr.end(), [](const pair<db,int>&a,const pair<db,int>&b){ return a.first > b.first; });
-    vector<Edge> chosen;
-    db used=0;
-    for(auto &pr: arr){
-        int i=pr.second;
-        if(used + edges[i].w <= budget){
-            chosen.push_back(edges[i]);
-            used += edges[i].w;
-        }
-    }
-    return chosen;
-}
-
-Graph build_random_habitat(int n,int m,int seed){
-    Graph g(n);
-    mt19937_64 rng(seed);
-    uniform_real_distribution<db> coord(0,100);
-    uniform_real_distribution<db> cost(1,20);
-    uniform_real_distribution<db> benefit(1,50);
-    set<pair<int,int>> used;
-    vector<pair<db,db>> pts(n);
-    for(int i=0;i<n;i++) pts[i] = {coord(rng), coord(rng)};
-    while((int)g.edges.size() < m){
-        int a = rng() % n, b = rng() % n;
-        if(a==b) continue;
-        if(a>b) swap(a,b);
-        if(used.insert({a,b}).second){
-            db d = hypot(pts[a].first - pts[b].first, pts[a].second - pts[b].second);
-            db w = max<db>(1.0, d * (cost(rng)/10.0));
-            db be = benefit(rng);
-            g.addEdge(a,b,w,be);
-        }
-    }
-    return g;
-}
-
-vector<int> highest_degree_nodes(const Graph &g, int k){
-    int n=g.n;
-    vector<pair<int,int>> deg;
-    for(int i=0;i<n;i++) deg.push_back({(int)g.adj[i].size(), i});
-    sort(deg.begin(), deg.end(), [](const pair<int,int>&a,const pair<int,int>&b){ return a.first > b.first; });
-    vector<int> out;
-    for(int i=0;i<k && i<deg.size(); ++i) out.push_back(deg[i].second);
-    return out;
-}
-
-vector<Edge> budgeted_improvement_plan(const Graph &g, db budget){
-    vector<Edge> res;
-    auto degs = highest_degree_nodes(g, max(1, g.n/10));
-    auto cand = evaluate_edges(g, degs);
-    sort(cand.begin(), cand.end(), [](const CandidateEdge&a,const CandidateEdge&b){ return a.score > b.score; });
-    db used=0;
-    DSU d(g.n);
+    sort(cand.begin(), cand.end(), [](const Candidate &a,const Candidate &b){
+        if(fabs(a.ratio - b.ratio) > 1e-12) return a.ratio > b.ratio;
+        if(a.benefit != b.benefit) return a.benefit > b.benefit;
+        return a.cost < b.cost;
+    });
+    vector<int> selected;
+    ll used = 0;
     for(auto &c: cand){
-        if(used + c.e.w > budget) continue;
-        if(d.find(c.e.u) == d.find(c.e.v)) continue;
-        d.unite(c.e.u, c.e.v);
-        res.push_back(c.e);
-        used += c.e.w;
-    }
-    return res;
-}
-
-vector<int> connectivity_after_edges(int n, const vector<Edge>&existing, const vector<Edge>&added){
-    DSU d(n);
-    for(auto &e: existing) d.unite(e.u, e.v);
-    for(auto &e: added) d.unite(e.u, e.v);
-    vector<int> comp(n);
-    for(int i=0;i<n;i++) comp[i] = d.find(i);
-    return comp;
-}
-
-db ecosystem_score(const Graph &g, const vector<Edge>&chosen){
-    db score=0;
-    vector<char> touched(g.n, 0);
-    for(auto &e: chosen){
-        score += e.benefit;
-        touched[e.u]=1; touched[e.v]=1;
-    }
-    int tcount=0;
-    for(int i=0;i<g.n;i++) if(touched[i]) tcount++;
-    score += tcount * 0.1;
-    return score;
-}
-
-vector<Edge> augment_mst_with_budget(const Graph &g, db budget){
-    vector<Edge> mst_edges;
-    db base = kruskal_mst(g, &mst_edges);
-    vector<Edge> extras;
-    db used=0;
-    set<pair<int,int>> mstset;
-    for(auto &e: mst_edges){ int a=min(e.u,e.v), b=max(e.u,e.v); mstset.insert({a,b}); }
-    auto sorted_edges = g.edges;
-    sort(sorted_edges.begin(), sorted_edges.end(), [](const Edge&a,const Edge&b){ return a.benefit > b.benefit; });
-    for(auto &e: sorted_edges){
-        int a=min(e.u,e.v), b=max(e.u,e.v);
-        if(mstset.count({a,b})) continue;
-        if(used + e.w <= budget){ extras.push_back(e); used += e.w; mstset.insert({a,b}); }
-    }
-    for(auto &e: extras) mst_edges.push_back(e);
-    return mst_edges;
-}
-
-pair<vector<Edge>, db> plan_restoration(const Graph &g, db budget){
-    auto plan1 = greedy_select_by_benefit_cost(g, budget);
-    auto plan2 = knapsack_like_select(g.edges, budget);
-    db s1 = ecosystem_score(g, plan1);
-    db s2 = ecosystem_score(g, plan2);
-    if(s1 >= s2) return {plan1, s1};
-    return {plan2, s2};
-}
-
-vector<int> highest_betweenness_approx(const Graph &g, int samples){
-    int n=g.n;
-    vector<double> score(n,0.0);
-    mt19937 rng(123);
-    uniform_int_distribution<int> ui(0,n-1);
-    for(int s=0;s<samples;s++){
-        int a = ui(rng), b = ui(rng);
-        vector<db> dist(n, INF);
-        vector<int> prev(n, -1);
-        using P=pair<db,int>;
-        priority_queue<P, vector<P>, greater<P>> pq;
-        dist[a]=0; pq.push({0,a});
-        while(!pq.empty()){
-            auto cur=pq.top(); pq.pop();
-            db d=cur.first; int u=cur.second;
-            if(d!=dist[u]) continue;
-            if(u==b) break;
-            for(auto &pr: g.adj[u]){
-                int v=pr.first; db w=pr.second;
-                if(d + w < dist[v]){ dist[v]=d+w; prev[v]=u; pq.push({dist[v], v}); }
-            }
-        }
-        int cur=b;
-        while(prev[cur]!=-1){
-            score[cur]+=1.0;
-            cur = prev[cur];
+        if(used + c.cost <= budget){
+            selected.push_back(c.id);
+            used += c.cost;
         }
     }
-    vector<pair<double,int>> arr;
-    for(int i=0;i<n;i++) arr.push_back({score[i], i});
-    sort(arr.begin(), arr.end(), [](const pair<double,int>&a,const pair<double,int>&b){ return a.first > b.first; });
-    vector<int> out;
-    for(int i=0;i<min((int)arr.size(), max(1, n/10)); ++i) out.push_back(arr[i].second);
-    return out;
+    return selected;
 }
-
-pair<vector<Edge>, db> iterative_budgeted_growth(const Graph &g, db total_budget, int steps){
-    vector<Edge> final;
-    db spent=0;
-    Graph cur = g;
-    for(int t=0;t<steps && spent < total_budget; ++t){
-        db step_budget = min<db>(total_budget - spent, total_budget / steps);
-        auto add = budgeted_improvement_plan(cur, step_budget);
-        for(auto &e: add){ final.push_back(e); spent += e.w; }
+vector<int> greedy_maximal_connectivity(Graph &g, ll budget) {
+    vector<int> order(g.edges.size());
+    iota(order.begin(), order.end(), 0);
+    sort(order.begin(), order.end(), [&](int a,int b){
+        double ra = g.edges[a].benefit / (double)max<ll>(1,g.edges[a].cost);
+        double rb = g.edges[b].benefit / (double)max<ll>(1,g.edges[b].cost);
+        if(fabs(ra-rb) > 1e-12) return ra > rb;
+        if(g.edges[a].benefit != g.edges[b].benefit) return g.edges[a].benefit > g.edges[b].benefit;
+        return g.edges[a].cost < g.edges[b].cost;
+    });
+    DSU d; d.init(g.n);
+    ll used = 0;
+    vector<int> picked;
+    for(int id: order){
+        Edge &e = g.edges[id];
+        if(used + e.cost > budget) continue;
+        int a = d.find(e.u), b = d.find(e.v);
+        if(a != b){
+            d.unite(a,b);
+            picked.push_back(id);
+            used += e.cost;
+        }
     }
-    db sc = ecosystem_score(g, final);
-    return {final, sc};
+    return picked;
 }
-
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    int mode;
-    if(!(cin>>mode)) return 0;
-    if(mode==0){
-        Graph g = build_random_habitat(80, 240, 2025);
-        db budget = 200.0;
-        auto best = plan_restoration(g, budget);
-        cout.setf(std::ios::fixed);
-        cout<<setprecision(6);
-        cout<<"CHOSEN "<<best.first.size()<<" SCORE "<<best.second<<"\n";
-        for(auto &e: best.first) cout<<e.u<<" "<<e.v<<" "<<e.w<<" "<<e.benefit<<"\n";
-        return 0;
+    vector<string> lines;
+    string row;
+    while(getline(cin,row)) lines.push_back(row);
+    if(lines.empty()) return 0;
+    int first_nonempty = 0;
+    while(first_nonempty < (int)lines.size()){
+        string t = lines[first_nonempty];
+        bool allws = true;
+        for(char c: t) if(!isspace((unsigned char)c)){ allws=false; break; }
+        if(!allws) break;
+        ++first_nonempty;
     }
-    if(mode==1){
-        int n,m; cin>>n>>m;
-        Graph g(n);
-        for(int i=0;i<m;i++){
-            int u,v; db w,be;
-            cin>>u>>v>>w>>be;
-            g.addEdge(u,v,w,be);
+    if(first_nonempty >= (int)lines.size()) return 0;
+    vector<string> header = split_csv(lines[first_nonempty]);
+    unordered_map<string,int> hmap;
+    for(int i=0;i<(int)header.size();++i){ string key=header[i]; for(auto &c:key) c=tolower((unsigned char)c); hmap[key]=i; }
+    Graph g;
+    ll budget = 1000000;
+    for(int i=first_nonempty+1;i<(int)lines.size();++i){
+        string s = lines[i];
+        if(s.find_first_not_of(" \t\r\n")==string::npos) continue;
+        auto f = split_csv(s);
+        string cmd = "";
+        if(hmap.count("command")) cmd = f[hmap["command"]];
+        if(cmd.empty()){
+            if(hmap.count("u") && hmap.count("v") && hmap.count("cost")) cmd = "EDGE";
         }
-        db budget; cin>>budget;
-        auto res = augment_mst_with_budget(g, budget);
-        cout<<res.size()<<"\n";
-        for(auto &e: res) cout<<e.u<<" "<<e.v<<" "<<e.w<<" "<<e.benefit<<"\n";
-        return 0;
-    }
-    if(mode==2){
-        int n,m; cin>>n>>m;
-        Graph g(n);
-        for(int i=0;i<m;i++){
-            int u,v; db w,be;
-            cin>>u>>v>>w>>be;
-            g.addEdge(u,v,w,be);
+        string cu = cmd;
+        for(auto &c: cu) c = toupper((unsigned char)c);
+        if(cu == "INIT"){
+            int n = to_int(f[hmap.count("u")?hmap["u"]:0]);
+            int m = to_int(f[hmap.count("v")?hmap["v"]:0]);
+            if(n < 0) n = 0;
+            g.init(n);
+            cout<<"INIT n="<<n<<" m_est="<<m<<"\n";
+        } else if(cu=="EDGE"){
+            int u = to_int(f[hmap.count("u")?hmap["u"]:1]);
+            int v = to_int(f[hmap.count("v")?hmap["v"]:2]);
+            ll cost = to_ll(f[hmap.count("cost")?hmap["cost"]:3]);
+            double benefit = to_double(f[hmap.count("benefit")?hmap["benefit"]:4]);
+            if(g.n==0){
+                int maxnode = max(u,v);
+                g.init(maxnode+1);
+            }
+            g.addEdge(u,v,cost,benefit);
+        } else if(cu=="BUDGET"){
+            budget = to_ll(f[hmap.count("u")?hmap["u"]:0]);
+            cout<<"Budget set to "<<budget<<"\n";
+        } else if(cu=="RUN_KRUSKAL"){
+            ll tot=0;
+            auto chosen = kruskal_mst(g, tot);
+            if(tot==INFLL) cout<<"Graph disconnected; MST not available\n"; else {
+                cout<<"Kruskal MST total_cost="<<tot<<" edges="<<chosen.size()<<"\n";
+            }
+        } else if(cu=="COMPONENTS"){
+            auto comps = all_components(g);
+            cout<<"Detected "<<comps.size()<<" components\n";
+            for(size_t ci=0;ci<comps.size();++ci){
+                cout<<"Component "<<ci<<" size="<<comps[ci].size()<<"\n";
+            }
+        } else if(cu=="GREEDY_RATIO"){
+            ll b = budget;
+            auto picked = greedy_select_by_ratio(g, b);
+            ll used=0; double totben=0;
+            for(int id: picked){ used += g.edges[id].cost; totben += g.edges[id].benefit; }
+            cout<<"Greedy ratio selected "<<picked.size()<<" edges used_cost="<<used<<" total_benefit="<<totben<<"\n";
+        } else if(cu=="GREEDY_CONNECT"){
+            auto picked = greedy_maximal_connectivity(g, budget);
+            ll used=0; double totben=0;
+            for(int id: picked){ used += g.edges[id].cost; totben += g.edges[id].benefit; }
+            cout<<"Greedy connect selected "<<picked.size()<<" edges used_cost="<<used<<" total_benefit="<<totben<<"\n";
+        } else if(cu=="EXPORT"){
+            string mode = "";
+            if(hmap.count("extra")) mode = f[hmap["extra"]];
+            for(int i=0;i<(int)g.edges.size();++i){
+                auto &e = g.edges[i];
+                cout<<e.u<<" "<<e.v<<" "<<e.cost<<" "<<e.benefit<<"\n";
+            }
+        } else if(cu=="QUIT"){
+            cout<<"QUIT\n";
+            break;
+        } else {
+            // ignore unknown
         }
-        db budget; cin>>budget;
-        auto it = iterative_budgeted_growth(g, budget, 5);
-        cout<<it.first.size()<<" "<<it.second<<"\n";
-        for(auto &e: it.first) cout<<e.u<<" "<<e.v<<" "<<e.w<<" "<<e.benefit<<"\n";
-        return 0;
     }
+    if(g.n==0){ cout<<"No graph loaded\n"; return 0; }
+    cout<<"Summary: nodes="<<g.n<<" edges="<<g.edges.size()<<"\n";
+    cout<<"Running default analyses: MST, components, greedy selection\n";
+    ll mstcost=0;
+    auto mst = kruskal_mst(g, mstcost);
+    if(mstcost==INFLL) cout<<"MST not available (disconnected)\n"; else cout<<"MST cost="<<mstcost<<" edges="<<mst.size()<<"\n";
+    auto comps = all_components(g);
+    cout<<"Components: "<<comps.size()<<"\n";
+    for(size_t ci=0; ci<comps.size(); ++ci) cout<<"Comp "<<ci<<" size="<<comps[ci].size()<<"\n";
+    auto greedy1 = greedy_select_by_ratio(g, budget);
+    ll used1=0; double ben1=0;
+    for(int id: greedy1){ used1 += g.edges[id].cost; ben1 += g.edges[id].benefit; }
+    cout<<"Greedy ratio: selected="<<greedy1.size()<<" used="<<used1<<" benefit="<<ben1<<"\n";
+    auto greedy2 = greedy_maximal_connectivity(g, budget);
+    ll used2=0; double ben2=0;
+    for(int id: greedy2){ used2 += g.edges[id].cost; ben2 += g.edges[id].benefit; }
+    cout<<"Greedy connectivity: selected="<<greedy2.size()<<" used="<<used2<<" benefit="<<ben2<<"\n";
     return 0;
 }
