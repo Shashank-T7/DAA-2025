@@ -1,422 +1,287 @@
 #include <bits/stdc++.h>
 using namespace std;
-using db = double;
 using ll = long long;
-const db INF = 1e18;
+const double INF_D = 1e300;
 
 struct Edge {
-    int u,v;
-    db w;
-    Edge(){}
-    Edge(int a,int b,db c):u(a),v(b),w(c){}
+    int u, v;
+    double loss;
+    int capacity;
+    Edge(): u(-1), v(-1), loss(0.0), capacity(0) {}
+    Edge(int a,int b,double l,int c): u(a), v(b), loss(l), capacity(c) {}
 };
 
 struct Graph {
     int n;
-    vector<vector<pair<int,db>>> adj;
+    vector<vector<pair<int,int>>> adj;
     vector<Edge> edges;
-    Graph(int n_=0){init(n_);}
-    void init(int N){
-        n=N;
-        adj.assign(n,{});
-        edges.clear();
-    }
-    void addEdge(int u,int v,db w){
-        adj[u].push_back({v,w});
-        edges.emplace_back(u,v,w);
+    Graph(): n(0) {}
+    void init(int N){ n=N; adj.assign(n,{}); edges.clear(); }
+    void addEdge(int u,int v,double loss,int cap){
+        if(u<0||v<0) return;
+        if(max(u,v) >= n){
+            int newn = max(u,v)+1;
+            adj.resize(newn);
+            n = newn;
+        }
+        edges.emplace_back(u,v,loss,cap);
+        int id = edges.size()-1;
+        if((int)adj.size() <= max(u,v)) adj.resize(max(u,v)+1);
+        adj[u].push_back({v,id});
+        adj[v].push_back({u,id});
     }
 };
 
-vector<db> dijkstra(const Graph&g,int s){
-    int n=g.n;
-    vector<db>d(n,INF);
-    priority_queue<pair<db,int>,vector<pair<db,int>>,greater<pair<db,int>>>pq;
-    d[s]=0;pq.push({0,s});
-    while(!pq.empty()){
-        auto cur=pq.top();pq.pop();
-        db cd=cur.first;int u=cur.second;
-        if(cd!=d[u]) continue;
-        for(auto &pr:g.adj[u]){
-            int v=pr.first;db w=pr.second;
-            if(cd+w<d[v]){d[v]=cd+w;pq.push({d[v],v});}
-        }
-    }
-    return d;
-}
-
-vector<db> bellman_ford(int n,const vector<Edge>&E,int s){
-    vector<db>d(n,INF);
-    d[s]=0;
-    for(int i=0;i<n-1;i++){
-        bool upd=false;
-        for(auto &e:E){
-            if(d[e.u]<INF && d[e.u]+e.w<d[e.v]){
-                d[e.v]=d[e.u]+e.w;
-                upd=true;
-            }
-        }
-        if(!upd) break;
-    }
-    for(int i=0;i<n;i++){
-        for(auto &e:E){
-            if(d[e.u]<INF && d[e.u]+e.w<d[e.v]){
-                d[e.v]=-INF;
-            }
-        }
-    }
-    return d;
-}
-
 struct Fenwick {
     int n;
-    vector<db> f;
-    Fenwick(int n_=0){init(n_);}
-    void init(int n_){
-        n=n_;
-        f.assign(n+1,0);
+    vector<double> bit;
+    Fenwick(): n(0) {}
+    void init(int N){ n=N; bit.assign(n+1,0.0); }
+    void add(int idx,double val){ idx++; while(idx<=n){ bit[idx]+=val; idx+=idx&-idx; } }
+    double sumPrefix(int idx){ idx++; double s=0.0; while(idx>0){ s+=bit[idx]; idx-=idx&-idx; } return s; }
+    double rangeSum(int l,int r){ if(r<l) return 0.0; return sumPrefix(r) - (l?sumPrefix(l-1):0.0); }
+};
+
+vector<string> split_csv_line(const string &s){
+    vector<string> out; string cur; bool inq=false;
+    for(size_t i=0;i<s.size();++i){
+        char c=s[i];
+        if(inq){
+            if(c=='"'){ if(i+1<s.size() && s[i+1]=='"'){ cur.push_back('"'); ++i; } else inq=false; }
+            else cur.push_back(c);
+        } else {
+            if(c==','){ out.push_back(cur); cur.clear(); }
+            else if(c=='"') inq=true;
+            else cur.push_back(c);
+        }
     }
-    void update(int i, db v){
-        for(;i<=n;i+=i&-i) f[i]+=v;
+    out.push_back(cur);
+    for(auto &t: out){ size_t a=0,b=t.size(); while(a<b && isspace((unsigned char)t[a])) ++a; while(b>a && isspace((unsigned char)t[b-1])) --b; t=t.substr(a,b-a); }
+    return out;
+}
+
+int to_int(const string &s){ if(s.empty()) return 0; try{return stoi(s);}catch(...){return 0;} }
+double to_double(const string &s){ if(s.empty()) return 0.0; try{return stod(s);}catch(...){return 0.0;} }
+long long to_ll(const string &s){ if(s.empty()) return 0; try{return stoll(s);}catch(...){return 0;} }
+
+struct Dijkstra {
+    Graph *g;
+    Dijkstra(Graph *gr=nullptr): g(gr) {}
+    vector<double> run(int src){
+        int n = g->n;
+        vector<double> dist(n, INF_D);
+        if(src<0||src>=n) return dist;
+        using P = pair<double,int>;
+        priority_queue<P, vector<P>, greater<P>> pq;
+        dist[src]=0; pq.push({0,src});
+        while(!pq.empty()){
+            auto p = pq.top(); pq.pop();
+            double d = p.first; int u = p.second;
+            if(d > dist[u] + 1e-12) continue;
+            for(auto &pr: g->adj[u]){
+                int v = pr.first; int eid = pr.second;
+                Edge &e = g->edges[eid];
+                double w = e.loss * 1000.0; // scale proxy
+                if(dist[u] + w < dist[v]){
+                    dist[v] = dist[u] + w;
+                    pq.push({dist[v], v});
+                }
+            }
+        }
+        return dist;
     }
-    db query(int i){
-        db s=0;
-        for(;i>0;i-=i&-i) s+=f[i];
-        return s;
-    }
-    db range(int l,int r){
-        if(l>r) return 0;
-        return query(r)-query(l-1);
+};
+
+struct BellmanFord {
+    int n;
+    vector<double> dist;
+    BellmanFord(int N=0){ init(N); }
+    void init(int N){ n=N; dist.assign(n, INF_D); }
+    bool detect_negative_cycle(const vector<tuple<int,int,double>> &edges){
+        if(n==0) return false;
+        for(int i=0;i<n;++i) dist[i]=0.0;
+        for(int iter=0; iter<n-1; ++iter){
+            bool any=false;
+            for(auto &t: edges){
+                int u,v; double w; tie(u,v,w)=t;
+                if(u<0||v<0||u>=n||v>=n) continue;
+                if(dist[u] + w < dist[v]){ dist[v] = dist[u] + w; any=true; }
+            }
+            if(!any) break;
+        }
+        for(auto &t: edges){
+            int u,v; double w; tie(u,v,w)=t;
+            if(u<0||v<0||u>=n||v>=n) continue;
+            if(dist[u] + w < dist[v]) return true;
+        }
+        return false;
     }
 };
 
 struct Battery {
-    db cap;
-    db cur;
-    Battery(){}
-    Battery(db c):cap(c),cur(c){}
-    db discharge(db x){
-        db t = min(cur,x);
-        cur-=t;
-        return t;
-    }
-    db charge(db x){
-        db sp = min(x, cap-cur);
-        cur+=sp;
-        return sp;
-    }
+    int id;
+    double soc;
+    double capacity;
+    double max_discharge; 
+    double max_charge;
+    double efficiency;
+    Battery(): id(0), soc(0), capacity(0), max_discharge(0), max_charge(0), efficiency(1.0) {}
 };
 
-vector<db> build_load(int n,int seed){
-    vector<db>L(n);
-    mt19937_64 rng(seed);
-    uniform_real_distribution<db>ud(10,40);
-    for(int i=0;i<n;i++) L[i]=ud(rng);
-    return L;
-}
-
-vector<db> build_supply(int n,int seed){
-    vector<db>S(n);
-    mt19937_64 rng(seed);
-    uniform_real_distribution<db>ud(5,35);
-    for(int i=0;i<n;i++) S[i]=ud(rng);
-    return S;
-}
-
-db route_cost(const vector<int>&r,const vector<vector<db>>&D){
-    db s=0;
-    for(int i=0;i+1<r.size();i++) s+=D[r[i]][r[i+1]];
-    return s;
-}
-
-vector<vector<db>> build_matrix(const vector<pair<db,db>>&pts){
-    int n=pts.size();
-    vector<vector<db>>D(n,vector<db>(n,INF));
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(i==j){D[i][j]=0;continue;}
-            db dx=pts[i].first-pts[j].first;
-            db dy=pts[i].second-pts[j].second;
-            D[i][j]=sqrt(dx*dx+dy*dy);
+struct MicrogridManager {
+    Graph g;
+    Fenwick fen; 
+    vector<Battery> batteries;
+    vector<pair<long long,double>> demand_times;
+    vector<tuple<long long,int,double>> storage_updates;
+    MicrogridManager(){}
+    void load_from_csv_lines(const vector<string> &lines){
+        if(lines.empty()) return;
+        int first=0; while(first < (int)lines.size() && lines[first].find(',')==string::npos) ++first;
+        if(first >= (int)lines.size()) return;
+        auto header = split_csv_line(lines[first]);
+        unordered_map<string,int> idx;
+        for(int i=0;i<(int)header.size();++i){ string k=header[i]; for(auto &c:k) c=tolower((unsigned char)c); idx[k]=i; }
+        for(int i=first+1;i<(int)lines.size();++i){
+            string row = lines[i];
+            if(row.find_first_not_of(" \t\r\n")==string::npos) continue;
+            auto f = split_csv_line(row);
+            string cmd = "";
+            if(idx.count("command")) cmd = f[idx["command"]];
+            if(cmd.empty()){
+                if(idx.count("u") && idx.count("v") && idx.count("loss")) cmd = "EDGE";
+            }
+            string cu = cmd; for(auto &c:cu) c = toupper((unsigned char)c);
+            if(cu == "INIT"){
+                int n = to_int(f[idx.count("u")?idx["u"]:0]);
+                int m = to_int(f[idx.count("v")?idx["v"]:1]);
+                if(n<=0) n=0;
+                g.init(n);
+            } else if(cu == "EDGE"){
+                int u = to_int(f[idx.count("u")?idx["u"]:1]);
+                int v = to_int(f[idx.count("v")?idx["v"]:2]);
+                double loss = to_double(f[idx.count("loss")?idx["loss"]:3]);
+                int cap = to_int(f[idx.count("line_capacity")?idx["line_capacity"]:4]);
+                g.addEdge(u,v,loss,cap);
+            } else if(cu == "STORAGE"){
+                long long ts = to_ll(f[idx.count("timestamp")?idx["timestamp"]:5]);
+                int batt = to_int(f[idx.count("battery_id")?idx["battery_id"]:6]);
+                double change = to_double(f[idx.count("charge_change")?idx["charge_change"]:7]);
+                double bcap = to_double(f[idx.count("battery_capacity")?idx["battery_capacity"]:8]);
+                double price = to_double(f[idx.count("price")?idx["price"]:9]);
+                storage_updates.emplace_back(ts,batt,change);
+                if(batt >= (int)batteries.size()){
+                    batteries.resize(batt+1);
+                    batteries[batt].id = batt;
+                    batteries[batt].capacity = bcap;
+                    batteries[batt].soc = bcap * 0.5;
+                    batteries[batt].max_charge = bcap * 0.5;
+                    batteries[batt].max_discharge = bcap * 0.5;
+                    batteries[batt].efficiency = 0.95;
+                }
+            } else if(cu == "DEMAND"){
+                long long ts = to_ll(f[idx.count("timestamp")?idx["timestamp"]:5]);
+                double d = to_double(f[idx.count("price")?idx["price"]:9]);
+                demand_times.emplace_back(ts, d);
+            } else {
+                // ignore others
+            }
+        }
+        int slots = max(1, (int)max(1, (int)demand_times.size()));
+        fen.init(slots + 5);
+        for(size_t i=0;i<storage_updates.size();++i){
+            long long ts; int bid; double change; tie(ts,bid,change) = storage_updates[i];
+            int slot = i % fen.n;
+            fen.add(slot, change);
         }
     }
-    return D;
-}
-
-vector<int> greedy_discharge(const vector<db>&need, vector<Battery>&B){
-    int n=need.size();
-    vector<int>order(n);
-    vector<pair<db,int>>arr;
-    for(int i=0;i<n;i++){
-        arr.push_back({need[i],i});
-    }
-    sort(arr.begin(),arr.end(),[&](auto&a,auto&b){return a.first>b.first;});
-    for(int i=0;i<n;i++) order[i]=arr[i].second;
-    for(int idx:order){
-        db req = need[idx];
-        for(auto &bat:B){
-            if(req<=0) break;
-            req -= bat.discharge(req);
+    vector<double> run_dijkstra(int src){ Dijkstra dj(&g); return dj.run(src); }
+    bool run_bellmanford_detect(){
+        int N = g.n;
+        vector<tuple<int,int,double>> ed;
+        for(auto &e: g.edges){
+            ed.emplace_back(e.u, e.v, e.loss - 0.01);
+            ed.emplace_back(e.v, e.u, e.loss - 0.01);
         }
+        BellmanFord bf(N); bf.init(N);
+        return bf.detect_negative_cycle(ed);
     }
-    return order;
-}
-
-struct Step {
-    db load;
-    db supply;
-    db net;
+    vector<int> greedy_discharge(double required_kwh){
+        vector<pair<double,int>> cand;
+        for(auto &b: batteries){
+            double avail = max(0.0, min(b.soc, b.max_discharge));
+            if(avail>1e-9) cand.emplace_back(avail / (b.capacity + 1e-9), b.id);
+        }
+        sort(cand.begin(), cand.end(), greater<pair<double,int>>());
+        vector<int> used;
+        double got = 0;
+        for(auto &p: cand){
+            if(got >= required_kwh) break;
+            int id = p.second;
+            double take = min(required_kwh - got, batteries[id].max_discharge);
+            if(take>0){
+                batteries[id].soc -= take;
+                got += take;
+                used.push_back(id);
+            }
+        }
+        return used;
+    }
+    double fenwick_query_range(int l,int r){ return fen.rangeSum(l,r); }
+    void fenwick_add_slot(int slot,double val){ if(slot>=0 && slot < fen.n) fen.add(slot,val); }
 };
-
-struct Simulation {
-    vector<Step>steps;
-    vector<Battery>B;
-    Fenwick fw;
-    Simulation(int nsteps,int nbatt):fw(nsteps){
-        for(int i=0;i<nbatt;i++) B.push_back(Battery(200));
-        fw.init(nsteps);
-    }
-};
-
-Simulation run_sim(int n,int nbatt,const vector<db>&L,const vector<db>&S){
-    Simulation sim(n,nbatt);
-    for(int i=0;i<n;i++){
-        db net = S[i]-L[i];
-        sim.steps.push_back({L[i],S[i],net});
-        sim.fw.update(i+1, net);
-    }
-    return sim;
-}
-
-vector<int> deficit_slots(const vector<Step>&st){
-    vector<int>d;
-    for(int i=0;i<st.size();i++){
-        if(st[i].net<0) d.push_back(i);
-    }
-    return d;
-}
-
-db total_energy(const vector<Battery>&B){
-    db s=0;
-    for(auto &b:B) s+=b.cur;
-    return s;
-}
-
-vector<int> multi_step_assignment(const vector<Step>&steps, vector<Battery>&B){
-    int n=steps.size();
-    vector<db>need(n);
-    for(int i=0;i<n;i++) need[i]=max<db>(0,-steps[i].net);
-    return greedy_discharge(need,B);
-}
-
-vector<db> prefix_supply(const vector<Step>&s){
-    int n=s.size();
-    vector<db>P(n);
-    db sum=0;
-    for(int i=0;i<n;i++){
-        sum+=s[i].supply;
-        P[i]=sum;
-    }
-    return P;
-}
-
-vector<db> prefix_load(const vector<Step>&s){
-    int n=s.size();
-    vector<db>P(n);
-    db sum=0;
-    for(int i=0;i<n;i++){
-        sum+=s[i].load;
-        P[i]=sum;
-    }
-    return P;
-}
-
-vector<db> sliding_def(const vector<Step>&s,int w){
-    int n=s.size();
-    vector<db>out(n);
-    db sum=0;
-    for(int i=0;i<n;i++){
-        sum+=s[i].net;
-        if(i>=w) sum-=s[i-w].net;
-        out[i]=sum;
-    }
-    return out;
-}
-
-vector<pair<int,db>> rank_nodes(const vector<db>&base,const vector<db>&dyn){
-    int n=base.size();
-    vector<pair<db,int>>arr;
-    for(int i=0;i<n;i++){
-        arr.push_back({base[i]+dyn[i],i});
-    }
-    sort(arr.begin(),arr.end(),[&](auto&a,auto&b){return a.first<b.first;});
-    vector<pair<int,db>>out;
-    for(auto &x:arr) out.push_back({x.second,x.first});
-    return out;
-}
-
-Graph build_micro(int n,int seed){
-    Graph g(n);
-    mt19937_64 rng(seed);
-    uniform_real_distribution<db>ud(1,10);
-    for(int i=0;i<n;i++){
-        for(int j=i+1;j<n;j++){
-            db w=ud(rng);
-            g.addEdge(i,j,w);
-        }
-    }
-    return g;
-}
-
-struct Mission {
-    vector<int>path;
-    db cost;
-};
-
-Mission best_route(int src,int dst,const Graph&g){
-    auto d=dijkstra(g,src);
-    if(d[dst]>=INF) return {{},INF};
-    vector<int>prev(g.n,-1);
-    vector<db>dd(d);
-    priority_queue<pair<db,int>,vector<pair<db,int>>,greater<pair<db,int>>>pq;
-    dd.assign(g.n,INF);
-    dd[src]=0; pq.push({0,src});
-    while(!pq.empty()){
-        auto cur=pq.top();pq.pop();
-        db cd=cur.first; int u=cur.second;
-        if(cd!=dd[u]) continue;
-        if(u==dst) break;
-        for(auto &pr:g.adj[u]){
-            int v=pr.first; db w=pr.second;
-            if(cd+w<dd[v]){ dd[v]=cd+w; prev[v]=u; pq.push({dd[v],v}); }
-        }
-    }
-    vector<int>P;
-    if(dd[dst]>=INF) return {{},INF};
-    int cur=dst;
-    while(cur!=-1){ P.push_back(cur); cur=prev[cur]; }
-    reverse(P.begin(),P.end());
-    return {P,dd[dst]};
-}
-
-vector<db> detect_cycles(const Graph&g){
-    vector<db>d = bellman_ford(g.n, g.edges, 0);
-    return d;
-}
-
-vector<pair<int,db>> zone_pressure(const Simulation&sim){
-    int n=sim.steps.size();
-    vector<db>base(n), dyn(n);
-    for(int i=0;i<n;i++){
-        base[i]=sim.steps[i].load - sim.steps[i].supply;
-        dyn[i]=sim.fw.query(i+1);
-    }
-    auto rk = rank_nodes(base,dyn);
-    vector<pair<int,db>>out;
-    for(auto &p:rk) out.push_back({p.first,p.second});
-    return out;
-}
-
-vector<vector<int>> plan_storage(const vector<Step>&steps, vector<Battery>&B, db cap){
-    int n=steps.size();
-    vector<vector<int>>missions;
-    vector<int>def = deficit_slots(steps);
-    if(def.empty()) return missions;
-    vector<db>need(n);
-    for(int i=0;i<n;i++) need[i]=max<db>(0,-steps[i].net);
-    vector<int>critical;
-    for(int i:def){
-        db t=need[i];
-        for(auto &b:B){
-            if(t<=0) break;
-            t-=b.discharge(t);
-        }
-        if(need[i]>0) critical.push_back(i);
-    }
-    missions.push_back(critical);
-    return missions;
-}
-
-struct Result {
-    db total;
-    vector<int>order;
-    vector<vector<int>>missions;
-};
-
-Result simulate(const Graph&g,int nsteps,int nbatt){
-    auto L = build_load(nsteps,5);
-    auto S = build_supply(nsteps,9);
-    Simulation sim = run_sim(nsteps,nbatt,L,S);
-    vector<int>ord = multi_step_assignment(sim.steps,sim.B);
-    vector<vector<int>>ms = plan_storage(sim.steps,sim.B,200.0);
-    db tot = total_energy(sim.B);
-    return {tot, ord, ms};
-}
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    int mode;
-    if(!(cin>>mode)) return 0;
-
-    if(mode==0){
-        int n=50;
-        Graph g = build_micro(30,3);
-        auto res = simulate(g, n, 5);
-        cout.setf(std::ios::fixed);
-        cout<<setprecision(6);
-        cout<<"ENERGY "<<res.total<<"\n";
-        cout<<"ORDER "<<res.order.size()<<"\n";
-        for(int x:res.order) cout<<x<<" ";
-        cout<<"\n";
-        cout<<"MS "<<res.missions.size()<<"\n";
-        for(auto &m:res.missions){
-            cout<<m.size()<<" ";
-            for(int x:m) cout<<x<<" ";
-            cout<<"\n";
-        }
-        return 0;
+    vector<string> lines;
+    string row;
+    while(getline(cin,row)) lines.push_back(row);
+    MicrogridManager mgr;
+    mgr.load_from_csv_lines(lines);
+    cout<<"Loaded graph nodes="<<mgr.g.n<<" edges="<<mgr.g.edges.size()<<"\n";
+    cout<<"Batteries loaded="<<mgr.batteries.size()<<"\n";
+    cout<<"Storage updates="<<mgr.storage_updates.size()<<" demand_points="<<mgr.demand_times.size()<<"\n";
+    cout<<"Default analyses:\n";
+    if(mgr.g.n>0){
+        int src = 0;
+        auto dist = mgr.run_dijkstra(src);
+        cout<<"Dijkstra from "<<src<<": sample dist[0]="<<dist[0]<<"\n";
     }
-
-    if(mode==1){
-        int n,m;
-        cin>>n>>m;
-        Graph g(n);
-        for(int i=0;i<m;i++){
-            int u,v;db w;cin>>u>>v>>w;
-            g.addEdge(u,v,w);
-        }
-        auto cyc = detect_cycles(g);
-        for(auto &x:cyc) cout<<x<<" ";
-        cout<<"\n";
-        return 0;
+    bool neg = mgr.run_bellmanford_detect();
+    cout<<"Bellman-Ford negative cycle detected="<<(neg? "YES":"NO")<<"\n";
+    double peak_required = 500.0;
+    auto used = mgr.greedy_discharge(peak_required);
+    cout<<"Greedy discharge used batteries="<<used.size()<<"\n";
+    cout<<"Interactive commands: RUN_DIJKSTRA src dst, FENWICK_ADD slot val, FENWICK_QUERY l r, BELLFORD_RUN, GREEDY_DISCHARGE val, SUMMARY, QUIT\n";
+    string cmdline;
+    while(true){
+        if(!getline(cin, cmdline)) break;
+        if(cmdline.find_first_not_of(" \t\r\n")==string::npos) continue;
+        stringstream ss(cmdline);
+        string cmd; ss>>cmd;
+        for(auto &c:cmd) c=toupper((unsigned char)c);
+        if(cmd=="QUIT") break;
+        else if(cmd=="RUN_DIJKSTRA"){
+            int a,b; if(!(ss>>a>>b)){ cout<<"Usage: RUN_DIJKSTRA src dst\n"; continue; }
+            vector<double> d = mgr.run_dijkstra(a);
+            if(b>=0 && b < (int)d.size()) cout<<"Dist["<<b<<"]="<<d[b]<<"\n"; else cout<<"Invalid dst\n";
+        } else if(cmd=="FENWICK_ADD"){
+            int slot; double val; if(!(ss>>slot>>val)){ cout<<"Usage: FENWICK_ADD slot val\n"; continue; }
+            mgr.fenwick_add_slot(slot,val); cout<<"Added\n";
+        } else if(cmd=="FENWICK_QUERY"){
+            int l,r; if(!(ss>>l>>r)){ cout<<"Usage: FENWICK_QUERY l r\n"; continue; }
+            cout<<"Sum="<<mgr.fenwick_query_range(l,r)<<"\n";
+        } else if(cmd=="BELLFORD_RUN"){
+            bool negcy = mgr.run_bellmanford_detect();
+            cout<<"Negative cycle: "<<(negcy? "YES":"NO")<<"\n";
+        } else if(cmd=="GREEDY_DISCHARGE"){
+            double val; if(!(ss>>val)){ cout<<"Usage: GREEDY_DISCHARGE kwh\n"; continue; }
+            auto u = mgr.greedy_discharge(val);
+            cout<<"Used batteries count="<<u.size()<<"\n";
+        } else if(cmd=="SUMMARY"){
+            cout<<"Nodes="<<mgr.g.n<<" edges="<<mgr.g.edges.size()<<" batteries="<<mgr.batteries.size()<<"\n";
+        } else cout<<"Unknown command\n";
     }
-
-    if(mode==2){
-        int n;
-        cin>>n;
-        vector<pair<db,db>>pts(n);
-        for(int i=0;i<n;i++) cin>>pts[i].first>>pts[i].second;
-        auto D = build_matrix(pts);
-        vector<int>r(n);
-        for(int i=0;i<n;i++) r[i]=i;
-        db c=route_cost(r,D);
-        cout.setf(std::ios::fixed);
-        cout<<setprecision(6);
-        cout<<c<<"\n";
-        return 0;
-    }
-
-    if(mode==3){
-        int n,nb;
-        cin>>n>>nb;
-        auto L = build_load(n,7);
-        auto S = build_supply(n,11);
-        Simulation sim = run_sim(n,nb,L,S);
-        auto z = zone_pressure(sim);
-        for(auto &p:z) cout<<p.first<<" "<<p.second<<"\n";
-        return 0;
-    }
-
     return 0;
 }
